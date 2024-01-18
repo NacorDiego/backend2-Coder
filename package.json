@@ -4,7 +4,7 @@
   "description": "Entregas del curso de Backend de Coderhouse.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/app.ts"
   },
   "author": "Diego Nacor",
   "license": "ISC",
