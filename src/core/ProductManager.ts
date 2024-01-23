@@ -1,4 +1,4 @@
-import { Product } from './interfaces/product.interface';
+import { Product } from '@interfaces/product.interface';
 
 export class ProductManager {
   private products: Product[] = [];
