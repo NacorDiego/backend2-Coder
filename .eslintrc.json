@@ -15,7 +15,7 @@
     "prettier"
   ],
   "parserOptions": {
-    "ecmaVersion": "latest",
+    "ecmaVersion": 2021,
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
@@ -24,14 +24,14 @@
     "import/no-unresolved": [
       "error",
       {
-        "plugins": [
-          "module-resolve",
-          {
-            "alias": {
-              "@core": "./src/core",
-              "@interfaces": "./src/interfaces"
-            }
-          }
+        "ignore": [
+          "^@core",
+          "^@interfaces"
+        ],
+        "extensions": [
+          ".ts",
+          ".js",
+          ".d.ts"
         ]
       }
     ]

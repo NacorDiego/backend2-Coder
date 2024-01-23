@@ -4,14 +4,20 @@
   "description": "Entregas del curso de Backend de Coderhouse.",
   "main": "app.js",
   "scripts": {
-    "build": "tsc",
+    "build": "babel src --extensions \".ts,.js\" --out-dir dist --copy-files",
     "start": "node dist/app.js",
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --ignore-watch node_moldules src/app.ts"
   },
   "author": "Diego Nacor",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.23.4",
+    "@babel/core": "^7.23.7",
+    "@babel/node": "^7.22.19",
+    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-typescript": "^7.23.3",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "babel-plugin-module-resolver": "^5.0.0",
     "eslint": "^8.56.0",
     "eslint-config": "^0.3.0",
     "eslint-config-standard-with-typescript": "^43.0.1",
