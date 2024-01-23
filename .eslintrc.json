@@ -20,6 +20,20 @@
     "project": "./tsconfig.json"
   },
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "import/no-unresolved": [
+      "error",
+      {
+        "plugins": [
+          "module-resolve",
+          {
+            "alias": {
+              "@core": "./src/core",
+              "@interfaces": "./src/interfaces"
+            }
+          }
+        ]
+      }
+    ]
   }
 }
