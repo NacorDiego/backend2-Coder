@@ -4,12 +4,14 @@
   "description": "Entregas del curso de Backend de Coderhouse.",
   "main": "app.js",
   "scripts": {
-    "start": "ts-node src/app.ts"
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "ts-node-dev --respawn --ignore-watch node_moldules src/app.ts"
   },
   "author": "Diego Nacor",
   "license": "ISC",
   "devDependencies": {
-    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
   }
 }
