@@ -1,10 +1,26 @@
 import { Product } from '@interfaces/product.interface';
+import fs from 'fs';
 
 export class ProductManager {
   private products: Product[] = [];
   private idSig: number = 1;
+  private path!: string;
 
-  public addProduct(product: Product): void {
+  constructor(path: string) {
+    this.path = path;
+    this.crearDirectorio(path);
+  }
+
+  private async crearDirectorio(path: string): Promise<void> {
+    try {
+      await fs.promises.mkdir(path, { recursive: true });
+      console.log(`Se crea el directorio en ${path}`);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public async addProduct(product: Product): Promise<void> {
     if (!this.validateRequiredFields(product)) {
       console.error(
         'Error: El producto no es válido. Todos los campos son requeridos.',
@@ -22,9 +38,13 @@ export class ProductManager {
         `Error: Ya existe un producto con el código ${product.code}`,
       );
     }
-
     product.id = this.idSig++;
-    product.id = this.products.push(product);
+    this.products.push(product);
+
+    const productsJson = JSON.stringify(this.products);
+    const fileName = `${this.path}/products.json`;
+
+    await fs.promises.writeFile(fileName, productsJson);
   }
 
   public getProducts(): Product[] {
