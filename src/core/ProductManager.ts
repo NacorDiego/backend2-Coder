@@ -5,6 +5,7 @@ export class ProductManager {
   private products: Product[] = [];
   private idSig: number = 1;
   private path!: string;
+  private fileName!:string;
 
   constructor(path: string) {
     this.path = path;
@@ -14,41 +15,47 @@ export class ProductManager {
   private async crearDirectorio(path: string): Promise<void> {
     try {
       await fs.promises.mkdir(path, { recursive: true });
-      console.log(`Se crea el directorio en ${path}`);
     } catch (error) {
       console.error(error);
     }
   }
 
   public async addProduct(product: Product): Promise<void> {
-    if (!this.validateRequiredFields(product)) {
-      console.error(
-        'Error: El producto no es válido. Todos los campos son requeridos.',
-      );
-      throw new Error(
-        'Error: El producto no es válido. Todos los campos son requeridos.',
-      );
+    try {
+      if (!this.validateRequiredFields(product)) {
+        throw new Error(
+          'Error: El producto no es válido. Todos los campos son requeridos.',
+        );
+      }
+
+      if (this.validateCode(product.code)) {
+        throw new Error(
+          `Error: Ya existe un producto con el código ${product.code}`,
+        );
+      }
+
+      product.id = this.idSig++;
+      this.products.push(product);
+
+      const productsJson = JSON.stringify(this.products);
+      this.fileName = `${this.path}/products.json`;
+
+      await fs.promises.writeFile(this.fileName, productsJson);
+
+    } catch (error) {
+      console.error(error);
     }
-
-    if (this.validateCode(product.code)) {
-      console.error(
-        `Error: Ya existe un producto con el código ${product.code}`,
-      );
-      throw new Error(
-        `Error: Ya existe un producto con el código ${product.code}`,
-      );
-    }
-    product.id = this.idSig++;
-    this.products.push(product);
-
-    const productsJson = JSON.stringify(this.products);
-    const fileName = `${this.path}/products.json`;
-
-    await fs.promises.writeFile(fileName, productsJson);
   }
 
-  public getProducts(): Product[] {
-    return this.products;
+  public async getProducts(): Promise<Product[]> {
+    try {
+      const productsJson = await fs.promises.readFile(this.fileName, 'utf-8');
+      const parsedProducts = JSON.parse(productsJson) as Product[];
+      return parsedProducts;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
   }
 
   public getProductById(id: number): Product | undefined {
