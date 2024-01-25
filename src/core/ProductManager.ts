@@ -5,7 +5,7 @@ export class ProductManager {
   private products: Product[] = [];
   private idSig: number = 1;
   private path!: string;
-  private fileName!:string;
+  private fileName!: string;
 
   constructor(path: string) {
     this.path = path;
@@ -41,7 +41,6 @@ export class ProductManager {
       this.fileName = `${this.path}/products.json`;
 
       await fs.promises.writeFile(this.fileName, productsJson);
-
     } catch (error) {
       console.error(error);
     }
@@ -58,15 +57,22 @@ export class ProductManager {
     }
   }
 
-  public getProductById(id: number): Product | undefined {
-    let product = this.products.find(elem => elem.id === id);
+  public async getProductById(id: number): Promise<Product | undefined> {
+    try {
+      const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
+      const parsedProducts = JSON.parse(jsonProducts) as Product[];
 
-    if (!product) {
-      console.error(`No existe un producto con id ${id}`);
+      const product = parsedProducts.find(elem => elem.id === id);
+
+      if (!product) {
+        throw new Error('El producto no existe.');
+      }
+
+      return product;
+    } catch (error) {
+      console.error(`Error: ${error}`);
       return undefined;
     }
-
-    return product;
   }
 
   private validateCode(code: number): boolean {
