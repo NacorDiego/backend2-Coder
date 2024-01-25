@@ -48,8 +48,8 @@ export class ProductManager {
 
   public async getProducts(): Promise<Product[]> {
     try {
-      const productsJson = await fs.promises.readFile(this.fileName, 'utf-8');
-      const parsedProducts = JSON.parse(productsJson) as Product[];
+      const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
+      const parsedProducts = JSON.parse(jsonProducts) as Product[];
       return parsedProducts;
     } catch (error) {
       console.error(error);
