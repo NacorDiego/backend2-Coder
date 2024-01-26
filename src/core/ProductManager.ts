@@ -6,18 +6,14 @@ export class ProductManager {
   private idSig: number = 1;
   private path!: string;
   private fileName!: string;
+  private pendingChanges: boolean = false;
+
+  //TODO: Implementar load y save para no leer y escribir todo el tiempo el archivo.
 
   constructor(path: string) {
     this.path = path;
     this.crearDirectorio(path);
-  }
-
-  private async crearDirectorio(path: string): Promise<void> {
-    try {
-      await fs.promises.mkdir(path, { recursive: true });
-    } catch (error) {
-      console.error(error);
-    }
+    this.loadFromFile();
   }
 
   public async addProduct(product: Product): Promise<void> {
@@ -72,6 +68,53 @@ export class ProductManager {
     } catch (error) {
       console.error(`Error: ${error}`);
       return undefined;
+    }
+  }
+
+  public async updateProduct(id: number, update: Product): Promise<void> {
+    try {
+      const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
+      const parsedProducts = JSON.parse(jsonProducts) as Product[];
+
+      const product = parsedProducts.find(elem => elem.id === id);
+
+      if (!product) {
+        throw new Error('El producto no existe.');
+      }
+    } catch (error) {}
+  }
+
+  private async crearDirectorio(path: string): Promise<void> {
+    try {
+      if (!path) {
+        throw new Error('El path no es valido.');
+      }
+
+      await fs.promises.mkdir(path, { recursive: true });
+      await fs.promises.writeFile(this.path, []);
+    } catch (error) {
+      console.error(`Error: ${error}`);
+    }
+  }
+
+  private async loadFromFile(): Promise<void> {
+    const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
+    this.products = JSON.parse(jsonProducts) as Product[];
+  }
+
+  private markChanges(): void {
+    this.pendingChanges = true;
+  }
+
+  private async saveChangesToFile(): Promise<void> {
+    try {
+      if (this.pendingChanges) {
+        const jsonProducts = JSON.stringify(this.products);
+        await fs.promises.writeFile(this.fileName, jsonProducts);
+        this.pendingChanges = false;
+      }
+    } catch (error) {
+      console.error(`Error: ${error}`);
     }
   }
 

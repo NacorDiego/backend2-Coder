@@ -26,6 +26,6 @@ const product2 = {
 
 productManager.addProduct(product2);
 
-productManager.getProducts().then(res => console.log(res));
+// productManager.getProducts().then(res => console.log(res));
 
-productManager.getProductById(2).then(res => console.log(res));
+// productManager.getProductById(2).then(res => console.log(res));
