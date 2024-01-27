@@ -1,5 +1,7 @@
 import { Product } from '@interfaces/product.interface';
 import fs from 'fs';
+import path from 'path';
+import Joi from 'joi';
 
 export class ProductManager {
   private products: Product[] = [];
@@ -10,9 +12,10 @@ export class ProductManager {
 
   //TODO: Implementar load y save para no leer y escribir todo el tiempo el archivo.
 
-  constructor(path: string) {
-    this.path = path;
-    this.crearDirectorio(path);
+  constructor(route: string) {
+    this.path = route;
+    this.fileName = path.join(this.path, 'productos.json');
+    this.crearDirectorio();
     this.loadFromFile();
   }
 
@@ -33,12 +36,10 @@ export class ProductManager {
       product.id = this.idSig++;
       this.products.push(product);
 
-      const productsJson = JSON.stringify(this.products);
-      this.fileName = `${this.path}/products.json`;
-
-      await fs.promises.writeFile(this.fileName, productsJson);
+      this.saveChangesToFile();
     } catch (error) {
       console.error(error);
+      throw error;
     }
   }
 
@@ -81,25 +82,49 @@ export class ProductManager {
       if (!product) {
         throw new Error('El producto no existe.');
       }
-    } catch (error) {}
+
+      this.saveChangesToFile();
+    } catch (error) {
+      throw error;
+    }
   }
 
-  private async crearDirectorio(path: string): Promise<void> {
+  private async crearDirectorio(): Promise<void> {
     try {
       if (!path) {
         throw new Error('El path no es valido.');
       }
 
-      await fs.promises.mkdir(path, { recursive: true });
-      await fs.promises.writeFile(this.path, []);
+      await fs.promises.mkdir(this.path, { recursive: true });
+      const jsonProducts = JSON.stringify(this.products);
+      await fs.promises.writeFile(this.fileName, jsonProducts);
     } catch (error) {
       console.error(`Error: ${error}`);
     }
   }
 
   private async loadFromFile(): Promise<void> {
-    const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
-    this.products = JSON.parse(jsonProducts) as Product[];
+    try {
+      // Verifico la existencia del archivo y si tengo permisos para accederlo
+      await fs.promises.access(this.fileName, fs.constants.F_OK);
+
+      const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
+
+      if (jsonProducts.trim() === '') {
+        console.warn('El archivo esta vacio.');
+        return;
+      }
+
+      this.products = JSON.parse(jsonProducts) as Product[];
+    } catch (error: any) {
+      if (error.code === 'ENOENT') {
+        console.warn('El archivo no existe. Se procede a crearlo.');
+        const jsonProducts = JSON.stringify(this.products);
+        await fs.promises.writeFile(this.fileName, jsonProducts);
+      } else {
+        console.error(`Error al cargar el archivo: ${error}`);
+      }
+    }
   }
 
   private markChanges(): void {
@@ -122,23 +147,38 @@ export class ProductManager {
     return this.products.some(elem => elem.code === code);
   }
 
-  private isValidString(value: string | undefined): boolean {
-    return typeof value === 'string' && value.trim() !== '';
-  }
-
-  private isValidNumber(value: number | undefined): boolean {
-    return typeof value === 'number' && !isNaN(value);
-  }
-
   private validateRequiredFields(product: Product): boolean {
-    const { title, description, price, thumbnail, code, stock } = product;
-    return (
-      this.isValidString(title) &&
-      this.isValidString(description) &&
-      this.isValidNumber(price) &&
-      this.isValidString(thumbnail) &&
-      this.isValidNumber(code) &&
-      this.isValidNumber(stock)
-    );
+    const productSchema = Joi.object({
+      title: Joi.string()
+        .required()
+        .error(new Error('El titulo es requerido y debe ser un string.')),
+      description: Joi.string()
+        .required()
+        .error(new Error('La descripcion es requerida y debe ser un string.')),
+      price: Joi.number()
+        .required()
+        .error(new Error('El precio es requerido y debe ser un number.')),
+      thumbnail: Joi.string()
+        .required()
+        .error(
+          new Error('La URL de la imagen es requerida y debe ser un string.'),
+        ),
+      code: Joi.number()
+        .required()
+        .error(new Error('El codigo es requerido y debe ser un number.')),
+      stock: Joi.number()
+        .required()
+        .error(new Error('El stock es requerido y debe ser un number.')),
+      id: Joi.number(),
+    });
+
+    const { error } = productSchema.validate(product);
+
+    if (error) {
+      console.error(`Error de validacion: ${error.message}`);
+      return false;
+    }
+
+    return true;
   }
 }
