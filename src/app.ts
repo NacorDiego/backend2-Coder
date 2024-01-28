@@ -26,8 +26,27 @@ const product2 = {
 
 productManager.addProduct(product2);
 
-productManager.getProducts().then(res => console.log(`getProducts: ${res}`));
+console.log(
+  `getProducts: ${JSON.stringify(productManager.getProducts(), null, 2)}`,
+);
 
-productManager
-  .getProductById(2)
-  .then(res => console.log(`getProductById: ${res}`));
+console.log(
+  `getProductById(2): ${JSON.stringify(productManager.getProductById(2), null, 2)}`,
+);
+
+const updateProduct = {
+  description: 'Descripcion actualizada',
+  stock: 100,
+};
+
+productManager.updateProduct(2, updateProduct);
+
+console.log(
+  `getProducts post update: ${JSON.stringify(productManager.getProducts(), null, 2)}`,
+);
+
+productManager.deleteProduct(2);
+
+console.log(
+  `getProducts post delete: ${JSON.stringify(productManager.getProducts(), null, 2)}`,
+);

@@ -8,15 +8,11 @@ export class ProductManager {
   private idSig: number = 1;
   private path!: string;
   private fileName!: string;
-  private pendingChanges: boolean = false;
-
-  //TODO: Implementar load y save para no leer y escribir todo el tiempo el archivo.
 
   constructor(route: string) {
     this.path = route;
     this.fileName = path.join(this.path, 'productos.json');
     this.crearDirectorio();
-    this.loadFromFile();
   }
 
   public async addProduct(product: Product): Promise<void> {
@@ -35,31 +31,20 @@ export class ProductManager {
 
       product.id = this.idSig++;
       this.products.push(product);
-
-      this.saveChangesToFile();
     } catch (error) {
       console.error(error);
       throw error;
     }
+    await this.saveChangesToFile();
   }
 
-  public async getProducts(): Promise<Product[]> {
-    try {
-      const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
-      const parsedProducts = JSON.parse(jsonProducts) as Product[];
-      return parsedProducts;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
+  public getProducts(): Product[] {
+    return this.products;
   }
 
-  public async getProductById(id: number): Promise<Product | undefined> {
+  public getProductById(id: number): Product | undefined {
     try {
-      const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
-      const parsedProducts = JSON.parse(jsonProducts) as Product[];
-
-      const product = parsedProducts.find(elem => elem.id === id);
+      const product = this.products.find(elem => elem.id === id);
 
       if (!product) {
         throw new Error('El producto no existe.');
@@ -72,34 +57,50 @@ export class ProductManager {
     }
   }
 
-  public async updateProduct(id: number, update: Product): Promise<void> {
-    try {
-      const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
-      const parsedProducts = JSON.parse(jsonProducts) as Product[];
+  public async updateProduct(
+    id: number,
+    updateFields: Partial<Product>,
+  ): Promise<void> {
+    const index = this.products.findIndex(product => product.id === id);
 
-      const product = parsedProducts.find(elem => elem.id === id);
-
-      if (!product) {
-        throw new Error('El producto no existe.');
-      }
-
-      this.saveChangesToFile();
-    } catch (error) {
-      throw error;
+    if (index === -1) {
+      throw new Error(
+        'Error: No se encontro el producto que se quiere actualizar.',
+      );
     }
+
+    this.products[index] = { ...this.products[index], ...updateFields };
+
+    await this.saveChangesToFile();
+  }
+
+  public async deleteProduct(id: number): Promise<void> {
+    const index = this.products.findIndex(product => product.id === id);
+
+    if (index === -1) {
+      throw new Error(
+        'Error: No se encontro el producto que se quiere eliminar.',
+      );
+    }
+
+    this.products.splice(index, 1);
+
+    await this.saveChangesToFile();
   }
 
   private async crearDirectorio(): Promise<void> {
     try {
-      if (!path) {
+      if (!this.path) {
         throw new Error('El path no es valido.');
       }
 
-      await fs.promises.mkdir(this.path, { recursive: true });
-      const jsonProducts = JSON.stringify(this.products);
-      await fs.promises.writeFile(this.fileName, jsonProducts);
+      await fs.promises.access(this.path, fs.constants.F_OK);
+
+      this.loadFromFile();
     } catch (error) {
-      console.error(`Error: ${error}`);
+      console.warn(`El directorio no existe. Se creara con el archivo.`);
+      await fs.promises.mkdir(this.path, { recursive: true });
+      await this.writeFile(this.products);
     }
   }
 
@@ -108,38 +109,45 @@ export class ProductManager {
       // Verifico la existencia del archivo y si tengo permisos para accederlo
       await fs.promises.access(this.fileName, fs.constants.F_OK);
 
-      const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
+      const jsonProducts = this.readFile();
 
-      if (jsonProducts.trim() === '') {
-        console.warn('El archivo esta vacio.');
-        return;
-      }
-
-      this.products = JSON.parse(jsonProducts) as Product[];
+      this.products = await jsonProducts;
     } catch (error: any) {
       if (error.code === 'ENOENT') {
         console.warn('El archivo no existe. Se procede a crearlo.');
-        const jsonProducts = JSON.stringify(this.products);
-        await fs.promises.writeFile(this.fileName, jsonProducts);
+        await this.writeFile(this.products);
       } else {
         console.error(`Error al cargar el archivo: ${error}`);
       }
     }
   }
 
-  private markChanges(): void {
-    this.pendingChanges = true;
-  }
-
   private async saveChangesToFile(): Promise<void> {
     try {
-      if (this.pendingChanges) {
-        const jsonProducts = JSON.stringify(this.products);
-        await fs.promises.writeFile(this.fileName, jsonProducts);
-        this.pendingChanges = false;
-      }
+      await fs.promises.truncate(this.fileName, 0);
+
+      await this.writeFile(this.products);
     } catch (error) {
-      console.error(`Error: ${error}`);
+      console.error(`Error al guardar los cambios en el archivo: ${error}`);
+    }
+  }
+
+  private async readFile(): Promise<Product[]> {
+    try {
+      const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
+      return JSON.parse(jsonProducts) as Product[];
+    } catch (error) {
+      console.error(`Error al leer el archivo: ${error}`);
+      return [];
+    }
+  }
+
+  private async writeFile(products: Product[]): Promise<void> {
+    try {
+      const jsonProducts = JSON.stringify(products, null, 2);
+      await fs.promises.writeFile(this.fileName, jsonProducts);
+    } catch (error) {
+      console.error(`Error al escribir el archivo: ${error}`);
     }
   }
 
