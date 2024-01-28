@@ -45,8 +45,8 @@ console.log(
   `getProducts post update: ${JSON.stringify(productManager.getProducts(), null, 2)}`,
 );
 
-// productManager.deleteProduct(2);
+productManager.deleteProduct(2);
 
-// console.log(
-//   `getProducts post delete: ${JSON.stringify(productManager.getProducts(), null, 2)}`,
-// );
+console.log(
+  `getProducts post delete: ${JSON.stringify(productManager.getProducts(), null, 2)}`,
+);
