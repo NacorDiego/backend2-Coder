@@ -1,7 +1,7 @@
 import { Product } from '@interfaces/product.interface';
 import fs from 'fs';
 import path from 'path';
-import Joi from 'joi';
+import Joi from 'joi'; // Utilizo esta biblioteca para realizar validaciones.
 
 export class ProductManager {
   private products: Product[] = [];
@@ -9,12 +9,14 @@ export class ProductManager {
   private path!: string;
   private fileName!: string;
 
+  // Inicializa la instancia de ProductManager con la ruta del directorio.
   constructor(route: string) {
     this.path = route;
     this.fileName = path.join(this.path, 'productos.json');
     this.crearDirectorio();
   }
 
+  // Agrega un nuevo producto al array y guarda los cambios en el archivo.
   public async addProduct(product: Product): Promise<void> {
     try {
       if (!this.validateRequiredFields(product)) {
@@ -38,10 +40,12 @@ export class ProductManager {
     await this.saveChangesToFile();
   }
 
+  // Retorna la lista de productos actual.
   public getProducts(): Product[] {
     return this.products;
   }
 
+  // Busca y retorna un producto por su ID.
   public getProductById(id: number): Product | undefined {
     try {
       const product = this.products.find(elem => elem.id === id);
@@ -57,6 +61,7 @@ export class ProductManager {
     }
   }
 
+  // Actualiza un producto existente y guarda los cambios en el archivo.
   public async updateProduct(
     id: number,
     updateFields: Partial<Product>,
@@ -74,6 +79,7 @@ export class ProductManager {
     await this.saveChangesToFile();
   }
 
+  // Elimina un producto y guarda los cambios en el archivo.
   public async deleteProduct(id: number): Promise<void> {
     const index = this.products.findIndex(product => product.id === id);
 
@@ -88,25 +94,24 @@ export class ProductManager {
     await this.saveChangesToFile();
   }
 
+  // Crea el directorio si no existe y carga productos desde el archivo.
   private async crearDirectorio(): Promise<void> {
     try {
       if (!this.path) {
-        throw new Error('El path no es valido.');
+        throw new Error('El path no es válido.');
       }
 
-      await fs.promises.access(this.path, fs.constants.F_OK);
+      await fs.promises.mkdir(this.path, { recursive: true });
 
       this.loadFromFile();
     } catch (error) {
-      console.warn(`El directorio no existe. Se creara con el archivo.`);
-      await fs.promises.mkdir(this.path, { recursive: true });
-      await this.writeFile(this.products);
+      console.warn(`El directorio no existe. Se creará con el archivo.`);
     }
   }
 
+  // Carga productos desde el archivo si existe; si no, crea el archivo.
   private async loadFromFile(): Promise<void> {
     try {
-      // Verifico la existencia del archivo y si tengo permisos para accederlo
       await fs.promises.access(this.fileName, fs.constants.F_OK);
 
       const jsonProducts = this.readFile();
@@ -122,8 +127,11 @@ export class ProductManager {
     }
   }
 
+  // Guarda los cambios en el archivo, truncándolo antes de escribir.
   private async saveChangesToFile(): Promise<void> {
     try {
+      await fs.promises.mkdir(this.path, { recursive: true });
+
       await fs.promises.truncate(this.fileName, 0);
 
       await this.writeFile(this.products);
@@ -132,6 +140,7 @@ export class ProductManager {
     }
   }
 
+  // Lee el archivo y retorna los productos como un array.
   private async readFile(): Promise<Product[]> {
     try {
       const jsonProducts = await fs.promises.readFile(this.fileName, 'utf-8');
@@ -142,6 +151,7 @@ export class ProductManager {
     }
   }
 
+  // Escribe los productos en el archivo.
   private async writeFile(products: Product[]): Promise<void> {
     try {
       const jsonProducts = JSON.stringify(products, null, 2);
@@ -151,10 +161,12 @@ export class ProductManager {
     }
   }
 
+  // Verifica si ya existe un producto con el código dado.
   private validateCode(code: number): boolean {
     return this.products.some(elem => elem.code === code);
   }
 
+  // Valida que los campos requeridos del producto estén presentes.
   private validateRequiredFields(product: Product): boolean {
     const productSchema = Joi.object({
       title: Joi.string()
