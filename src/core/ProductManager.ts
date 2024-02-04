@@ -33,21 +33,31 @@ export class ProductManager {
 
       product.id = this.idSig++;
       this.products.push(product);
+      await this.saveChangesToFile();
     } catch (error) {
       console.error(error);
       throw error;
     }
-    await this.saveChangesToFile();
   }
 
   // Retorna la lista de productos actual.
-  public getProducts(): Product[] {
-    return this.products;
+  public async getProducts(limit?: number): Promise<Product[]> {
+    try {
+      await this.loadFromFile();
+      if (limit !== undefined && limit >= 0) {
+        return this.products.slice(0, limit);
+      } else {
+        return this.products;
+      }
+    } catch (error) {
+      return [];
+    }
   }
 
   // Busca y retorna un producto por su ID.
-  public getProductById(id: number): Product | undefined {
+  public async getProductById(id: number): Promise<Product | undefined> {
     try {
+      await this.loadFromFile();
       const product = this.products.find(elem => elem.id === id);
 
       if (!product) {
@@ -66,6 +76,7 @@ export class ProductManager {
     id: number,
     updateFields: Partial<Product>,
   ): Promise<void> {
+    await this.loadFromFile();
     const index = this.products.findIndex(product => product.id === id);
 
     if (index === -1) {
@@ -81,6 +92,7 @@ export class ProductManager {
 
   // Elimina un producto y guarda los cambios en el archivo.
   public async deleteProduct(id: number): Promise<void> {
+    await this.loadFromFile();
     const index = this.products.findIndex(product => product.id === id);
 
     if (index === -1) {
@@ -103,7 +115,7 @@ export class ProductManager {
 
       await fs.promises.mkdir(this.path, { recursive: true });
 
-      this.loadFromFile();
+      await this.loadFromFile();
     } catch (error) {
       console.warn(`El directorio no existe. Se creará con el archivo.`);
     }
@@ -114,9 +126,9 @@ export class ProductManager {
     try {
       await fs.promises.access(this.fileName, fs.constants.F_OK);
 
-      const jsonProducts = this.readFile();
+      const jsonProducts = await this.readFile();
 
-      this.products = await jsonProducts;
+      this.products = jsonProducts;
     } catch (error: any) {
       if (error.code === 'ENOENT') {
         console.warn('El archivo no existe. Se procede a crearlo.');
