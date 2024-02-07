@@ -4,11 +4,11 @@ module.exports = {
       '@babel/preset-env',
       {
         targets: {
-          node: 'current'
-        }
-      }
+          node: 'current',
+        },
+      },
     ],
-    '@babel/preset-typescript'
+    '@babel/preset-typescript',
   ],
   plugins: [
     [
@@ -17,16 +17,16 @@ module.exports = {
         alias: {
           '@core': './src/core',
           '@interfaces': './src/interfaces',
-          //'@routes': './src/routes',
+          '@routes': './src/routes',
           //'@models': './src/models',
           //'@config': './src/config',
           //'@controllers': './src/controllers',
           //'@services': './src/services',
           //'@utils': './src/utils',
           //'@middlewares': './src/middlewares'
-        }
-      }
-    ]
+        },
+      },
+    ],
   ],
   // ignore: ['**/*.spec.ts']                     //Para ignorar codigo test (si trabajamos con test)
-}
+};

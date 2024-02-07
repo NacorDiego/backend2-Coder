@@ -1,55 +1,27 @@
 import express from 'express';
-import { ProductManager } from '@core/ProductManager';
+import userRoutes from '@routes/product.routes';
+import __dirname from './utils';
 
 const app = express();
 const PORT = 3000;
-const productManager = new ProductManager('./src/data');
 
-// Endpoints
-app.get('/products', async (req, res) => {
-  try {
-    const limit = parseInt(req.query.limit as string, 10) || undefined;
-    const products = await productManager.getProducts(limit);
+// mideldware para trabajar con JSON
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-    res.status(200).send({
-      status: 200,
-      message: products,
-    });
-  } catch (error: any) {
-    res.status(500).send({
-      status: 500,
-      message: `Error al obtener los productos: ${error.message}`,
-    });
-  }
+// Configuracion de archivos estáticos
+app.use(express.static(__dirname + '/public'));
+
+// ENDPOINTS
+app.use('api/products', userRoutes);
+
+// TEST
+app.get('/ping', (req, res) => {
+  console.log();
 });
 
-app.get('/products/:pid', async (req, res) => {
-  try {
-    const productId = parseInt(req.params.pid as string, 10);
-    const product = await productManager.getProductById(productId);
-
-    if (!product) {
-      return res.status(404).send({
-        status: 404,
-        message: `Producto no encontrado. No existe un producto con el ID proporcionado.`,
-      });
-    }
-
-    res.status(200).send({
-      status: 200,
-      message: product,
-    });
-  } catch (error: any) {
-    res.status(500).send({
-      status: 500,
-      message: `Error al obtener el producto: ${error.message}`,
-    });
-  }
-});
-
-// Manejo de errores
-
-// Ruta para manejar errores 404 (ruta no encontrada)
+// MANEJO DE ERRORES
+// Manejar errores 404 (ruta no encontrada)
 app.use((req, res) => {
   res.status(404).send({
     status: 404,
@@ -57,7 +29,7 @@ app.use((req, res) => {
   });
 });
 
-// Manejador de errores global que captura cualquier error que no esté contemplado antes.
+// Manejador cualquier error inesperado.
 app.use((err: any, req: any, res: any, next: any) => {
   console.error(err);
   res.status(500).send({
