@@ -1,6 +1,5 @@
 import express from 'express';
 import userRoutes from '@routes/product.routes';
-import __dirname from './utils';
 
 const app = express();
 const PORT = 3000;
@@ -10,14 +9,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Configuracion de archivos estáticos
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '\\public'));
 
 // ENDPOINTS
 app.use('api/products', userRoutes);
 
 // TEST
 app.get('/ping', (req, res) => {
-  console.log();
+  console.log(__dirname);
 });
 
 // MANEJO DE ERRORES
