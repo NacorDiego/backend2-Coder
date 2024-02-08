@@ -211,7 +211,6 @@ export class ProductManager {
     const { error } = productSchema.validate(product);
 
     if (error) {
-      // console.error(error);
       console.error(`Error de validacion: ${error.message}`);
       return error;
     }
