@@ -53,7 +53,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send('Producto agregado con éxito.');
   } catch (error: any) {
-    if (error.message.includes('El producto no es válido')) {
+    if (error.message.includes('Error de validacion')) {
       res.status(400).send({ error: error.message });
     } else if (error.message.includes('Ya existe un producto con el código')) {
       res.status(409).send({ error: error.message });
@@ -61,6 +61,10 @@ router.post('/', async (req, res) => {
       res.status(500).send({ error: 'Error interno del servidor.' });
     }
   }
+});
+router.put('/', async (req, res) => {
+  try {
+  } catch (error: any) {}
 });
 
 export default router;

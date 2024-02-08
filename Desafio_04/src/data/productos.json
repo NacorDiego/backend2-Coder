@@ -1,29 +1,23 @@
 [
   {
-    "title": "producto1",
-    "description": "descripcion del producto 1",
-    "price": 150,
-    "thumbnail": "producto1.jpg",
+    "title": "producto_1",
+    "description": "descripcion 1",
     "code": 1,
-    "stock": 50,
+    "price": 50,
+    "status": true,
+    "stock": 15,
+    "category": "lacteos",
     "id": 1
   },
   {
-    "title": "producto2",
-    "description": "descripcion del producto 2",
-    "price": 250,
-    "thumbnail": "producto2.jpg",
+    "title": "producto_2",
+    "description": "descripcion 2",
     "code": 2,
-    "stock": 70,
+    "price": 140,
+    "status": true,
+    "stock": 150,
+    "category": "lacteos",
+    "thumbnail": "producto2.jpg",
     "id": 2
-  },
-  {
-    "title": "producto3",
-    "description": "descripcion del producto 3",
-    "price": 550,
-    "thumbnail": "producto3.jpg",
-    "code": 3,
-    "stock": 15,
-    "id": 3
   }
 ]

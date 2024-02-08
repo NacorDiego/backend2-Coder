@@ -19,10 +19,10 @@ export class ProductManager {
   // Agrega un nuevo producto al array y guarda los cambios en el archivo.
   public async addProduct(product: Product): Promise<void> {
     try {
-      if (!this.validateRequiredFields(product)) {
-        throw new Error(
-          'Error: El producto no es válido. Todos los campos son requeridos.',
-        );
+      const validationErrors = this.validateRequiredFields(product);
+
+      if (validationErrors) {
+        throw new Error(`Error de validacion: ${validationErrors}.`);
       }
 
       if (this.validateCode(product.code)) {
@@ -179,7 +179,9 @@ export class ProductManager {
   }
 
   // Valida que los campos requeridos del producto estén presentes.
-  private validateRequiredFields(product: Product): boolean {
+  private validateRequiredFields(
+    product: Product,
+  ): Joi.ValidationError | undefined {
     const productSchema = Joi.object({
       title: Joi.string()
         .required()
@@ -187,30 +189,33 @@ export class ProductManager {
       description: Joi.string()
         .required()
         .error(new Error('La descripcion es requerida y debe ser un string.')),
-      price: Joi.number()
-        .required()
-        .error(new Error('El precio es requerido y debe ser un number.')),
-      thumbnail: Joi.string()
-        .required()
-        .error(
-          new Error('La URL de la imagen es requerida y debe ser un string.'),
-        ),
       code: Joi.number()
         .required()
         .error(new Error('El codigo es requerido y debe ser un number.')),
+      price: Joi.number()
+        .required()
+        .error(new Error('El precio es requerido y debe ser un number.')),
+      status: Joi.boolean()
+        .required()
+        .error(new Error('El estado es requerido y debe ser un boolean.')),
       stock: Joi.number()
         .required()
         .error(new Error('El stock es requerido y debe ser un number.')),
+      category: Joi.string()
+        .required()
+        .error(new Error('La categoría es requerida y debe ser un string.')),
+      thumbnail: Joi.string(),
       id: Joi.number(),
     });
 
     const { error } = productSchema.validate(product);
 
     if (error) {
+      // console.error(error);
       console.error(`Error de validacion: ${error.message}`);
-      return false;
+      return error;
     }
 
-    return true;
+    return undefined;
   }
 }
