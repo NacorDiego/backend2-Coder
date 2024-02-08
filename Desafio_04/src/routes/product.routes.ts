@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { ProductManager } from '@core/ProductManager';
+import { Product } from '@interfaces/product.interface';
 
 const router = Router();
 const productManager = new ProductManager('./src/data');
@@ -42,6 +43,23 @@ router.get('/:pid', async (req, res) => {
       status: 500,
       message: `Error al obtener el producto: ${error.message}`,
     });
+  }
+});
+
+router.post('/', async (req, res) => {
+  try {
+    const product = req.body as Product;
+    await productManager.addProduct(product);
+
+    res.status(200).send('Producto agregado con éxito.');
+  } catch (error: any) {
+    if (error.message.includes('El producto no es válido')) {
+      res.status(400).send({ error: error.message });
+    } else if (error.message.includes('Ya existe un producto con el código')) {
+      res.status(409).send({ error: error.message });
+    } else {
+      res.status(500).send({ error: 'Error interno del servidor.' });
+    }
   }
 });
 

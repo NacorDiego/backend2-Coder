@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from 'express';
 const storage = multer.diskStorage({
   // Ubicacion donde voy a guardar los archivos
   destination: function (req, file, callback) {
-    callback(null, `${__dirname}src/public/img`);
+    callback(null, `${__dirname}\\public\\img`);
   },
   // Nombre de los archivos
   filename: function (req, file, callback) {

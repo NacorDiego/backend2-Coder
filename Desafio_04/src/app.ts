@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '\\public'));
 
 // ENDPOINTS
-app.use('api/products', userRoutes);
+app.use('/api/products', userRoutes);
 
 // TEST
 app.get('/ping', (req, res) => {
