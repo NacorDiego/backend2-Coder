@@ -50,6 +50,14 @@ router.post('/', async (req, res) => {
   try {
     const product = req.body as Product;
 
+    if (isEmptyObject(product)) {
+      return res.status(404).send({
+        status: 404,
+        message:
+          'Error al crear el producto: Deben enviarse los campos requeridos.',
+      });
+    }
+
     if (product.id) {
       return res.status(404).send({
         status: 404,
@@ -79,6 +87,14 @@ router.put('/:pid', async (req, res) => {
   try {
     const productId = parseInt(req.params.pid as string, 10);
     const productUpdated = req.body as Partial<Product>;
+
+    if (isEmptyObject(productUpdated)) {
+      return res.status(404).send({
+        status: 404,
+        message:
+          'Error al actualizar el producto: Debe enviarse al menos un campo.',
+      });
+    }
 
     if (productUpdated.id) {
       return res.status(404).send({
@@ -121,5 +137,10 @@ router.delete('/:pid', async (req, res) => {
     }
   }
 });
+
+// FUNCIONES
+function isEmptyObject(obj: any): boolean {
+  return Object.keys(obj).length === 0;
+}
 
 export default router;
