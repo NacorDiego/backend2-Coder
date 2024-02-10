@@ -12,7 +12,7 @@ export class ProductManager {
   // Inicializa la instancia de ProductManager con la ruta del directorio.
   constructor(route: string) {
     this.path = route;
-    this.fileName = path.join(this.path, 'productos.json');
+    this.fileName = path.join(this.path, 'products.json');
     this.crearDirectorio();
   }
 
