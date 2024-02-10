@@ -1,33 +1,52 @@
 [
   {
-    "title": "producto_1",
-    "description": "descripcion 1",
+    "title": "Producto_01",
+    "description": "descripcion producto 1",
     "code": 1,
-    "price": 50,
+    "price": 120,
     "status": true,
-    "stock": 15,
-    "category": "lacteos",
+    "stock": 20,
+    "category": "comestibles",
     "id": 1
   },
   {
-    "title": "producto_2",
-    "description": "descripcion 2",
-    "code": 2,
-    "price": 140,
-    "status": true,
-    "stock": 150,
-    "category": "lacteos",
-    "thumbnail": "producto2.jpg",
-    "id": 2
-  },
-  {
-    "title": "Producto3",
+    "title": "Producto_03 (updated)",
     "description": "descripcion producto 3",
     "code": 3,
     "price": 120,
     "status": true,
     "stock": 20,
     "category": "comestibles",
-    "id": 1
+    "id": 3
+  },
+  {
+    "title": "Producto_04",
+    "description": "descripcion producto 4",
+    "code": 4,
+    "price": 120,
+    "status": true,
+    "stock": 20,
+    "category": "comestibles",
+    "id": 4
+  },
+  {
+    "title": "Producto_05",
+    "description": "descripcion producto 5",
+    "code": 5,
+    "price": 120,
+    "status": true,
+    "stock": 20,
+    "category": "comestibles",
+    "id": 5
+  },
+  {
+    "title": "Producto_02",
+    "description": "descripcion producto 2",
+    "code": 2,
+    "price": 120,
+    "status": true,
+    "stock": 20,
+    "category": "comestibles",
+    "id": 6
   }
 ]

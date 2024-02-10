@@ -49,16 +49,29 @@ router.get('/:pid', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const product = req.body as Product;
+
+    if (product.id) {
+      return res.status(404).send({
+        status: 404,
+        message:
+          'El ID del producto se genera automáticamente y no debe indicarse en la solicitud.',
+      });
+    }
+
     await productManager.addProduct(product);
 
-    res.status(200).send('Producto agregado con éxito.');
+    res
+      .status(200)
+      .send({ status: 200, message: 'Producto agregado con éxito.' });
   } catch (error: any) {
     if (error.message.includes('Error de validacion')) {
-      res.status(400).send({ error: error.message });
+      res.status(400).send({ status: 400, message: error.message });
     } else if (error.message.includes('Ya existe un producto con el código')) {
-      res.status(409).send({ error: error.message });
+      res.status(409).send({ status: 409, message: error.message });
     } else {
-      res.status(500).send({ error: 'Error interno del servidor.' });
+      res
+        .status(500)
+        .send({ status: 500, message: 'Error interno del servidor.' });
     }
   }
 });
@@ -67,14 +80,25 @@ router.put('/:pid', async (req, res) => {
     const productId = parseInt(req.params.pid as string, 10);
     const productUpdated = req.body as Partial<Product>;
 
+    if (productUpdated.id) {
+      return res.status(404).send({
+        status: 404,
+        message: 'No se puede actualizar el ID de un producto.',
+      });
+    }
+
     await productManager.updateProduct(productId, productUpdated);
 
-    res.status(200).send('Producto actualizado con éxito.');
+    res
+      .status(200)
+      .send({ status: 200, message: 'Producto actualizado con éxito.' });
   } catch (error: any) {
-    if (error.message.include('No se encontro el producto')) {
-      res.status(404).send({ error: error.message });
+    if (error.message.includes('No se encontro el producto')) {
+      res.status(404).send({ status: 404, message: error.message });
     } else {
-      res.status(500).send({ error: 'Error interno del servidor.' });
+      res
+        .status(500)
+        .send({ status: 500, message: 'Error interno del servidor.' });
     }
   }
 });
@@ -84,12 +108,16 @@ router.delete('/:pid', async (req, res) => {
     const productId = parseInt(req.params.pid as string, 10);
     await productManager.deleteProduct(productId);
 
-    res.status(200).send('Producto eliminado con éxito.');
+    res
+      .status(200)
+      .send({ status: 200, message: 'Producto eliminado con éxito.' });
   } catch (error: any) {
-    if (error.message.include('No se encontro el producto')) {
-      res.status(404).send({ error: error.message });
+    if (error.message.includes('No se encontro el producto')) {
+      res.status(404).send({ status: 404, message: error.message });
     } else {
-      res.status(500).send({ error: 'Error interno del servidor.' });
+      res
+        .status(500)
+        .send({ status: 500, message: 'Error interno del servidor.' });
     }
   }
 });
