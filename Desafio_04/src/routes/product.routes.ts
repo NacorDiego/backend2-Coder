@@ -62,9 +62,36 @@ router.post('/', async (req, res) => {
     }
   }
 });
-router.put('/', async (req, res) => {
+router.put('/:pid', async (req, res) => {
   try {
-  } catch (error: any) {}
+    const productId = parseInt(req.params.pid as string, 10);
+    const productUpdated = req.body as Partial<Product>;
+
+    await productManager.updateProduct(productId, productUpdated);
+
+    res.status(200).send('Producto actualizado con éxito.');
+  } catch (error: any) {
+    if (error.message.include('No se encontro el producto')) {
+      res.status(404).send({ error: error.message });
+    } else {
+      res.status(500).send({ error: 'Error interno del servidor.' });
+    }
+  }
+});
+
+router.delete('/:pid', async (req, res) => {
+  try {
+    const productId = parseInt(req.params.pid as string, 10);
+    await productManager.deleteProduct(productId);
+
+    res.status(200).send('Producto eliminado con éxito.');
+  } catch (error: any) {
+    if (error.message.include('No se encontro el producto')) {
+      res.status(404).send({ error: error.message });
+    } else {
+      res.status(500).send({ error: 'Error interno del servidor.' });
+    }
+  }
 });
 
 export default router;
