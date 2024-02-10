@@ -18,10 +18,10 @@ module.exports = {
           '@core': './src/core',
           '@interfaces': './src/interfaces',
           '@routes': './src/routes',
+          '@services': './src/services',
           //'@models': './src/models',
           //'@config': './src/config',
           //'@controllers': './src/controllers',
-          //'@services': './src/services',
           //'@utils': './src/utils',
           //'@middlewares': './src/middlewares'
         },

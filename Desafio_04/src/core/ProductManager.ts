@@ -1,19 +1,26 @@
 import { Product } from '@interfaces/product.interface';
 import fs from 'fs';
 import path from 'path';
+import {
+  createDirectory,
+  createFile,
+  readFile,
+  writeFile,
+} from '@services/fileSystemService';
 import Joi from 'joi'; // Utilizo esta biblioteca para realizar validaciones.
 
 export class ProductManager {
   private products: Product[] = [];
-  private idSig: number = 1;
   private path!: string;
   private fileName!: string;
+  private idSig: number = 1;
 
   // Inicializa la instancia de ProductManager con la ruta del directorio.
   constructor(route: string) {
     this.path = route;
     this.fileName = path.join(this.path, 'products.json');
-    this.crearDirectorio();
+    createDirectory(this.path);
+    createFile(this.fileName, '[]');
   }
 
   // Agrega un nuevo producto al array y guarda los cambios en el archivo.
