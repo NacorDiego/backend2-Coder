@@ -21,12 +21,58 @@ export class CartManager {
     createFile(this.filename, '[]');
   }
 
+  public async createCart(): Promise<void> {
+    try {
+      const cart = {
+        id: this.idSig++,
+        products: [],
+      };
+      this.carts.push(cart);
+      await writeFile(this.filename, this.carts);
+    } catch (err: any) {
+      throw new Error('Error al crear un nuevo carrito.');
+    }
+  }
   public async getCarts(): Promise<Cart[]> {
     try {
       const jsonCarts = await readFile(this.filename);
-      return JSON.parse(jsonCarts);
+      return jsonCarts as Cart[];
     } catch (err: any) {
       throw new Error(err.message);
+    }
+  }
+  public async getCartById(id: number): Promise<Cart | undefined> {
+    try {
+      this.carts = await readFile(this.filename);
+      const cart = this.carts.find(elem => elem.id === id);
+      return cart;
+    } catch (err: any) {
+      throw new Error(`Error al traer el carrito: ${err.message}`);
+    }
+  }
+
+  public async addProductToCart(cid: number, pid: number): Promise<void> {
+    try {
+      this.carts = await readFile(this.filename);
+      const cartIndex = this.carts.findIndex(elem => elem.id === cid);
+      if (cartIndex === -1) {
+        throw new Error('No existe un carrito con ese ID.');
+      }
+      let productIndex = this.carts[cartIndex].products.findIndex(
+        product => product.id === pid,
+      );
+      if (productIndex !== -1) {
+        this.carts[cartIndex].products[productIndex].quantity++;
+      } else {
+        const product = {
+          id: pid,
+          quantity: 1,
+        };
+        this.carts[cartIndex].products.push(product);
+      }
+      await writeFile(this.filename, this.carts);
+    } catch (err: any) {
+      throw new Error(`Error: ${err.message}`);
     }
   }
 }
