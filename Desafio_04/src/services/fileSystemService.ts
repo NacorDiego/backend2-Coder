@@ -6,18 +6,26 @@ export async function createDirectory(directoryPath: string): Promise<void> {
     if (!directoryPath) {
       throw new Error('La ruta del directorio no es válida.');
     }
-    await fs.promises.mkdir(directoryPath, { recursive: true });
+    await fs.promises.access(directoryPath, fs.constants.F_OK);
   } catch (err: any) {
-    throw new Error(`Error al crear directorio: ${err.message}`);
+    try {
+      await fs.promises.mkdir(directoryPath, { recursive: true });
+    } catch (createErr: any) {
+      throw new Error(`Error al crear directorio: ${createErr.message}`);
+    }
   }
 }
 
 export async function createFile(filePath: string, data: any): Promise<void> {
   try {
-    await fs.promises.writeFile(filePath, data);
+    await fs.promises.access(filePath, fs.constants.F_OK);
   } catch (err: any) {
-    console.error(`Error al crear el archivo: ${err.message}`);
-    throw new Error(`Error al crear el archivo: ${err.message}`);
+    try {
+      await fs.promises.writeFile(filePath, data);
+    } catch (writeErr: any) {
+      console.error(`Error al crear el archivo: ${writeErr.message}`);
+      throw new Error(`Error al crear el archivo: ${err.message}`);
+    }
   }
 }
 
