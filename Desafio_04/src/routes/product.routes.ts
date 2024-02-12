@@ -1,9 +1,8 @@
 import { Router } from 'express';
-import { ProductManager } from '@core/ProductManager';
+import { productManager } from '@core/index';
 import { Product } from '@interfaces/product.interface';
 
 const router = Router();
-const productManager = new ProductManager('./src/data');
 
 router.get('/', async (req, res) => {
   try {

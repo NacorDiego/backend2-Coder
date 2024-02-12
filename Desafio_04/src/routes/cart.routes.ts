@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { CartManager } from '@core/CartManager';
+import { cartManager } from '@core/index';
+import { productManager } from '@core/index';
 
 const router = Router();
-const cartManager = new CartManager('./src/data');
 
 router.get('/', async (req, res) => {
   try {
@@ -56,8 +56,14 @@ router.post('/', async (req, res) => {
 router.post('/:cid/product/:pid', async (req, res) => {
   try {
     const cartId = parseInt(req.params.cid, 10);
-    //TODO Chequear que el producto exista en api/products
     const productId = parseInt(req.params.pid, 10);
+    const product = await productManager.getProductById(productId);
+    if (!product) {
+      return res.status(404).send({
+        status: 404,
+        message: `No existe un producto con ese ID.`,
+      });
+    }
     await cartManager.addProductToCart(cartId, productId);
     res.status(200).send({
       status: 200,
