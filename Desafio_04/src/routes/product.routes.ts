@@ -6,7 +6,9 @@ const router = Router();
 
 router.get('/', async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit as string, 10) || undefined;
+    const limit = req.query.limit
+      ? parseInt(req.query.limit as string, 10)
+      : undefined;
     const products = await productManager.getProducts(limit);
 
     res.status(200).send({
