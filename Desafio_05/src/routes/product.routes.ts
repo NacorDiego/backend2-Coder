@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
   } catch (error: any) {
     res.status(500).send({
       status: 500,
-      message: `Error al obtener los productos: ${error.message}`,
+      message: `${error.message}`,
     });
   }
 });
@@ -42,7 +42,7 @@ router.get('/:pid', async (req, res) => {
   } catch (error: any) {
     res.status(500).send({
       status: 500,
-      message: `Error al obtener el producto: ${error.message}`,
+      message: `${error.message}`,
     });
   }
 });
@@ -72,11 +72,11 @@ router.post('/', async (req, res) => {
     res
       .status(200)
       .send({ status: 200, message: 'Producto agregado con éxito.' });
-  } catch (error: any) {
-    if (error.message.includes('Error de validacion')) {
-      res.status(400).send({ status: 400, message: error.message });
-    } else if (error.message.includes('Ya existe un producto con el código')) {
-      res.status(409).send({ status: 409, message: error.message });
+  } catch (err: any) {
+    if (err.message.includes('Error de validacion')) {
+      res.status(400).send({ status: 400, message: err.message });
+    } else if (err.message.includes('Ya existe un producto con el código')) {
+      res.status(409).send({ status: 409, message: err.message });
     } else {
       res
         .status(500)
