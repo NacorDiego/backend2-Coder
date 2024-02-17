@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "rootDir": "./src",
+    "allowJs": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    //Rutas absolutas
+    "baseUrl": ".",
+    "paths": {
+      "@core/*":["./src/core/*"],
+      "@interfaces/*":["./src/interfaces/*"],
+      "@routes/*":["./src/routes/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*", "src/utils.ts"],
+  "exclude": ["node_modules"]
+}

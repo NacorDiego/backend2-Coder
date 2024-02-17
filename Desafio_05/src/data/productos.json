@@ -1,0 +1,23 @@
+[
+  {
+    "title": "producto_1",
+    "description": "descripcion 1",
+    "code": 1,
+    "price": 50,
+    "status": true,
+    "stock": 15,
+    "category": "lacteos",
+    "id": 1
+  },
+  {
+    "title": "producto_2",
+    "description": "descripcion 2",
+    "code": 2,
+    "price": 140,
+    "status": true,
+    "stock": 150,
+    "category": "lacteos",
+    "thumbnail": "producto2.jpg",
+    "id": 2
+  }
+]
