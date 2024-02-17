@@ -6,6 +6,6 @@ export interface Product {
   status: boolean;
   stock: number;
   category: string;
-  thumbnail?: string[];
+  thumbnail?: string;
   id?: number;
 }

@@ -1,19 +1,50 @@
 import { Product } from '@interfaces/product.interface';
 import fs from 'fs';
 import path from 'path';
+import {
+  createDirectory,
+  createFile,
+  readFile,
+  writeFile,
+} from '@services/fileSystemService';
 import Joi from 'joi'; // Utilizo esta biblioteca para realizar validaciones.
 
 export class ProductManager {
   private products: Product[] = [];
-  private idSig: number = 1;
   private path!: string;
   private fileName!: string;
+  private idSig: number = 1;
 
   // Inicializa la instancia de ProductManager con la ruta del directorio.
   constructor(route: string) {
     this.path = route;
-    this.fileName = path.join(this.path, 'productos.json');
-    this.crearDirectorio();
+    this.fileName = path.join(this.path, 'products.json');
+    createDirectory(this.path);
+    createFile(this.fileName, '[]');
+  }
+
+  // Agrega un nuevo producto al array y guarda los cambios en el archivo.
+  public async addProduct(product: Product): Promise<void> {
+    try {
+      const validationErrors = this.validateRequiredFields(product);
+
+      if (validationErrors) {
+        throw new Error(`Error de validacion: ${validationErrors}.`);
+      }
+
+      if (this.validateCode(product.code)) {
+        throw new Error(
+          `Error: Ya existe un producto con el código ${product.code}`,
+        );
+      }
+
+      product.id = this.idSig++;
+      this.products.push(product);
+      await this.saveChangesToFile();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   // Retorna la lista de productos actual.
@@ -44,30 +75,6 @@ export class ProductManager {
     } catch (error) {
       console.error(`Error: ${error}`);
       return undefined;
-    }
-  }
-
-  // Agrega un nuevo producto al array y guarda los cambios en el archivo.
-  public async addProduct(product: Product): Promise<void> {
-    try {
-      const validationErrors = this.validateRequiredFields(product);
-
-      if (validationErrors) {
-        throw new Error(`Error de validacion: ${validationErrors}.`);
-      }
-
-      if (this.validateCode(product.code)) {
-        throw new Error(
-          `Error: Ya existe un producto con el código ${product.code}`,
-        );
-      }
-
-      product.id = this.idSig++;
-      this.products.push(product);
-      await this.saveChangesToFile();
-    } catch (error) {
-      console.error(error);
-      throw error;
     }
   }
 
@@ -204,7 +211,7 @@ export class ProductManager {
       category: Joi.string()
         .required()
         .error(new Error('La categoría es requerida y debe ser un string.')),
-      thumbnail: Joi.array().items(Joi.string()),
+      thumbnail: Joi.string(),
       id: Joi.number(),
     });
 

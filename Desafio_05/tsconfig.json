@@ -11,7 +11,8 @@
     "paths": {
       "@core/*":["./src/core/*"],
       "@interfaces/*":["./src/interfaces/*"],
-      "@routes/*":["./src/routes/*"]
+      "@routes/*":["./src/routes/*"],
+      "@services/*":["./src/services/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/@types"],
     "esModuleInterop": true,

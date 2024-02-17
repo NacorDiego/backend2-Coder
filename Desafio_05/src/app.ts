@@ -1,8 +1,9 @@
 import express from 'express';
-import userRoutes from '@routes/product.routes';
+import productRoutes from '@routes/product.routes';
+import cartRoutes from '@routes/cart.routes';
 
 const app = express();
-const PORT = 8080;
+const PORT = 3000;
 
 // mideldware para trabajar con JSON
 app.use(express.json());
@@ -12,12 +13,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '\\public'));
 
 // ENDPOINTS
-app.get('/', (req, res) => {
-  res.send(
-    '<h1>¡Bienvenido al proyecto de Diego Nacor!</h1><br><h3>La ruta de productos es "/api/products"</h3>',
-  );
-});
-app.use('/api/products', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/carts', cartRoutes);
 
 // TEST
 app.get('/ping', (req, res) => {
