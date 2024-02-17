@@ -1,5 +1,6 @@
 import express from 'express';
-import userRoutes from '@routes/product.routes';
+import productRoutes from '@routes/product.routes';
+import cartRoutes from '@routes/cart.routes';
 
 const app = express();
 const PORT = 3000;
@@ -12,7 +13,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '\\public'));
 
 // ENDPOINTS
-app.use('/api/products', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/carts', cartRoutes);
 
 // TEST
 app.get('/ping', (req, res) => {
