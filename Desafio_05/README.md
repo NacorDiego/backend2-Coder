@@ -533,5 +533,5 @@ La aplicación utiliza Express.js para el enrutamiento y gestión de solicitudes
 ## Contacto
 
 - **Github:** https://github.com/NacorDiego/
-- **LinkedIn:** https://www.linkedin.com/in/diego-ezequiel-nacor-97657b245/
+- **LinkedIn:** https://www.linkedin.com/in/diego-ezequiel-nacor/
 - **Correo:** diegoenacor@gmail.com
