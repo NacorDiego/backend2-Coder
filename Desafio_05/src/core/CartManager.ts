@@ -1,5 +1,4 @@
 import { Cart } from '@interfaces/cart.interface';
-import fs from 'fs';
 import path from 'path';
 import {
   createDirectory,

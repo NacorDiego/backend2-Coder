@@ -43,6 +43,7 @@ router.post('/', async (req, res) => {
     await cartManager.createCart();
     res.status(200).send({
       status: 200,
+      //TODO: Debe devolver el carrito creado.
       message: 'Carrito creado con éxito.',
     });
   } catch (err: any) {
