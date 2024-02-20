@@ -20,7 +20,7 @@ export class CartManager {
     createFile(this.filename, '[]');
   }
 
-  public async createCart(): Promise<void> {
+  public async createCart(): Promise<Cart> {
     try {
       const cart = {
         id: this.idSig++,
@@ -28,6 +28,8 @@ export class CartManager {
       };
       this.carts.push(cart);
       await writeFile(this.filename, this.carts);
+
+      return cart;
     } catch (err: any) {
       throw new Error('Error al crear un nuevo carrito.');
     }
@@ -50,7 +52,7 @@ export class CartManager {
     }
   }
 
-  public async addProductToCart(cid: number, pid: number): Promise<void> {
+  public async addProductToCart(cid: number, pid: number): Promise<Cart> {
     try {
       this.carts = await readFile(this.filename);
       const cartIndex = this.carts.findIndex(elem => elem.id === cid);
@@ -70,8 +72,9 @@ export class CartManager {
         this.carts[cartIndex].products.push(product);
       }
       await writeFile(this.filename, this.carts);
+      return this.carts[cartIndex];
     } catch (err: any) {
-      throw new Error(`Error: ${err.message}`);
+      throw new Error(`${err.message}`);
     }
   }
 }
