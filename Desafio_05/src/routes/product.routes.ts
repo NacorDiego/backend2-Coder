@@ -67,14 +67,14 @@ router.post('/', async (req, res) => {
       });
     }
 
-    await productManager.addProduct(product);
+    const productAdded = await productManager.addProduct(product);
 
-    res
-      .status(200)
-      .send({ status: 200, message: 'Producto agregado con éxito.' });
+    res.status(200).send({ status: 200, message: productAdded });
   } catch (err: any) {
     if (err.message.includes('Error de validacion')) {
       res.status(400).send({ status: 400, message: err.message });
+    } else if (err.message.includes('Error al agregar el producto')) {
+      res.status(404).send({ status: 404, message: err.message });
     } else if (err.message.includes('Ya existe un producto con el código')) {
       res.status(409).send({ status: 409, message: err.message });
     } else {

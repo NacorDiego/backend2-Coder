@@ -23,7 +23,7 @@ export class ProductManager {
   }
 
   // Agrega un nuevo producto al array y guarda los cambios en el archivo.
-  public async addProduct(product: Product): Promise<void> {
+  public async addProduct(product: Product): Promise<Product | undefined> {
     try {
       const validationErrors = this.validateRequiredFields(product);
 
@@ -38,8 +38,11 @@ export class ProductManager {
       product.id = this.idSig++;
       this.products.push(product);
       await writeFile(this.fileName, this.products);
+      return product;
     } catch (err: any) {
-      throw new Error(`Error al agregar el producto: ${err.message}`);
+      throw new Error(
+        `Error al agregar el producto: ${err.message.replace('Error: ', '')}`,
+      );
     }
   }
 
@@ -62,10 +65,6 @@ export class ProductManager {
     try {
       this.products = await readFile(this.fileName);
       const product = this.products.find(elem => elem.id === id);
-
-      if (!product) {
-        throw new Error('El producto no existe.');
-      }
 
       return product;
     } catch (err: any) {
