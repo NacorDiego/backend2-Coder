@@ -1,6 +1,7 @@
 import express from 'express';
 import productRoutes from '@routes/product.routes';
 import cartRoutes from '@routes/cart.routes';
+import viewsRoutes from '@routes/views.routes';
 import { engine } from 'express-handlebars';
 
 const app = express();
@@ -21,11 +22,7 @@ app.set('views', __dirname + '\\views');
 // ENDPOINTS
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
-
-// RUTA DE PRUEBA HANDLEBARS
-app.get('/handlebars', (req, res) => {
-  res.render('index');
-});
+app.use('/handlebars', viewsRoutes);
 
 // MANEJO DE ERRORES
 // Manejar errores 404 (ruta no encontrada)
