@@ -1,6 +1,7 @@
 import express from 'express';
 import productRoutes from '@routes/product.routes';
 import cartRoutes from '@routes/cart.routes';
+import { engine } from 'express-handlebars';
 
 const app = express();
 const PORT = 3000;
@@ -12,13 +13,18 @@ app.use(express.urlencoded({ extended: true }));
 // Configuracion de archivos estáticos
 app.use(express.static(__dirname + '\\public'));
 
+// HANDLEBARS
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', __dirname + '\\views');
+
 // ENDPOINTS
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
 
-// TEST
-app.get('/ping', (req, res) => {
-  console.log(__dirname);
+// RUTA DE PRUEBA HANDLEBARS
+app.get('/handlebars', (req, res) => {
+  res.render('index');
 });
 
 // MANEJO DE ERRORES
