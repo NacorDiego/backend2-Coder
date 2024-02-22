@@ -7,6 +7,8 @@ const router = Router();
 
 router.get('/', async (req, res) => {
   try {
+    console.log('SE PEGO A LA RUTA GET API/PRODUCTS');
+
     const limit = req.query.limit
       ? parseInt(req.query.limit as string, 10)
       : undefined;
@@ -69,6 +71,9 @@ router.post('/', async (req, res) => {
     }
 
     const productAdded = await productManager.addProduct(product);
+
+    socketServer.emit('productsUpdated');
+
     res.status(200).send({ status: 200, message: productAdded });
   } catch (err: any) {
     if (err.message.includes('Error de validacion')) {
@@ -124,6 +129,8 @@ router.delete('/:pid', async (req, res) => {
   try {
     const productId = parseInt(req.params.pid as string, 10);
     await productManager.deleteProduct(productId);
+
+    socketServer.emit('productsUpdated');
 
     res
       .status(200)
