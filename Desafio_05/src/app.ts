@@ -3,6 +3,7 @@ import productRoutes from '@routes/product.routes';
 import cartRoutes from '@routes/cart.routes';
 import viewsRoutes from '@routes/views.routes';
 import { engine } from 'express-handlebars';
+import { Server } from 'socket.io';
 
 const app = express();
 const PORT = 3000;
@@ -22,7 +23,7 @@ app.set('views', __dirname + '\\views');
 // ENDPOINTS
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
-app.use('/handlebars', viewsRoutes);
+app.use('/hbs', viewsRoutes);
 
 // MANEJO DE ERRORES
 // Manejar errores 404 (ruta no encontrada)
@@ -42,4 +43,15 @@ app.use((err: any, req: any, res: any, next: any) => {
   });
 });
 
-app.listen(PORT, () => console.log(`The server is listening on port ${PORT}.`));
+const httpServer = app.listen(PORT, () =>
+  console.log(`The server is listening on port ${PORT}.`),
+);
+
+// Instancio socket.io
+const socketServer = new Server(httpServer);
+
+socketServer.on('connection', socket => {
+  console.log('Nuevo cliente conectado');
+});
+
+export { socketServer };

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { productManager } from '@core/index';
 import { Product } from '@interfaces/product.interface';
+import { socketServer } from 'src/app';
 
 const router = Router();
 
@@ -68,7 +69,6 @@ router.post('/', async (req, res) => {
     }
 
     const productAdded = await productManager.addProduct(product);
-
     res.status(200).send({ status: 200, message: productAdded });
   } catch (err: any) {
     if (err.message.includes('Error de validacion')) {

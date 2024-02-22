@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { productManager } from '@core/index';
 import { Product } from '@interfaces/product.interface';
+import { socketServer } from 'src/app';
 
 const router = Router();
 
@@ -19,7 +20,9 @@ router.get('/', async (req, res) => {
 
 router.get('/realtimeproducts', async (req, res) => {
   try {
-    res.render('realTimeProducts');
+    const products = await productManager.getProducts(undefined);
+
+    res.render('realTimeProducts', { products });
   } catch (err: any) {
     res.status(500).send({
       status: 500,
