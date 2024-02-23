@@ -6,7 +6,7 @@ import { engine } from 'express-handlebars';
 import { Server } from 'socket.io';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 8080;
 
 // mideldware para trabajar con JSON
 app.use(express.json());
