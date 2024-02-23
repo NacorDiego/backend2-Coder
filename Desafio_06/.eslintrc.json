@@ -1,0 +1,39 @@
+{
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "standard-with-typescript",
+    "plugin:prettier/recommended",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "import",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": [
+          "^@core",
+          "^@interfaces"
+        ],
+        "extensions": [
+          ".ts",
+          ".js",
+          ".d.ts"
+        ]
+      }
+    ]
+  }
+}
