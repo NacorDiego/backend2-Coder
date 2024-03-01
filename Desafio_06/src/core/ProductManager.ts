@@ -36,8 +36,11 @@ export class ProductManager {
       }
 
       product.id = this.idSig++;
-      this.products.push(product);
-      await writeFile(this.fileName, this.products);
+
+      const products = await readFile(this.fileName);
+      products.push(product);
+
+      await writeFile(this.fileName, products);
       return product;
     } catch (err: any) {
       throw new Error(

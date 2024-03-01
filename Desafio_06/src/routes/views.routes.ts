@@ -18,11 +18,9 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/realtimeproducts', async (req, res) => {
+router.get('/realtimeproducts', (req, res) => {
   try {
-    const products = await productManager.getProducts(undefined);
-
-    res.render('realTimeProducts', { products });
+    res.render('realTimeProducts', {});
   } catch (err: any) {
     res.status(500).send({
       status: 500,
