@@ -13,17 +13,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Configuracion de archivos estáticos
-app.use(express.static(__dirname + '\\public'));
+app.use(express.static(__dirname + '/public'));
 
 // HANDLEBARS
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
-app.set('views', __dirname + '\\views');
+app.set('views', __dirname + '/views');
 
 // ENDPOINTS
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
-app.use('/hbs', viewsRoutes);
+app.use('/', viewsRoutes);
 
 // MANEJO DE ERRORES
 // Manejar errores 404 (ruta no encontrada)
