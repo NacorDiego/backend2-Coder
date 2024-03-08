@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import {
   createProduct,
-  deleteProductById,
-  getProductById,
   getProducts,
+  getProductById,
   updateProductById,
-} from '@controllers/product.controller';
+  deleteProductById,
+} from '../controllers/product.controller';
 
 const router = Router();
 

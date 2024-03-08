@@ -2,7 +2,7 @@ import { Router } from 'express';
 import {
   renderProducts,
   renderRealTimeProducts,
-} from '@controllers/views.controller';
+} from '../controllers/views.controller';
 
 const router = Router();
 

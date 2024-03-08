@@ -12,7 +12,8 @@
       "@core/*":["./src/core/*"],
       "@interfaces/*":["./src/interfaces/*"],
       "@routes/*":["./src/routes/*"],
-      "@services/*":["./src/services/*"]
+      "@services/*":["./src/services/*"],
+      "@controllers/*":["./src/controllers/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/@types"],
     "esModuleInterop": true,
