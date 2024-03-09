@@ -3,7 +3,7 @@ export interface Cart {
   products: ProductInTheCart[];
 }
 
-interface ProductInTheCart {
+export interface ProductInTheCart {
   id: number;
   quantity: number;
 }
