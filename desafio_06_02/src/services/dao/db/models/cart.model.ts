@@ -3,7 +3,7 @@ import { Schema, model } from 'mongoose';
 const cartCollection = 'carts';
 
 const productInTheCartSchema = new Schema({
-  _id: { type: Schema.Types.ObjectId, auto: true },
+  _id: { type: Schema.Types.ObjectId, required: true },
   quantity: { type: Number, default: 1 },
 });
 
