@@ -1,36 +1,33 @@
 import Product from './models/product.model';
 
 export const createProduct = async (dataProduct: any) => {
+  const {
+    title,
+    description,
+    code,
+    price,
+    status,
+    stock,
+    category,
+    thumbnail,
+  } = dataProduct;
+
+  const newProduct = new Product({
+    title,
+    description,
+    code,
+    price,
+    status,
+    stock,
+    category,
+    thumbnail,
+  });
   try {
-    const {
-      title,
-      description,
-      code,
-      price,
-      status,
-      stock,
-      category,
-      thumbnail,
-    } = dataProduct;
-
-    const newProduct = new Product({
-      title,
-      description,
-      code,
-      price,
-      status,
-      stock,
-      category,
-      thumbnail,
-    });
-
     const productSave = await newProduct.save();
 
     return { status: 201, data: productSave };
   } catch (error: any) {
-    throw new Error(
-      `Error al agregar el producto a la base de datos: ${error.message}`,
-    );
+    throw new Error(`Error al agregar el producto: ${error.message}`);
   }
 };
 
@@ -50,9 +47,7 @@ export const getProducts = async (limit: number | undefined) => {
 
     return { status: 200, data: products };
   } catch (error: any) {
-    throw Error(
-      `Error al traer los productos de la base de datos: ${error.message}`,
-    );
+    throw Error(`Error al obtener los productos: ${error.message}`);
   }
 };
 
@@ -65,7 +60,7 @@ export const getProductById = async (pId: string) => {
 
     return { status: 200, data: product };
   } catch (error: any) {
-    throw Error(`Error al traer el producto: ${error.message}`);
+    throw new Error(`Error al obtener el producto: ${error.message}`);
   }
 };
 
