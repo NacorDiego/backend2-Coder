@@ -64,7 +64,7 @@ export const getProductById = async (pId: string) => {
   }
 };
 
-export const updateProductById = async (pId: number, updates: any) => {
+export const updateProductById = async (pId: string, updates: any) => {
   try {
     const productId = pId;
     const newData = updates;
@@ -79,7 +79,7 @@ export const updateProductById = async (pId: number, updates: any) => {
   }
 };
 
-export const deleteProductById = async (pId: number) => {
+export const deleteProductById = async (pId: string) => {
   try {
     const productId = pId;
 

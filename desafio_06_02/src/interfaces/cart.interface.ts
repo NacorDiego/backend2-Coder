@@ -1,9 +1,9 @@
 export interface Cart {
-  id?: number;
+  id?: string;
   products: ProductInTheCart[];
 }
 
 export interface ProductInTheCart {
-  id: number;
+  id: string;
   quantity: number;
 }

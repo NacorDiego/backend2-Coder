@@ -20,7 +20,8 @@ export const createProduct = async (dataProduct: Product) => {
         `Ya existe un producto con el código ${dataProduct.code}`,
       );
 
-    dataProduct.id = idSig++;
+    const id = idSig++;
+    dataProduct.id = id.toString();
 
     products = await fs.readFile(fileName);
     products.push(dataProduct);
@@ -50,7 +51,7 @@ export const getProducts = async (limit?: number) => {
 };
 
 // Busca y retorna un producto por su ID.
-export const getProductById = async (id: number) => {
+export const getProductById = async (id: string) => {
   try {
     products = await fs.readFile(fileName);
     const product = products.find(product => product.id === id);
@@ -65,7 +66,7 @@ export const getProductById = async (id: number) => {
 };
 
 // Actualiza un producto existente y guarda los cambios en el archivo.
-export const updateProductById = async (id: number, updates: any) => {
+export const updateProductById = async (id: string, updates: any) => {
   try {
     products = await fs.readFile(fileName);
 
@@ -85,7 +86,7 @@ export const updateProductById = async (id: number, updates: any) => {
 };
 
 // Elimina un producto y guarda los cambios en el archivo.
-export const deleteProductById = async (id: number) => {
+export const deleteProductById = async (id: string) => {
   try {
     products = await fs.readFile(fileName);
 
@@ -136,7 +137,7 @@ const validateRequiredFields = (
       .required()
       .error(new Error('La categoría es requerida y debe ser un string.')),
     thumbnail: Joi.string(),
-    id: Joi.number(),
+    id: Joi.string(),
   });
 
   const { error } = productSchema.validate(product);
