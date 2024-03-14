@@ -1,10 +1,8 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import config from './config';
 
-dotenv.config();
-
-const NAME_DB = process.env.NAME_DB;
-const MONGO_URI = process.env.MONGO_URI;
+const NAME_DB = config.name_bd;
+const MONGO_URI = config.mongo_uri;
 
 if (MONGO_URI && NAME_DB) {
   mongoose
