@@ -54,7 +54,7 @@ export const addProductToCart = async (cid: string, pid: string) => {
   try {
     // Verificar si el producto existe en la BD
     const dbProduct = await getProductById(pid);
-    if (dbProduct.status !== 200)
+    if (!dbProduct)
       throw new Error('No existe ese producto en la base de datos.');
 
     // Obtener el carrito
@@ -62,7 +62,9 @@ export const addProductToCart = async (cid: string, pid: string) => {
     if (!cart) throw new Error('No existe el carrito.');
 
     // Buscar producto en el carrito
-    const productIndex = cart.products.findIndex(product => product.id === pid);
+    const productIndex = cart.products?.findIndex(
+      product => product.id === pid,
+    );
 
     productIndex !== -1
       ? cart.products[productIndex].quantity++

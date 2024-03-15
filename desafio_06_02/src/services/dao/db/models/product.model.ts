@@ -2,37 +2,32 @@ import { Schema, model } from 'mongoose';
 
 const productCollection = 'products';
 
+const numberTypeSchemaNoUniqueRequired = {
+  type: Number,
+  required: true,
+};
+
+const stringTypeSchemaNoUniqueRequired = {
+  type: String,
+  required: true,
+};
+
 const productSchema = new Schema(
   {
-    title: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
+    title: stringTypeSchemaNoUniqueRequired,
+    description: stringTypeSchemaNoUniqueRequired,
     code: {
       type: Number,
       required: true,
       unique: true,
     },
-    price: {
-      type: Number,
-      required: true,
-    },
+    price: numberTypeSchemaNoUniqueRequired,
     status: {
       type: Boolean,
       required: true,
     },
-    stock: {
-      type: Number,
-      required: true,
-    },
-    category: {
-      type: String,
-      required: true,
-    },
+    stock: numberTypeSchemaNoUniqueRequired,
+    category: stringTypeSchemaNoUniqueRequired,
     thumbnail: String,
   },
   {
