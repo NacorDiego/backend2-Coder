@@ -28,6 +28,11 @@ const cartSchema = new Schema(
   },
 );
 
+// Middleware para ejecutar 'populate' cuando se utilice el método find
+cartSchema.pre('find', function () {
+  this.populate('products.item');
+});
+
 const cartModel = model(cartCollection, cartSchema);
 
 export default cartModel;
