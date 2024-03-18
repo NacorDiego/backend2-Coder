@@ -41,7 +41,7 @@ export const getProductById = async (req: Request, res: Response) => {
 };
 
 export const updateProductById = async (req: Request, res: Response) => {
-  const pId = parseInt(req.params.pid);
+  const pId = req.params.pid;
   const updates = req.body;
   try {
     const updatedProduct = await productService.updateProductById(pId, updates);
@@ -54,7 +54,7 @@ export const updateProductById = async (req: Request, res: Response) => {
 };
 
 export const deleteProductById = async (req: Request, res: Response) => {
-  const pid = parseInt(req.params.pid);
+  const pid = req.params.pid;
   try {
     const deletedProduct = await productService.deleteProductById(pid);
     res.status(deletedProduct.status).json({ status: deletedProduct.status });

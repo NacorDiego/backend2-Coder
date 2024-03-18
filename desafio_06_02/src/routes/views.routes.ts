@@ -3,7 +3,7 @@ import {
   renderProducts,
   renderRealTimeProducts,
 } from '@controllers/views.controller';
-import { getMessages } from '@controllers/message.controller';
+import { getMessages } from '@controllers/chat.controller';
 
 const router = Router();
 

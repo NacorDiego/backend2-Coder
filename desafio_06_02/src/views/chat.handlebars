@@ -1,23 +1,24 @@
 <div>
   <h1>
-    Bienvenido al chat
+    {{title}}
   </h1>
-  <h2>
-    Nombre
-    <span id='myName'></span>
-  </h2>
 
-  <div>
-    <p>
-      Escribe un mensaje en el Chatbox:
-      <input type='text' id='chatBox' />
-    </p>
-    <button id='cloaseChatbox'>
-      Close ChatBox
+  <div id='chat-messages'>
+    <ul>
+      {{#each messages}}
+        <li>
+          {{this}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <form id='chat-form'>
+    <input type='text' id='message-input' placeholder='Escribe tu mensaje' />
+    <button type='submit'>
+      Enviar
     </button>
-  </div>
-
-  <div>
-    <p id='messageLogs'></p>
-  </div>
+  </form>
 </div>
+
+<script src='/src/public/js/chat.js'></script>
