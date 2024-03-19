@@ -15,9 +15,6 @@ const app = express();
 // Crear servidor con http
 const server = http.createServer(app);
 const io = new Server(server); //  Inicializar socket.io en el servidor
-io.listen(parseInt(config.port), () =>
-  console.log(`io listen on port  ${config.port}`),
-);
 
 //  Middleware de registro de logs
 app.use(morgan('dev'));

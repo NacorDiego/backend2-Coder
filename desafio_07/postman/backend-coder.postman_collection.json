@@ -1,0 +1,200 @@
+{
+  "info": {
+    "_postman_id": "e7e51819-f90b-463f-a741-56db2a722522",
+    "name": "Backend - Coder",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "27576845"
+  },
+  "item": [
+    {
+      "name": "desafio_06",
+      "item": [
+        {
+          "name": "products",
+          "item": [
+            {
+              "name": "/api/products",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{localhost}}/{{products}}",
+                  "host": ["{{localhost}}"],
+                  "path": ["{{products}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/api/products?limit=",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{localhost}}/{{products}}?limit=1",
+                  "host": ["{{localhost}}"],
+                  "path": ["{{products}}"],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/api/products/:pid",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{localhost}}/{{products}}/10",
+                  "host": ["{{localhost}}"],
+                  "path": ["{{products}}", "10"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/api/products",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"title\": \"Producto 1\",\r\n  \"description\": \"Descripción del producto 1\",\r\n  \"code\": 101,\r\n  \"price\": 19.99,\r\n  \"status\": true,\r\n  \"stock\": 50,\r\n  \"category\": \"Electrónicos\",\r\n  \"thumbnail\": \"producto1.jpg\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{localhost}}/{{products}}",
+                  "host": ["{{localhost}}"],
+                  "path": ["{{products}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/api/products/:pid",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\":\"producto_actualizado\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{localhost}}/{{products}}/1",
+                  "host": ["{{localhost}}"],
+                  "path": ["{{products}}", "1"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/api/products/:pid",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{localhost}}/{{products}}/1",
+                  "host": ["{{localhost}}"],
+                  "path": ["{{products}}", "1"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "carts",
+          "item": [
+            {
+              "name": "/api/carts",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{localhost}}/{{carts}}",
+                  "host": ["{{localhost}}"],
+                  "path": ["{{carts}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/api/carts/:pid",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{localhost}}/{{carts}}/1",
+                  "host": ["{{localhost}}"],
+                  "path": ["{{carts}}", "1"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/api/carts",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{localhost}}/{{carts}}",
+                  "host": ["{{localhost}}"],
+                  "path": ["{{carts}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/api/carts/:cid/product/:pid",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{localhost}}/{{carts}}/1/product/1",
+                  "host": ["{{localhost}}"],
+                  "path": ["{{carts}}", "1", "product", "1"]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "localhost",
+      "value": "localhost:8080"
+    }
+  ]
+}

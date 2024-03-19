@@ -1,0 +1,24 @@
+<div>
+  <h1>
+    {{title}}
+  </h1>
+
+  <div id='chat-messages'>
+    <ul>
+      {{#each messages}}
+        <li>
+          {{this}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <form id='chat-form'>
+    <input type='text' id='message-input' placeholder='Escribe tu mensaje' />
+    <button type='submit'>
+      Enviar
+    </button>
+  </form>
+</div>
+
+<script src='/src/public/js/chat.js'></script>
