@@ -1,24 +1,17 @@
-<div>
-  <h1>
-    {{title}}
-  </h1>
-
-  <div id='chat-messages'>
-    <ul>
-      {{#each messages}}
-        <li>
-          {{this}}
-        </li>
-      {{/each}}
-    </ul>
-  </div>
-
-  <form id='chat-form'>
-    <input type='text' id='message-input' placeholder='Escribe tu mensaje' />
+<section id='chat'>
+  <ul id='messages'></ul>
+  <form id='form'>
+    <input
+      type='text'
+      name='message'
+      id='input'
+      placeholder='Escribe un mensaje'
+      autocomplete='off'
+    />
     <button type='submit'>
       Enviar
     </button>
   </form>
-</div>
-
-<script src='/src/public/js/chat.js'></script>
+</section>
+<script src='/socket.io/socket.io.js'></script>
+<script src='/js/chat.js'></script>

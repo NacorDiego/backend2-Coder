@@ -1,18 +1,19 @@
 const socket = io();
 
-// Escuchar eventos de chat
-socket.on('chat_message', msg => {
-  const messageElement = document.createElement('');
-  messageElement.textContent = msg;
-  document.getElementById('chat-messages').appendChild(messageElement);
+const form = document.getElementById('form');
+const input = document.getElementById('input');
+const messages = document.getElementById('messages');
+
+socket.on('chat message', msg => {
+  const item = `<li>${msg}</li>`;
+  messages.insertAdjacentHTML('beforeend', item);
 });
 
-// Manejar envío de mensajes desde el formulario
-const chatForm = document.getElementById('chat-form');
-const messageInput = document.getElementById('message-input');
-chatForm.addEventListener('submit', e => {
+form.addEventListener('submit', e => {
   e.preventDefault();
-  const message = messageInput.value;
-  socket.emit('chat_message', message); // Enviar mensaje al servidor
-  messageInput.value = '';
+
+  if (input.value) {
+    socket.emit('chat message', input.value);
+    input.value = '';
+  }
 });
