@@ -31,15 +31,27 @@ export const createProduct = async (dataProduct: any) => {
   }
 };
 
-export const getProducts = async (limit: number | undefined) => {
-  try {
-    let products;
+export const getProducts = async (
+  limit: number,
+  page: number,
+  status: boolean | undefined,
+  category: string | undefined,
+  sort: string | undefined,
+) => {
+  // query
+  let query: any = {};
+  if (status !== undefined) query.status = status;
+  if (category !== undefined) query.category = category;
 
-    if (limit !== undefined && limit >= 0) {
-      products = await Product.find().limit(limit);
-    } else {
-      products = await Product.find();
-    }
+  // options
+  const options: any = {
+    limit,
+    page,
+    sort: sort ? { price: sort === 'asc' ? 1 : -1 } : undefined,
+  };
+
+  try {
+    const products = await Product.paginate(query, options);
 
     if (!products) {
       throw new Error('No se encontrar productos.');

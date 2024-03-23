@@ -13,12 +13,35 @@ export const createProduct = async (req: Request, res: Response) => {
 };
 
 export const getProducts = async (req: Request, res: Response) => {
-  const limit = req.query.limit
-    ? parseInt(req.query.limit as string, 10)
-    : undefined;
+  // limit
+  const limit =
+    typeof req.query.limit === 'string' ? parseInt(req.query.limit) : 10;
+  // page
+  const page =
+    typeof req.query.page === 'string' ? parseInt(req.query.page) : 1;
+  // category
+  const category =
+    typeof req.query.category === 'string' ? req.query.category : undefined;
+  // sort
+  const sort = typeof req.query.sort === 'string' ? req.query.sort : undefined;
+  // status
+  let queryStatus = req.query.status;
+  let status: boolean | undefined;
+  if (queryStatus !== undefined) {
+    status = req.query.status === 'true';
+  } else {
+    status = undefined;
+  }
 
   try {
-    const products = await productService.getProducts(limit);
+    const products = await productService.getProducts(
+      limit,
+      page,
+      status,
+      category,
+      sort,
+    );
+
     return res
       .status(products.status)
       .json({ status: products.status, data: products.data });
