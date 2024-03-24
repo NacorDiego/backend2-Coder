@@ -59,3 +59,14 @@ export const addProductToCart = async (req: Request, res: Response) => {
     res.status(500).json({ status: 500, message: error.message });
   }
 };
+
+export const updateCart = async (req: Request, res: Response) => {};
+
+export const updateProductQuantity = async (req: Request, res: Response) => {};
+
+export const removeProductFromCart = async (req: Request, res: Response) => {};
+
+export const removeAllProductsFromCart = async (
+  req: Request,
+  res: Response,
+) => {};
