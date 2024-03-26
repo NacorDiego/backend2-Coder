@@ -1,5 +1,6 @@
 import Cart from './models/cart.model';
 import { getProductById } from './product.service';
+import { IProduct } from '@services/dao/db/models/product.model';
 
 // Crea un nuevo carrito vacío
 export const createCart = async () => {
@@ -85,20 +86,15 @@ export const removeProductFromCart = async (cid: string, pid: string) => {
     // Obtener carrito
     const cart = await Cart.findById(cid);
     if (!cart) throw new Error('No existe el carrito.');
-
     // Buscar producto en el carrito
     const productIndex = cart.products?.findIndex(
       product => product.item.toString() === pid,
     );
-
     if (productIndex === -1)
       throw new Error('El producto no está en el carrito.');
-
     // Eliminar el producto del carrito
     cart.products.splice(productIndex, 1);
-
     const updatedCart = await cart.save();
-
     return { status: 200, data: updatedCart };
   } catch (error: any) {
     throw new Error(
@@ -112,7 +108,6 @@ export const updateCart = async (cid: string, newProducts: any) => {
     // Verificar si el carrito existe
     const cart = await Cart.findById(cid);
     if (!cart) throw new Error('No existe el carrito.');
-
     // Verificar si los productos existen en la BD
     for (let product of newProducts.payload) {
       const dbProduct = await getProductById(product.id);
@@ -121,15 +116,12 @@ export const updateCart = async (cid: string, newProducts: any) => {
           `No existe el producto con id ${product.id} en la base de datos.`,
         );
     }
-
     // Actualizar los productos del carrito
-    cart.products = newProducts.payload.map(product => ({
+    cart.products = newProducts.payload.map((product: IProduct) => ({
       item: product._id,
-      quantity: product.quantity,
+      quantity: 1,
     }));
-
     const updatedCart = await cart.save();
-
     return { status: 200, data: updatedCart };
   } catch (error: any) {
     throw new Error(
@@ -154,7 +146,6 @@ export const updateProductQuantity = async (
         message: 'Carrito no encontrado',
       };
     }
-
     // Buscar el producto en el carrito
     const productIndex = cart.products.findIndex(
       product => product.item.toString() === pid,
@@ -165,13 +156,10 @@ export const updateProductQuantity = async (
         message: 'Producto no encontrado en el carrito',
       };
     }
-
     // Actualizar la cantidad del producto
     cart.products[productIndex].quantity = quantity;
-
     // Guardar el carrito actualizado
     const updatedCart = await cart.save();
-
     return {
       status: 'success',
       payload: updatedCart,
@@ -196,12 +184,12 @@ export const removeAllProductsFromCart = async (cartid: string) => {
       };
     }
 
-    // Eliminar todos los productos del carrito
-    cart.products = [];
+    console.log(cart.products);
+
+    //TODO: Vaciar lista de productos del carrito (no sé como hacerlo)
 
     // Guardar el carrito actualizado
     const updatedCart = await cart.save();
-
     return {
       status: 'success',
       payload: updatedCart,

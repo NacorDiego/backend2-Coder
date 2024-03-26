@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
-interface IProduct extends mongoose.Document {
+export interface IProduct extends mongoose.Document {
   title: string;
   description: string;
   code: number;
