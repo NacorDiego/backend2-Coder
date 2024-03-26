@@ -63,7 +63,6 @@ export const addProductToCart = async (req: Request, res: Response) => {
 };
 export const removeProductFromCart = async (req: Request, res: Response) => {
   const { pid, cid } = req.params;
-
   try {
     const result = await cartService.removeProductFromCart(cid, pid);
     if (!result)
@@ -77,7 +76,6 @@ export const removeProductFromCart = async (req: Request, res: Response) => {
 export const updateCart = async (req: Request, res: Response) => {
   const cid = req.params.cid;
   const newProducts = req.body;
-
   try {
     const result = await cartService.updateCart(cid, newProducts);
     if (!result)
@@ -93,7 +91,6 @@ export const updateCart = async (req: Request, res: Response) => {
 export const updateProductQuantity = async (req: Request, res: Response) => {
   const { pid, cid } = req.params;
   const quantity = req.body;
-
   try {
     const result = await cartService.updateProductQuantity(cid, pid, quantity);
     if (!result)
@@ -109,7 +106,6 @@ export const removeAllProductsFromCart = async (
   res: Response,
 ) => {
   const cid = req.params.cid;
-
   try {
     const result = await cartService.removeAllProductsFromCart(cid);
     if (!result)
