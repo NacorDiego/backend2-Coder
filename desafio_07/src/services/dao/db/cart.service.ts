@@ -70,12 +70,12 @@ export const addProductToCart = async (cid: string, pid: string) => {
 
     // Buscar producto en el carrito
     const productIndex = cart.products?.findIndex(
-      product => product.id === pid,
+      product => product.item.toString() === pid,
     );
 
     productIndex !== -1
       ? cart.products[productIndex].quantity++
-      : cart.products.push({ pid });
+      : cart.products.push({ item: pid, quantity: 1 });
 
     const updatedCart = await cart.save();
 
