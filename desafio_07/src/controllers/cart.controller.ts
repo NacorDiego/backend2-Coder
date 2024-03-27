@@ -61,6 +61,7 @@ export const addProductToCart = async (req: Request, res: Response) => {
     res.status(500).json({ status: 500, message: error.message });
   }
 };
+
 export const removeProductFromCart = async (req: Request, res: Response) => {
   const { pid, cid } = req.params;
   try {
