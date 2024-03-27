@@ -54,7 +54,7 @@ export const getProducts = async (
     const products = await Product.paginate(query, options);
 
     if (!products) {
-      throw new Error('No se encontrar productos.');
+      throw new Error('No se encontraron productos.');
     }
 
     return { status: 200, data: products };

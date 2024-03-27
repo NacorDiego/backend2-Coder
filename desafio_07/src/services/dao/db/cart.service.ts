@@ -1,6 +1,12 @@
 import Cart from './models/cart.model';
 import { getProductById } from './product.service';
 import { IProduct } from '@services/dao/db/models/product.model';
+import { Types } from 'mongoose';
+
+export interface ICartItem {
+  item: IProduct;
+  quantity: number;
+}
 
 // Crea un nuevo carrito vacío
 export const createCart = async () => {
@@ -117,9 +123,9 @@ export const updateCart = async (cid: string, newProducts: any) => {
         );
     }
     // Actualizar los productos del carrito
-    cart.products = newProducts.payload.map((product: IProduct) => ({
-      item: product._id,
-      quantity: 1,
+    cart.products = newProducts.payload.map((product: ICartItem) => ({
+      item: product.item._id,
+      quantity: product.quantity,
     }));
     const updatedCart = await cart.save();
     return { status: 200, data: updatedCart };
@@ -129,8 +135,6 @@ export const updateCart = async (cid: string, newProducts: any) => {
     );
   }
 };
-
-import { Types } from 'mongoose';
 
 export const updateProductQuantity = async (
   cid: string,
@@ -186,7 +190,8 @@ export const removeAllProductsFromCart = async (cartid: string) => {
 
     console.log(cart.products);
 
-    //TODO: Vaciar lista de productos del carrito (no sé como hacerlo)
+    // Vaciar lista de productos del carrito
+    cart.products = [] as any;
 
     // Guardar el carrito actualizado
     const updatedCart = await cart.save();

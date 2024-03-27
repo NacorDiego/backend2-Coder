@@ -34,7 +34,7 @@ export const getProducts = async (req: Request, res: Response) => {
   }
 
   try {
-    const products = await productService.getProducts(
+    const result = await productService.getProducts(
       limit,
       page,
       status,
@@ -42,9 +42,28 @@ export const getProducts = async (req: Request, res: Response) => {
       sort,
     );
 
-    return res
-      .status(products.status)
-      .json({ status: products.status, data: products.data });
+    return res.status(result.status).json({
+      status: result.status === 200 ? 'success' : 'error',
+      payload: result.data.docs,
+      totalPages: result.data.totalPages,
+      prevPage: result.data.prevPage,
+      nextPage: result.data.nextPage,
+      page: result.data.page,
+      hasPrevPage: result.data.hasPrevPage,
+      hasNextPage: result.data.hasNextPage,
+      prevLink:
+        result.data.hasPrevPage && result.data.page
+          ? `${req.protocol}://${req.get('host')}${
+              req.originalUrl.split('?')[0]
+            }?page=${result.data.page - 1}`
+          : null,
+      nextLink:
+        result.data.hasNextPage && result.data.page
+          ? `${req.protocol}://${req.get('host')}${
+              req.originalUrl.split('?')[0]
+            }?page=${result.data.page + 1}`
+          : null,
+    });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
