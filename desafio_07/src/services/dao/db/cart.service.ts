@@ -3,11 +3,6 @@ import { getProductById } from './product.service';
 import { IProduct } from '@services/dao/db/models/product.model';
 import { Types } from 'mongoose';
 
-export interface ICartItem {
-  item: IProduct;
-  quantity: number;
-}
-
 // Crea un nuevo carrito vacío
 export const createCart = async () => {
   const newCart = new Cart({
@@ -46,7 +41,7 @@ export const getCartById = async (id: string) => {
   const cartId = id;
 
   try {
-    const cart = await Cart.findById(cartId);
+    const cart = await Cart.findById(cartId).populate('products.item');
 
     if (!cart) throw new Error('El carrito no existe.');
 
@@ -116,16 +111,18 @@ export const updateCart = async (cid: string, newProducts: any) => {
     if (!cart) throw new Error('No existe el carrito.');
     // Verificar si los productos existen en la BD
     for (let product of newProducts.payload) {
-      const dbProduct = await getProductById(product.id);
+      const pid = product._id;
+
+      const dbProduct = await getProductById(pid);
       if (!dbProduct)
         throw new Error(
-          `No existe el producto con id ${product.id} en la base de datos.`,
+          `No existe el producto con id ${product._id} en la base de datos.`,
         );
     }
     // Actualizar los productos del carrito
-    cart.products = newProducts.payload.map((product: ICartItem) => ({
-      item: product.item._id,
-      quantity: product.quantity,
+    cart.products = newProducts.payload.map((product: IProduct) => ({
+      item: product._id,
+      quantity: 1,
     }));
     const updatedCart = await cart.save();
     return { status: 200, data: updatedCart };

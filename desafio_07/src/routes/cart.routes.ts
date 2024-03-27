@@ -13,7 +13,7 @@ const router = Router();
 router.get('/', getCarts);
 router.get('/:cid', getCartById);
 router.post('/', createCart);
-router.post('/:cid/product/:pid', addProductToCart);
+router.post('/:cid/products/:pid', addProductToCart);
 router.put('/:cid', updateCart);
 router.put('/:cid/products/:pid', updateProductQuantity);
 router.delete('/:cid/products/:pid', removeProductFromCart);
