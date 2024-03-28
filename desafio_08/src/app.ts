@@ -10,6 +10,8 @@ import userRoutes from '@routes/user.routes';
 import path from 'path';
 import viewsRoutes from '@routes/views.routes';
 import { createMessage } from '@services/dao/db/chat.service';
+import session from 'express-session';
+import FileStore from 'session-file-store';
 
 const app = express();
 const server = createServer(app);
@@ -31,6 +33,20 @@ app.set('views', __dirname + '/views');
 
 // Indicamos que vamos a trabajar con archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Conectar nuestra sesión con el fileStorage
+const fileStorage = FileStore(session);
+
+// Middleware de sesiones
+app.use(
+  session({
+    // Usando session-file-store
+    store: new fileStorage({ path: './src/sessions', ttl: 15, retries: 0 }),
+    secret: 'C0d3rS3cr3t', // Key de seguridad
+    resave: true, // Guarda en memoria
+    saveUninitialized: true, // Guarda apenas se crea la sesión, aunque no tenga info
+  }),
+);
 
 // Ruta principal
 app.get('/', (req, res) => {
