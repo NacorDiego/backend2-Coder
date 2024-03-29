@@ -1,8 +1,8 @@
-import server from './app';
-import './database';
+import server from './config/server';
+import './config/database';
 import { createDirectory, createFile } from './services/fileSystem.services';
 import path from 'path';
-import config from './config';
+import config from './config/config';
 
 const ROUTE = path.join(__dirname + '/data');
 const FILENAME = path.join(ROUTE, '/products.json');

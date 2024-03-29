@@ -1,19 +1,38 @@
 import { Schema, model } from 'mongoose';
 
-const userCollection = 'usuarios';
+const userCollection = 'users';
 
 const userSchema = new Schema(
   {
-    firstName: {
+    first_name: {
       type: String,
-      unique: true,
+      trim: true,
+      lowercase: true,
+      required: true,
     },
-    lastName: String,
+    last_name: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      required: true,
+    },
     email: {
       type: String,
+      trim: true,
+      lowercase: true,
       unique: true,
     },
-    age: Number,
+    age: {
+      type: Number,
+      required: true,
+      min: 18,
+      max: 99,
+    },
+    password: {
+      type: String,
+      trim: true,
+      required: true,
+    },
   },
   {
     timestamps: true,
