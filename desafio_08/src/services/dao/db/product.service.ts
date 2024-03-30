@@ -27,7 +27,10 @@ export const createProduct = async (dataProduct: any) => {
 
     return { status: 201, data: productSave };
   } catch (error: any) {
-    throw new Error(`Error al agregar el producto: ${error.message}`);
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
+    };
   }
 };
 
@@ -54,12 +57,18 @@ export const getProducts = async (
     const products = await Product.paginate(query, options);
 
     if (!products) {
-      throw new Error('No se encontraron productos.');
+      throw {
+        status: 404,
+        message: 'No se encontraron productos.',
+      };
     }
 
     return { status: 200, data: products };
   } catch (error: any) {
-    throw Error(`Error al obtener los productos: ${error.message}`);
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
+    };
   }
 };
 
@@ -68,11 +77,18 @@ export const getProductById = async (pId: string) => {
     const productId = pId;
     const product = await Product.findById(productId);
 
-    if (!product) throw new Error('El producto no existe.');
+    if (!product)
+      throw {
+        status: 404,
+        message: 'El producto no existe.',
+      };
 
     return { status: 200, data: product };
   } catch (error: any) {
-    throw new Error(`Error al obtener el producto: ${error.message}`);
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
+    };
   }
 };
 
@@ -85,9 +101,18 @@ export const updateProductById = async (pId: string, updates: any) => {
       new: true,
     });
 
+    if (!updatedProduct)
+      throw {
+        status: 404,
+        message: 'No se encontró el producto para actualizar.',
+      };
+
     return { status: 200, data: updatedProduct };
   } catch (error: any) {
-    throw new Error(`Error al actualizar el producto: ${error.message}`);
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
+    };
   }
 };
 
@@ -95,10 +120,19 @@ export const deleteProductById = async (pId: string) => {
   try {
     const productId = pId;
 
-    await Product.findByIdAndDelete(productId);
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+
+    if (!deletedProduct)
+      throw {
+        status: 404,
+        message: 'No se encontró el producto para eliminar.',
+      };
 
     return { status: 204 };
   } catch (error: any) {
-    throw new Error(`Error al eliminar el producto: ${error.message}`);
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
+    };
   }
 };

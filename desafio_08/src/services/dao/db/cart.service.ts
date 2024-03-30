@@ -11,7 +11,10 @@ export const createCart = async () => {
     const cartSave = await newCart.save();
     return { status: 201, data: cartSave };
   } catch (error: any) {
-    throw new Error(`Error al agregar el carrito: ${error.message}`);
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
+    };
   }
 };
 
@@ -25,11 +28,18 @@ export const getCarts = async (limit: number | undefined) => {
       carts = await Cart.find();
     }
 
-    if (!carts) throw new Error('No se encontraron carritos.');
+    if (!carts)
+      throw {
+        status: 404,
+        message: 'No se encontraron carritos.',
+      };
 
     return { status: 200, data: carts };
   } catch (error: any) {
-    throw new Error(`Error al obtener los carritos: ${error.message}`);
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
+    };
   }
 };
 
@@ -39,11 +49,18 @@ export const getCartById = async (id: string) => {
   try {
     const cart = await Cart.findById(cartId).populate('products.item');
 
-    if (!cart) throw new Error('El carrito no existe.');
+    if (!cart)
+      throw {
+        status: 404,
+        message: 'El carrito no existe.',
+      };
 
     return { status: 200, data: cart };
   } catch (error: any) {
-    throw new Error(`Error al obtener el carrito: ${error.message}`);
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
+    };
   }
 };
 
@@ -52,11 +69,18 @@ export const addProductToCart = async (cid: string, pid: string) => {
     // Verificar si el producto existe en la BD
     const dbProduct = await getProductById(pid);
     if (!dbProduct)
-      throw new Error('No existe ese producto en la base de datos.');
+      throw {
+        status: 404,
+        message: 'No existe el producto.',
+      };
 
     // Obtener el carrito
     const cart = await Cart.findById(cid);
-    if (!cart) throw new Error('No existe el carrito.');
+    if (!cart)
+      throw {
+        status: 404,
+        message: 'No existe el carrito.',
+      };
 
     // Buscar producto en el carrito
     const productIndex = cart.products?.findIndex(
@@ -71,9 +95,10 @@ export const addProductToCart = async (cid: string, pid: string) => {
 
     return { status: 200, data: updatedCart };
   } catch (error: any) {
-    throw new Error(
-      `Error al agregar el producto al carrito: ${error.message}`,
-    );
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
+    };
   }
 };
 
@@ -81,21 +106,29 @@ export const removeProductFromCart = async (cid: string, pid: string) => {
   try {
     // Obtener carrito
     const cart = await Cart.findById(cid);
-    if (!cart) throw new Error('No existe el carrito.');
+    if (!cart)
+      throw {
+        status: 404,
+        message: 'No existe el carrito.',
+      };
     // Buscar producto en el carrito
     const productIndex = cart.products?.findIndex(
       product => product.item.toString() === pid,
     );
     if (productIndex === -1)
-      throw new Error('El producto no está en el carrito.');
+      throw {
+        status: 404,
+        message: 'El producto no está en el carrito.',
+      };
     // Eliminar el producto del carrito
     cart.products.splice(productIndex, 1);
     const updatedCart = await cart.save();
     return { status: 200, data: updatedCart };
   } catch (error: any) {
-    throw new Error(
-      `Error al eliminar el producto del carrito: ${error.message}`,
-    );
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
+    };
   }
 };
 
@@ -103,16 +136,21 @@ export const updateCart = async (cid: string, newProducts: any) => {
   try {
     // Verificar si el carrito existe
     const cart = await Cart.findById(cid);
-    if (!cart) throw new Error('No existe el carrito.');
+    if (!cart)
+      throw {
+        status: 404,
+        message: 'No existe el carrito.',
+      };
     // Verificar si los productos existen en la BD
     for (let product of newProducts.payload) {
       const pid = product._id;
 
       const dbProduct = await getProductById(pid);
       if (!dbProduct)
-        throw new Error(
-          `No existe el producto con id ${product._id} en la base de datos.`,
-        );
+        throw {
+          status: 404,
+          message: 'No existe el producto.',
+        };
     }
     // Actualizar los productos del carrito
     cart.products = newProducts.payload.map((product: Product) => ({
@@ -123,9 +161,10 @@ export const updateCart = async (cid: string, newProducts: any) => {
     const updatedCart = await cart.save();
     return { status: 200, data: updatedCart };
   } catch (error: any) {
-    throw new Error(
-      `Error al actualizar los productos del carrito: ${error.message}`,
-    );
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
+    };
   }
 };
 
@@ -137,35 +176,33 @@ export const updateProductQuantity = async (
   try {
     // Buscar el carrito por ID
     const cart = await Cart.findById(cid);
-    if (!cart) {
-      return {
-        status: 'error',
-        message: 'Carrito no encontrado',
+    if (!cart)
+      throw {
+        status: 404,
+        message: 'No existe el carrito.',
       };
-    }
+
     // Buscar el producto en el carrito
     const productIndex = cart.products.findIndex(
       product => product.item.toString() === pid,
     );
-    if (productIndex === -1) {
-      return {
-        status: 'error',
-        message: 'Producto no encontrado en el carrito',
+    if (productIndex === -1)
+      throw {
+        status: 404,
+        message: 'Producto no encontrado en el carrito.',
       };
-    }
     // Actualizar la cantidad del producto
     cart.products[productIndex].quantity = quantity;
     // Guardar el carrito actualizado
     const updatedCart = await cart.save();
     return {
-      status: 'success',
-      payload: updatedCart,
+      status: 200,
+      data: updatedCart,
     };
-  } catch (error) {
-    console.error(error);
-    return {
-      status: 'error',
-      message: 'Error al actualizar la cantidad del producto',
+  } catch (error: any) {
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
     };
   }
 };
@@ -174,14 +211,11 @@ export const removeAllProductsFromCart = async (cartid: string) => {
   try {
     // Buscar el carrito por ID
     const cart = await Cart.findById(cartid);
-    if (!cart) {
-      return {
-        status: 'error',
-        message: 'Carrito no encontrado',
+    if (!cart)
+      throw {
+        status: 404,
+        message: 'No existe el carrito.',
       };
-    }
-
-    console.log(cart.products);
 
     // Vaciar lista de productos del carrito
     cart.products = [] as any;
@@ -189,14 +223,13 @@ export const removeAllProductsFromCart = async (cartid: string) => {
     // Guardar el carrito actualizado
     const updatedCart = await cart.save();
     return {
-      status: 'success',
-      payload: updatedCart,
+      status: 200,
+      data: updatedCart,
     };
-  } catch (error) {
-    console.error(error);
-    return {
-      status: 'error',
-      message: 'Error al eliminar los productos del carrito',
+  } catch (error: any) {
+    throw {
+      status: error?.status || 500,
+      message: error?.message || error,
     };
   }
 };
