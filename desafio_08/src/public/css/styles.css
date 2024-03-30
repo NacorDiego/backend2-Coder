@@ -14,8 +14,8 @@ body {
     Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   display: grid;
   place-content: center;
-  height: 100vh;
-  padding: 36px 36px 100px 36px;
+  /* min-height: 100vh; */
+  /* padding: 36px 36px 100px 36px; */
   grid-template-rows: 1fr;
 }
 .container {
@@ -83,4 +83,17 @@ body {
 
 #messages > li:nth-child(odd) {
   background-color: #000;
+}
+
+#container-products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+#container-products > div {
+  border: #eee 1px solid;
+  border-radius: 30px;
+  padding: 10px;
+  min-height: 150px;
 }

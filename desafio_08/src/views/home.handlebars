@@ -1,12 +1,15 @@
-<div>
+<div id='container-products'>
   {{#each products}}
     <div>
       <h2>
         {{this.title}}
       </h2>
-      <p>
+      <span>
         Precio: {{this.price}}
-      </p>
+      </span>
+      <span>
+        Stock: {{this.stock}}
+      </span>
     </div>
   {{/each}}
 </div>
