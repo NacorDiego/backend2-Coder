@@ -1,16 +1,11 @@
 import { Router } from 'express';
-import {
-  renderProducts,
-  renderRealTimeProducts,
-} from '@controllers/views.controller';
-import { showChat } from '@controllers/chat.controller';
+import * as viewsController from '@controllers/views.controller';
+import * as chatController from '@controllers/chats.controller';
 
 const router = Router();
 
-router.get('/', renderProducts);
-
-router.get('/realtimeproducts', renderRealTimeProducts);
-
-router.get('/chat', showChat);
+router.get('/', viewsController.renderProducts);
+router.get('/realtimeproducts', viewsController.renderRealTimeProducts);
+router.get('/chat', chatController.showChat);
 
 export default router;

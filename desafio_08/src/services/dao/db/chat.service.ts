@@ -1,4 +1,4 @@
-import Message from './models/chat.model';
+import Message from '@models/chat.model';
 
 export const createMessage = async (dataMessage: any) => {
   const { user, message } = dataMessage;

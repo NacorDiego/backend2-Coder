@@ -1,18 +1,10 @@
 import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
+import { Product } from '@interfaces/products.interface';
 
-export interface IProduct extends mongoose.Document {
-  title: string;
-  description: string;
-  code: number;
-  price: number;
-  status: boolean;
-  stock: number;
-  category: string;
-  thumbnail?: string;
-}
+const productCollection = 'products';
 
-const productSchema = new mongoose.Schema<IProduct>(
+const productSchema = new mongoose.Schema<Product>(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
@@ -38,8 +30,8 @@ const productSchema = new mongoose.Schema<IProduct>(
 
 productSchema.plugin(mongoosePaginate);
 
-const productModel = mongoose.model<IProduct, mongoose.PaginateModel<IProduct>>(
-  'products',
+const productModel = mongoose.model<Product, mongoose.PaginateModel<Product>>(
+  productCollection,
   productSchema,
 );
 

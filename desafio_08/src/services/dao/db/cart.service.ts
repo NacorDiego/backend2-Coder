@@ -1,9 +1,7 @@
 import Cart from './models/cart.model';
 import { getProductById } from './product.service';
-import { IProduct } from '@services/dao/db/models/product.model';
-import { Types } from 'mongoose';
+import { Product } from '@interfaces/products.interface';
 
-// Crea un nuevo carrito vacío
 export const createCart = async () => {
   const newCart = new Cart({
     products: [],
@@ -17,7 +15,6 @@ export const createCart = async () => {
   }
 };
 
-// Obtiene todos los carritos, opcionalmente limitados por cantidad
 export const getCarts = async (limit: number | undefined) => {
   let carts;
 
@@ -36,7 +33,6 @@ export const getCarts = async (limit: number | undefined) => {
   }
 };
 
-// Obtiene un carrito por su ID
 export const getCartById = async (id: string) => {
   const cartId = id;
 
@@ -51,7 +47,6 @@ export const getCartById = async (id: string) => {
   }
 };
 
-// Agrega un producto a un carrito existente
 export const addProductToCart = async (cid: string, pid: string) => {
   try {
     // Verificar si el producto existe en la BD
@@ -120,10 +115,11 @@ export const updateCart = async (cid: string, newProducts: any) => {
         );
     }
     // Actualizar los productos del carrito
-    cart.products = newProducts.payload.map((product: IProduct) => ({
-      item: product._id,
+    cart.products = newProducts.payload.map((product: Product) => ({
+      item: product.id,
       quantity: 1,
     }));
+
     const updatedCart = await cart.save();
     return { status: 200, data: updatedCart };
   } catch (error: any) {

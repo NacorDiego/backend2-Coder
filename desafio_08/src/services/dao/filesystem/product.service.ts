@@ -1,14 +1,16 @@
-import { Product } from '../../../interfaces/product.interface';
-import * as fs from '../../fileSystem.services';
-import Joi from 'joi';
+// Interfaces
+import { Product } from '@interfaces/products.interface';
+// Services
+import * as fs from '@services/fileSystem.services';
+// Utilities
 import path from 'path';
+import Joi from 'joi';
 
 let products: Product[] = [];
 const route: string = __dirname + '/data';
 const fileName: string = path.join(route, '/products.json');
 let idSig: number = 1;
 
-// Agrega un nuevo producto al array y guarda los cambios en el archivo.
 export const createProduct = async (dataProduct: Product) => {
   try {
     const validationErrors = validateRequiredFields(dataProduct);
@@ -35,7 +37,6 @@ export const createProduct = async (dataProduct: Product) => {
   }
 };
 
-// Retorna la lista de productos actual.
 export const getProducts = async (limit?: number) => {
   try {
     products = await fs.readFile(fileName);
@@ -50,7 +51,6 @@ export const getProducts = async (limit?: number) => {
   }
 };
 
-// Busca y retorna un producto por su ID.
 export const getProductById = async (id: string) => {
   try {
     products = await fs.readFile(fileName);
@@ -65,7 +65,6 @@ export const getProductById = async (id: string) => {
   }
 };
 
-// Actualiza un producto existente y guarda los cambios en el archivo.
 export const updateProductById = async (id: string, updates: any) => {
   try {
     products = await fs.readFile(fileName);
@@ -85,7 +84,6 @@ export const updateProductById = async (id: string, updates: any) => {
   }
 };
 
-// Elimina un producto y guarda los cambios en el archivo.
 export const deleteProductById = async (id: string) => {
   try {
     products = await fs.readFile(fileName);
@@ -105,12 +103,10 @@ export const deleteProductById = async (id: string) => {
   }
 };
 
-// Verifica si ya existe un producto con el código dado.
 const validateCode = (code: number): boolean => {
   return products.some(elem => elem.code === code);
 };
 
-// Valida que los campos requeridos del producto estén presentes.
 const validateRequiredFields = (
   product: Product,
 ): Joi.ValidationError | undefined => {

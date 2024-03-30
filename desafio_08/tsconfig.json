@@ -21,6 +21,9 @@
       "@services/*": [
         "./src/services/*"
       ],
+      "@models/*": [
+        "./src/services/dao/db/models/*"
+      ]
     },
     "typeRoots": [
       "./node_modules/@types",

@@ -1,5 +1,8 @@
+// Utilities
 import path from 'path';
-import { Cart } from '@interfaces/cart.interface';
+// Interfaces
+import { Cart } from '@interfaces/carts.interface';
+// Services
 import * as fs from '@services/fileSystem.services';
 import { getProductById } from '@services/dao/filesystem/product.service';
 
