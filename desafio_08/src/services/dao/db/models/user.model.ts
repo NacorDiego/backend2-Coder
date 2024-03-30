@@ -20,6 +20,7 @@ const userSchema = new Schema(
       type: String,
       trim: true,
       lowercase: true,
+      required: true,
       unique: true,
     },
     age: {

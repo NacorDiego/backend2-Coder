@@ -1,4 +1,4 @@
-import server from './config/server';
+import server from './server';
 import './config/database';
 import { createDirectory, createFile } from './services/fileSystem.services';
 import path from 'path';
