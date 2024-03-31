@@ -34,6 +34,11 @@ const userSchema = new Schema(
       trim: true,
       required: true,
     },
+    role: {
+      type: String,
+      enum: ['admin', 'user'], // Definir los posibles valores de rol
+      default: 'user', // Establecer el valor predeterminado como "usuario"
+    },
   },
   {
     timestamps: true,

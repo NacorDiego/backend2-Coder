@@ -48,8 +48,8 @@ app.use(
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URI,
       mongoOptions: {},
-      autoRemove: 'interval',
-      autoRemoveInterval: 10,
+      autoRemove: 'interval', // Eliminar sesiones en intervalos de 1min
+      autoRemoveInterval: 1, // eliminar sesion en 1min
     }),
     secret: 'C0d3rS3cr3t', // Key de seguridad
     resave: false, // Guardar en memoria
@@ -57,7 +57,7 @@ app.use(
     cookie: {
       secure: false, // Cambiar esto a true en un entorno de producción con HTTPS habilitado
       httpOnly: true,
-      maxAge: 1000 * 60,
+      maxAge: 1000 * 60, // eliminar cookie en 1min
     },
   }),
 );

@@ -9,16 +9,29 @@ declare module 'express-session' {
   }
 }
 
+interface NewUser {
+  first_name: string;
+  last_name: string;
+  email: string;
+  age: number;
+  password: string;
+  role: string;
+}
+
 export const userRegister = async (req: Request, res: Response) => {
   const { first_name, last_name, email, age, password } = req.body;
 
-  const registerData = {
+  const registerData: NewUser = {
     first_name,
     last_name,
     email,
     age,
     password,
+    role: 'user',
   };
+
+  if (email === 'adminCoder@coder.com' && password === 'adminCod3r123')
+    registerData.role = 'admin';
 
   try {
     const result = await sessionService.userRegisterService(registerData);
@@ -54,12 +67,12 @@ export const userLogin = async (req: Request, res: Response) => {
 
 export const userLogout = (req: Request, res: Response) => {
   req.session.destroy(err => {
-    if (err)
+    if (err) {
       res
         .status(500)
-        .json({ status: 'FAILED', message: 'Error al cerrar la sesion.' });
-    res
-      .status(200)
-      .json({ status: 'OK', message: 'Sesion cerrada correctamente.' });
+        .json({ status: 'FAILED', message: 'Error al cerrar la sesión.' });
+    } else {
+      res.redirect('/api/users/login');
+    }
   });
 };

@@ -35,11 +35,11 @@ export const createProduct = async (dataProduct: any) => {
 };
 
 export const getProducts = async (
-  limit: number,
-  page: number,
-  status: boolean | undefined,
-  category: string | undefined,
-  sort: string | undefined,
+  limit: number = 10,
+  page: number = 1,
+  status: boolean | undefined = undefined,
+  category: string | undefined = undefined,
+  sort: string | undefined = undefined,
 ) => {
   // query
   let query: any = {};

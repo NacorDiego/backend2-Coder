@@ -15,7 +15,6 @@ form.addEventListener('submit', e => {
       'Content-Type': 'application/json',
     },
   }).then(result => {
-    console.log('result:', result);
     if (result.status === 200) {
       window.location.replace('/');
     } else {
