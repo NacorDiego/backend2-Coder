@@ -7,5 +7,5 @@ export interface Product {
   stock: number;
   category: string;
   thumbnail?: string;
-  id?: number;
+  id?: string;
 }

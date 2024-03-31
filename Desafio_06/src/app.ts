@@ -1,61 +1,45 @@
 import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+// import { configureChat } from './controllers/chat.controller';
+import morgan from 'morgan';
+import { engine } from 'express-handlebars';
+import config from './config';
 import productRoutes from '@routes/product.routes';
 import cartRoutes from '@routes/cart.routes';
+import userRoutes from '@routes/user.routes';
 import viewsRoutes from '@routes/views.routes';
-import { engine } from 'express-handlebars';
-import { Server } from 'socket.io';
 
 const app = express();
-const PORT = process.env.PORT || 8080;
 
-// mideldware para trabajar con JSON
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Crear servidor con http
+const server = http.createServer(app);
+const io = new Server(server); //  Inicializar socket.io en el servidor
 
-// Configuracion de archivos estáticos
-app.use(express.static(__dirname + '/public'));
+//  Middleware de registro de logs
+app.use(morgan('dev'));
 
-// HANDLEBARS
+// Preparar servidor para recibir JSON
+app.use(express.json()); // Permite recibir y entender objetos json.
+app.use(express.urlencoded({ extended: true })); // Permite recibir datos codificados de POST en form por url.
+
+// Configuracion handlebars
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', __dirname + '/views');
 
-// ENDPOINTS
+// Indicamos que vamos a trabajar con archivos estaticos
+app.use(express.static(config.route_public));
+
+// Ruta principal
+app.get('/', (req, res) => {
+  res.json('welcome');
+});
+
+// Enrutadores
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
+app.use('/api/users', userRoutes);
 app.use('/', viewsRoutes);
 
-// MANEJO DE ERRORES
-// Manejar errores 404 (ruta no encontrada)
-app.use((req, res) => {
-  res.status(404).send({
-    status: 404,
-    message: 'Ruta no encontrada',
-  });
-});
-
-// Manejador cualquier error inesperado.
-app.use((err: any, req: any, res: any, next: any) => {
-  console.error(err);
-  res.status(500).send({
-    status: 500,
-    message: 'Error interno del servidor',
-  });
-});
-
-const httpServer = app.listen(PORT, () =>
-  console.log(`The server is listening on port ${PORT}.`),
-);
-
-// Instancio socket.io
-const socketServer = new Server(httpServer);
-
-socketServer.on('connection', socket => {
-  console.log('Nuevo cliente conectado');
-
-  socket.on('productsUpdated', () => {
-    socketServer.emit('productsUpdated');
-  });
-});
-
-export { socketServer };
+export default app;

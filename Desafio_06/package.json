@@ -1,45 +1,30 @@
 {
-  "name": "entregas",
+  "name": "desafio_06_02",
   "version": "1.0.0",
-  "description": "Entregas del curso de Backend de Coderhouse.",
-  "main": "app.js",
+  "description": "E-commerce project from the Coderhouse backend course.",
+  "main": "index.js",
   "scripts": {
-    "build": "babel src --extensions \".ts,.js\" --out-dir dist --copy-files",
-    "start": "node dist/app.js",
-    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --ignore-watch node_moldules src/app.ts"
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --ignore-watch node_moldules src/index.ts"
   },
-  "author": "Diego Nacor",
+  "keywords": [],
+  "author": "Nacor Diego",
   "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "express-handlebars": "^7.1.2",
+    "helmet": "^7.1.0",
+    "joi": "^17.12.2",
+    "mongoose": "^8.2.0",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.7.4"
+  },
   "devDependencies": {
-    "@babel/cli": "^7.23.4",
-    "@babel/core": "^7.23.7",
-    "@babel/node": "^7.22.19",
-    "@babel/preset-env": "^7.23.8",
-    "@babel/preset-typescript": "^7.23.3",
-    "@babel/register": "^7.23.7",
     "@types/express": "^4.17.21",
-    "@types/multer": "^1.4.11",
-    "@typescript-eslint/eslint-plugin": "^6.19.1",
-    "babel-plugin-module-resolver": "^5.0.0",
-    "eslint": "^8.56.0",
-    "eslint-config": "^0.3.0",
-    "eslint-config-standard-with-typescript": "^43.0.1",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-promise": "^6.1.1",
-    "prettier": "^3.2.4",
+    "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.9",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.18.2",
-    "express-handlebars": "^7.1.2",
-    "joi": "^17.12.0",
-    "mongoose": "^8.2.0",
-    "multer": "^1.4.5-lts.1",
-    "socket.io": "^4.7.4"
   }
 }
