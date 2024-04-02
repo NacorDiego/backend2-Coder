@@ -26,4 +26,17 @@ export const renderProducts = async (req: Request, res: Response) => {
     res.status(error.status).json({ status: 'FAILED', message: error.message });
   }
 };
+
 export const renderRealTimeProducts = async (req: Request, res: Response) => {};
+
+export const viewLoginForm = (req: Request, res: Response) => {
+  res.render('login');
+};
+
+export const viewRegistrationForm = (req: Request, res: Response) => {
+  res.render('register');
+};
+
+export const viewUserProfile = (req: Request, res: Response) => {
+  res.render('profile', { user: req.session.user });
+};

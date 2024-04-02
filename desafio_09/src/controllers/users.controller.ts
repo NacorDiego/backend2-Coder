@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as sessionService from '@services/dao/db/session.service';
+import * as usersService from '@services/dao/db/users.service';
 import { User } from '@interfaces/users.interface';
 
 // declare module se utilizan para poder crear sesión.
@@ -34,7 +34,7 @@ export const userRegister = async (req: Request, res: Response) => {
     registerData.role = 'admin';
 
   try {
-    const result = await sessionService.userRegisterService(registerData);
+    const result = await usersService.userRegisterService(registerData);
 
     res.status(201).json({ status: 'OK', data: result });
   } catch (error: any) {
@@ -53,7 +53,7 @@ export const userLogin = async (req: Request, res: Response) => {
   };
 
   try {
-    const result = await sessionService.userLoginService(loginData);
+    const result = await usersService.userLoginService(loginData);
     // Creo la sesión del usuario
     req.session.user = result;
 

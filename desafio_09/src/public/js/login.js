@@ -4,7 +4,7 @@ form.addEventListener('submit', e => {
   e.preventDefault();
 
   const obj = {
-    email: form.email.value,
+    username: form.email.value,
     password: form.password.value,
   };
 

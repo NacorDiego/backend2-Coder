@@ -7,5 +7,8 @@ const router = Router();
 router.get('/', viewsController.renderProducts);
 router.get('/realtimeproducts', viewsController.renderRealTimeProducts);
 router.get('/chat', chatController.showChat);
+router.get('/register', viewsController.viewRegistrationForm);
+router.get('/login', viewsController.viewLoginForm);
+router.get('/profile', viewsController.viewUserProfile);
 
 export default router;
