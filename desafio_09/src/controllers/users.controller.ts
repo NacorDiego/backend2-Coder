@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import * as usersService from '@services/dao/db/users.service';
-import { User } from '@interfaces/users.interface';
+import { SessionUser } from '@interfaces/users.interface';
 
 // declare module se utilizan para poder crear sesión.
 declare module 'express-session' {
   interface SessionData {
-    user: User; // Agrega tu propiedad de usuario aquí
+    user: SessionUser; // Agrega tu propiedad de usuario aquí
   }
 }
 
