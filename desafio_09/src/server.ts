@@ -20,59 +20,15 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 // Utilities
 import path from 'path';
-import dotenv from 'dotenv';
 
-dotenv.config();
-
+//? - - - = = = Initializations = = = - - -
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   connectionStateRecovery: {}, // Recupera datos  de conexión interrumpida
 });
 
-//  Middleware de registro de logs
-app.use(logger('dev'));
-
-// Preparar servidor para recibir JSON
-app.use(express.json()); // Permite recibir y entender objetos json.
-app.use(express.urlencoded({ extended: true })); // Permite recibir datos codificados de POST en form por url.
-
-// Configurar handlebars
-app.engine('handlebars', engine());
-app.set('view engine', 'handlebars');
-app.set('views', __dirname + '/views');
-
-// Indicar que vamos a trabajar con archivos estaticos
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Configurar cookies
-app.use(cookieParser('C0d3rS3cr3t'));
-
-// Middleware de sesiones
-app.use(
-  session({
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-      mongoOptions: {},
-      autoRemove: 'interval', // Eliminar sesiones en intervalos de 1min
-      autoRemoveInterval: 1, // eliminar sesion en 1min
-    }),
-    secret: 'C0d3rS3cr3t', // Key de seguridad
-    resave: true, // Guardar en memoria
-    saveUninitialized: true, // Guardar apenas se crea la sesión, aunque no tenga info
-    cookie: {
-      secure: false, // Cambiar esto a true en un entorno de producción con HTTPS habilitado
-      httpOnly: true,
-      maxAge: 1000 * 60, // eliminar cookie en 1min
-    },
-  }),
-);
-
-// Configurar Passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Inicializar io
+// Socket.io
 io.on('connection', socket => {
   console.log('An user connected');
 
@@ -91,10 +47,59 @@ io.on('connection', socket => {
   });
 });
 
-// Routers
+//? - - - = = = Settings = = = - - -
+app.set('port', process.env.PORT || 3000);
+
+// Handlebars
+app.set('views', path.join(__dirname, 'views'));
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+
+// Cookies
+app.use(cookieParser('C0d3rS3cr3t'));
+
+// Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+//? - - - = = = Middlewares = = = - - -
+// Log record
+app.use(logger('dev'));
+
+// Sessions
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      mongoOptions: {},
+      autoRemove: 'interval', // Eliminar sesiones en intervalos de 1min
+      autoRemoveInterval: 1, // eliminar sesion en 1min
+    }),
+    secret: 'C0d3rS3cr3t', // Key de seguridad
+    resave: true, // Guardar en memoria
+    saveUninitialized: true, // Guardar apenas se crea la sesión, aunque no tenga info
+    cookie: {
+      secure: false, // Cambiar esto a true en un entorno de producción con HTTPS habilitado
+      httpOnly: true,
+      maxAge: 1000 * 60, // eliminar cookie en 1min
+    },
+  }),
+);
+// Permite recibir datos codificados de POST en form por url.
+app.use(express.urlencoded({ extended: true }));
+
+// Preparar servidor para recibir JSON
+app.use(express.json());
+
+//? - - - = = = Global Variables = = = - - -
+
+//? - - - = = = Routes = = = - - -
+app.use('/', viewsRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
 app.use('/api/users', usersRoutes);
-app.use('/', viewsRoutes);
+
+//? - - - = = = Static files = = = - - -
+app.use(express.static(path.join(__dirname, 'public')));
 
 export default server;

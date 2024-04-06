@@ -30,7 +30,6 @@ export const userRegister = async (req: Request, res: Response) => {
     errors.push({ text: 'Las contraseñas deben tener al menos 4 caracteres' });
 
   if (errors.length > 0) res.render('users/signup', { errors });
-  else res.send('Registro exitoso');
 
   const registerData: NewUser = {
     first_name,

@@ -4,10 +4,12 @@ import server from './server';
 import './config/database';
 // Utilities
 import config from './config/config';
+import dotenv from 'dotenv';
 // import path from 'path';
 // Filesystem
 // import { createDirectory, createFile } from './services/fileSystem.services';
 
+dotenv.config();
 const PORT = process.env.PORT || config.port;
 
 //? Habilitar cuando use filesystem

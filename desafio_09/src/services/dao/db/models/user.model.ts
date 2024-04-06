@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const userCollection = 'users';
 
@@ -45,6 +46,21 @@ const userSchema = new Schema(
     versionKey: false,
   },
 );
+
+// Agrego método para cifrar password
+userSchema.methods.encryptPassword = async (
+  password: string,
+): Promise<string> => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
+};
+
+// Agrego método para comprar password con la almacenada en bd
+userSchema.methods.matchPassword = async function (
+  password: string,
+): Promise<boolean> {
+  return await bcrypt.compare(password, this.password);
+};
 
 const userModel = model(userCollection, userSchema);
 
