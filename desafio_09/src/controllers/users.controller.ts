@@ -19,7 +19,18 @@ interface NewUser {
 }
 
 export const userRegister = async (req: Request, res: Response) => {
-  const { first_name, last_name, email, age, password } = req.body;
+  const errors = [];
+  const { first_name, last_name, email, age, password, confirm_password } =
+    req.body;
+
+  if (password !== confirm_password) {
+    errors.push({ text: 'Las contraseñas no coinciden' });
+  }
+  if (password.length < 4)
+    errors.push({ text: 'Las contraseñas deben tener al menos 4 caracteres' });
+
+  if (errors.length > 0) res.render('users/signup', { errors });
+  else res.send('Registro exitoso');
 
   const registerData: NewUser = {
     first_name,
