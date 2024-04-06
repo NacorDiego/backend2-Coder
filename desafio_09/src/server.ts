@@ -1,6 +1,7 @@
 // Cookies
 import cookieParser from 'cookie-parser';
 // Handlebars
+// import exphbs from 'express-handlebars';
 import { engine } from 'express-handlebars';
 // Logger
 import logger from 'morgan';
@@ -20,13 +21,16 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 // Utilities
 import path from 'path';
+import dotenv from 'dotenv';
 
 //? - - - = = = Initializations = = = - - -
+dotenv.config();
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   connectionStateRecovery: {}, // Recupera datos  de conexión interrumpida
 });
+// const ROUTE_SRC = path.join(__dirname, 'src');
 
 // Socket.io
 io.on('connection', socket => {
@@ -48,19 +52,31 @@ io.on('connection', socket => {
 });
 
 //? - - - = = = Settings = = = - - -
+// PORT
 app.set('port', process.env.PORT || 3000);
 
 // Handlebars
+app.engine(
+  '.hbs',
+  engine({
+    defaultLayout: 'main',
+    layoutsDir: path.join(__dirname, 'views', 'layouts'),
+    partialsDir: path.join(__dirname, 'views', 'partials'),
+    extname: '.hbs',
+  }),
+);
+app.set('view engine', '.hbs');
+console.log('dirname: ', __dirname);
+console.log('views: ', path.join(__dirname, 'views'));
+
 app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', engine());
-app.set('view engine', 'handlebars');
 
 // Cookies
 app.use(cookieParser('C0d3rS3cr3t'));
 
 // Passport
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 //? - - - = = = Middlewares = = = - - -
 // Log record

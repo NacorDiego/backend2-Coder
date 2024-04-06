@@ -1,10 +1,13 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import * as viewsController from '@controllers/views.controller';
 import * as chatController from '@controllers/chats.controller';
 
 const router = Router();
 
-router.get('/', viewsController.renderProducts);
+router.get('/', (req: Request, res: Response) => {
+  res.render('index');
+});
+// router.get('/', viewsController.renderProducts);
 router.get('/realtimeproducts', viewsController.renderRealTimeProducts);
 router.get('/chat', chatController.showChat);
 router.get('/register', viewsController.viewRegistrationForm);
