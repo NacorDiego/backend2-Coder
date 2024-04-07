@@ -4,10 +4,10 @@ import * as chatController from '@controllers/chats.controller';
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response) => {
-  res.render('index');
-});
-// router.get('/', viewsController.renderProducts);
+// router.get('/', (req: Request, res: Response) => {
+//   res.render('index');
+// });
+router.get('/', viewsController.renderProducts);
 router.get('/realtimeproducts', viewsController.renderRealTimeProducts);
 router.get('/chat', chatController.showChat);
 router.get('/register', viewsController.viewRegistrationForm);

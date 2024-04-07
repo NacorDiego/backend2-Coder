@@ -3,10 +3,10 @@ import { getProducts } from '@services/dao/db/product.service';
 
 //TODO: Desarrollar controladores
 export const renderProducts = async (req: Request, res: Response) => {
-  if (!req.session.user)
-    res
-      .status(400)
-      .json({ status: 'FAILED', message: 'No se encontró una sesión válida.' });
+  // if (!req.session.user)
+  //   res
+  //     .status(400)
+  //     .json({ status: 'FAILED', message: 'No se encontró una sesión válida.' });
 
   try {
     const result = await getProducts();
