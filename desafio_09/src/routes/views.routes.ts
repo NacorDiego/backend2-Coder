@@ -8,6 +8,7 @@ const router = Router();
 //   res.render('index');
 // });
 router.get('/', viewsController.renderProducts);
+router.get('/edit-product/:id', viewsController.renderEditProductForm);
 router.get('/realtimeproducts', viewsController.renderRealTimeProducts);
 router.get('/chat', chatController.showChat);
 router.get('/register', viewsController.viewRegistrationForm);

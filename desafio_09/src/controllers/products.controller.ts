@@ -88,7 +88,7 @@ export const updateProductById = async (req: Request, res: Response) => {
   const updates = req.body;
   try {
     const result = await productService.updateProductById(pId, updates);
-    return res.status(result.status).json({ status: 'OK', data: result.data });
+    return res.status(result.status).redirect('/');
   } catch (error: any) {
     res.status(error.status).json({ status: 'FAILED', message: error.message });
   }
@@ -98,7 +98,7 @@ export const deleteProductById = async (req: Request, res: Response) => {
   const pid = req.params.pid;
   try {
     const result = await productService.deleteProductById(pid);
-    res.status(result.status).json({ status: 'OK' });
+    res.status(result.status).redirect('/');
   } catch (error: any) {
     res.status(error.status).json({ status: 'FAILED', message: error.message });
   }

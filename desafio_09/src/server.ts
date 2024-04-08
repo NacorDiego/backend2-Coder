@@ -19,9 +19,11 @@ import { Server } from 'socket.io';
 // Sessions
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import flash from 'connect-flash';
 // Utilities
 import path from 'path';
 import dotenv from 'dotenv';
+import methodOverride from 'method-override';
 
 //? - - - = = = Initializations = = = - - -
 dotenv.config();
@@ -81,7 +83,12 @@ app.use(cookieParser('C0d3rS3cr3t'));
 //? - - - = = = Middlewares = = = - - -
 // Log record
 app.use(logger('dev'));
-
+// Preparar servidor para recibir JSON
+app.use(express.json());
+// Permite recibir datos codificados de POST en form por url.
+app.use(express.urlencoded({ extended: true }));
+// Method-override
+app.use(methodOverride('_method'));
 // Sessions
 app.use(
   session({
@@ -101,11 +108,8 @@ app.use(
     },
   }),
 );
-// Permite recibir datos codificados de POST en form por url.
-app.use(express.urlencoded({ extended: true }));
-
-// Preparar servidor para recibir JSON
-app.use(express.json());
+// Mensajes con connect-flash
+app.use(flash());
 
 //? - - - = = = Global Variables = = = - - -
 
