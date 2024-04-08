@@ -7,6 +7,9 @@ export const userRegisterService = async (registerData: RegisterData) => {
     if (userExists)
       throw { status: 409, message: 'El usuario ya se encuentra registrado.' };
 
+    //TODO:Encriptar constraseña
+    // registerData.password = await User.encryptPassword(password);
+
     const result = await User.create(registerData);
     return result;
   } catch (error: any) {
