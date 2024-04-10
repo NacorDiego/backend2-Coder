@@ -63,9 +63,6 @@ export const userRegister = async (req: Request, res: Response) => {
     console.log(errors[0].text);
 
     res.status(error?.status || 500).render('users/register', { errors });
-    // res
-    //   .status(error?.status || 500)
-    //   .json({ status: 'FAILED', error: error?.message || error });
   }
 };
 
