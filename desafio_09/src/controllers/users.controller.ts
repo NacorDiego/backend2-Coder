@@ -24,12 +24,14 @@ export const userRegister = async (req: Request, res: Response) => {
     req.body;
 
   if (password !== confirm_password) {
-    errors.push({ text: 'Las contraseñas no coinciden' });
+    errors.push({ text: 'Las contraseñas no coinciden.' });
   }
   if (password.length < 4)
-    errors.push({ text: 'Las contraseñas deben tener al menos 4 caracteres' });
+    errors.push({ text: 'Las contraseñas deben tener al menos 4 caracteres.' });
 
   if (errors.length > 0) {
+    console.log('hay errores en errors');
+
     const dataUser = {
       first_name,
       last_name,
@@ -53,12 +55,17 @@ export const userRegister = async (req: Request, res: Response) => {
 
   try {
     const result = await usersService.userRegisterService(registerData);
-
-    res.status(201).json({ status: 'OK', data: result });
+    req.flash('success_msg', 'Usuario registrado con éxito');
+    res.status(201).redirect('/login');
   } catch (error: any) {
-    res
-      .status(error?.status || 500)
-      .json({ status: 'FAILED', error: error?.message || error });
+    console.error('error: ', error.message);
+    const errors = [{ text: error?.message || 'Error interno del servidor' }];
+    console.log(errors[0].text);
+
+    res.status(error?.status || 500).render('users/register', { errors });
+    // res
+    //   .status(error?.status || 500)
+    //   .json({ status: 'FAILED', error: error?.message || error });
   }
 };
 

@@ -1,9 +1,10 @@
-import { Schema, model } from 'mongoose';
+import { Model, Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
+import { UserToRegister } from '@interfaces/users.interface';
 
 const userCollection = 'users';
 
-const userSchema = new Schema(
+const userSchema = new Schema<UserToRegister>(
   {
     first_name: {
       type: String,
@@ -62,6 +63,6 @@ userSchema.methods.matchPassword = async function (
   return await bcrypt.compare(password, this.password);
 };
 
-const userModel = model(userCollection, userSchema);
+const userModel: Model<UserToRegister> = model(userCollection, userSchema);
 
 export default userModel;
