@@ -6,6 +6,7 @@ const userCollection = 'users';
 
 const userSchema = new Schema<UserToRegister>(
   {
+    _id: { type: Schema.Types.ObjectId, auto: true },
     first_name: {
       type: String,
       trim: true,

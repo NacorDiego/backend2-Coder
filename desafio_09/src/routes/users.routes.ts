@@ -8,11 +8,12 @@ router.get('/logout', usersController.userLogout);
 router.post('/register', usersController.userRegister);
 router.post(
   '/login',
-  passport.authenticate('local', {
+  passport.authenticate('login', {
     successRedirect: '/',
     failureRedirect: '/login',
+    failureFlash: true, // Utilizar flash para errores
   }),
-  usersController.userLogin,
+  // usersController.userLogin,
 );
 
 export default router;

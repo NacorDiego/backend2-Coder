@@ -7,6 +7,7 @@ import { engine } from 'express-handlebars';
 import logger from 'morgan';
 // Passport
 import passport from 'passport';
+import './config/passport.config';
 // Routes
 import cartRoutes from '@routes/carts.routes';
 import productRoutes from '@routes/products.routes';
@@ -76,10 +77,6 @@ app.set('views', path.join(__dirname, 'views'));
 // Cookies
 app.use(cookieParser('C0d3rS3cr3t'));
 
-// Passport
-// app.use(passport.initialize());
-// app.use(passport.session());
-
 //? - - - = = = Middlewares = = = - - -
 // Log record
 app.use(logger('dev'));
@@ -108,6 +105,9 @@ app.use(
     },
   }),
 );
+// Autenticación y registro con Passport
+app.use(passport.initialize());
+app.use(passport.session());
 // Mensajes con connect-flash
 app.use(flash());
 
@@ -115,6 +115,8 @@ app.use(flash());
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  res.locals.user = req.user || null;
   next();
 });
 

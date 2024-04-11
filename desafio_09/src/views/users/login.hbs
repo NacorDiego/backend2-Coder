@@ -3,7 +3,7 @@
     <h1>
       Iniciar sesión
     </h1>
-    <form id='login_form'>
+    <form action='/api/users/login' method='POST' id='login_form'>
       <div class='row mb-3'>
         <div class='col-12 mb-3'>
           <label class='form-label' for='email'>
@@ -36,7 +36,7 @@
         </button>
         <span class='ml-auto'>
           ¿No estás registrado?
-          <a href='/api/users/register'>
+          <a href='/register'>
             Registrate aquí
           </a>
         </span>
@@ -44,14 +44,3 @@
     </form>
   </div>
 </div>
-
-<script src='/js/login.js'></script>
-
-<style>
-  .container-form { margin: auto 0; } .container-form > form{ border: 1px solid
-  white; border-radius:30px; padding: 50px; } .container-form > form > div{
-  width:300px;display:flex; flex-direction: column; gap:10px; margin-bottom:
-  20px; } .container-form > form > div > input{ height: 30px; border-radius:
-  5px; } .container-form > form > button { padding:10px 30px;
-  background-color:cadetblue; border-radius: 5px; font-size: 1rem; }
-</style>
