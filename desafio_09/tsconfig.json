@@ -15,15 +15,18 @@
       "@interfaces/*": [
         "./src/interfaces/*"
       ],
+      "@middlewares/*": [
+        "./src/middlewares/*"
+      ],
+      "@models/*": [
+        "./src/services/dao/db/models/*"
+      ],
       "@routes/*": [
         "./src/routes/*"
       ],
       "@services/*": [
         "./src/services/*"
       ],
-      "@models/*": [
-        "./src/services/dao/db/models/*"
-      ]
     },
     "typeRoots": [
       "./node_modules/@types",
