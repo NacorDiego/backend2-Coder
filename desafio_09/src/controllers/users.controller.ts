@@ -21,8 +21,6 @@ export const userRegister = async (req: Request, res: Response) => {
     errors.push({ text: 'Las contraseñas deben tener al menos 4 caracteres.' });
 
   if (errors.length > 0) {
-    console.log('hay errores en errors');
-
     const dataUser = {
       first_name,
       last_name,
@@ -51,7 +49,6 @@ export const userRegister = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('error: ', error.message);
     const errors = [{ text: error?.message || 'Error interno del servidor' }];
-    console.log(errors[0].text);
 
     res.status(error?.status || 500).render('users/register', { errors });
   }

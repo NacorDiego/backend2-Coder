@@ -69,8 +69,6 @@ app.engine(
   }),
 );
 app.set('view engine', '.hbs');
-console.log('dirname: ', __dirname);
-console.log('views: ', path.join(__dirname, 'views'));
 
 app.set('views', path.join(__dirname, 'views'));
 

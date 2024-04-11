@@ -6,9 +6,8 @@ export const isAuthenticated = (
   next: NextFunction,
 ) => {
   if (req.isAuthenticated()) {
-    console.log('Esta autenticado');
     return next();
   }
-  console.log('No está autenticado');
+  req.flash('error_msg', 'No estás autorizado.');
   res.redirect('/login');
 };

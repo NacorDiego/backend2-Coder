@@ -26,3 +26,18 @@
     </button>
   </div>
 {{/if}}
+
+{{! Errores de autorización }}
+{{#if error_msg}}
+  <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+    {{error_msg}}
+    <button
+      type='button'
+      class='close'
+      data-bs-dismiss='alert'
+      aria-label='Close'
+    >
+      &times;
+    </button>
+  </div>
+{{/if}}
