@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import * as usersController from '@controllers/users.controller';
 import passport from 'passport';
+import { isAuthenticated } from '@middlewares/auth.middleware';
 
 const router = Router();
 
-router.get('/logout', usersController.userLogout);
+router.get('/logout', isAuthenticated, usersController.userLogout);
 router.post('/register', usersController.userRegister);
 router.post(
   '/login',
@@ -13,7 +14,6 @@ router.post(
     failureRedirect: '/login',
     failureFlash: true, // Utilizar flash para errores
   }),
-  // usersController.userLogin,
 );
 
 export default router;
