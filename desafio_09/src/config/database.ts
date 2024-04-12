@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import config from './config';
+import { configDB } from './config';
 
-const NAME_DB = config.name_bd;
-const MONGO_URI = config.mongo_uri;
+const NAME_DB = configDB.name_bd;
+const MONGO_URI = configDB.mongo_uri;
 
 if (MONGO_URI && NAME_DB) {
   mongoose

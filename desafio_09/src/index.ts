@@ -3,12 +3,12 @@ import server from './server';
 // Database
 import './config/database';
 // Utilities
-import config from './config/config';
+import { configServer } from './config/config';
+//? Filesystem
 // import path from 'path';
-// Filesystem
 // import { createDirectory, createFile } from './services/fileSystem.services';
 
-const PORT = process.env.PORT || config.port;
+const PORT = process.env.PORT || configServer.port;
 
 //? Habilitar cuando use filesystem
 // const ROUTE = path.join(__dirname + '/data');

@@ -1,7 +1,44 @@
-import passport from 'passport';
+import passport, { DoneCallback } from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as GithubStrategy, Profile } from 'passport-github2';
 import User from '@models/user.model';
+import { configGithub } from './config';
 
+const CLIENT_ID = configGithub.client_id;
+const CLIENT_SECRET = configGithub.client_secret;
+
+if (!CLIENT_ID || !CLIENT_SECRET)
+  throw new Error(
+    'Las variables de enterno GITHUB_CLIENT_ID y GITHUB_CLIENT_SECRET deben estar definidas.',
+  );
+
+//? Estrategia GITHUB
+passport.use(
+  'github',
+  new GithubStrategy(
+    {
+      clientID: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
+      callbackURL: 'http://localhost:8080/api/users/githubcallback',
+    },
+    async (
+      accessToken: string,
+      refreshToken: string,
+      profile: Profile,
+      done: DoneCallback,
+    ) => {
+      console.log('Perfil obtenido del usuario en github:');
+      console.log(profile);
+
+      try {
+      } catch (error: any) {
+        done(error);
+      }
+    },
+  ),
+);
+
+//? Estrategia LOCAL
 passport.use(
   'login',
   new LocalStrategy(
@@ -41,13 +78,3 @@ passport.deserializeUser(
     }
   },
 );
-
-// Login GITHUB
-
-// Owned by: @NacorDiego
-
-// App ID: 875221
-
-// Client ID: Iv1.2f7587670b7a36c3
-
-// Client secret: 52efafdd2c2a2a6ea7b779ae878b1d6abb69548b
