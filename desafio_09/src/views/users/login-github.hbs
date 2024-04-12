@@ -1,0 +1,30 @@
+<div class='d-flex justify-content-center'>
+  <div class='card w-50 p-5'>
+    <h1 class='mb-4'>
+      Iniciar sesión con GitHub
+    </h1>
+    <form action='/api/users/github' method='GET'>
+      <button class='btn btn-lg btn-primary btn-block mb-4' type='submit'>
+        Entrar con GitHub
+        <i class='bi bi-github ml-2'></i>
+      </button>
+
+      <div class='card-footer mt-3'>
+        <div class='d-flex flex-column'>
+          <span class='mb-1'>
+            ¿No estás registrado?
+            <a class='ml-2' href='/register'>
+              Registrarse
+            </a>
+          </span>
+          <span>
+            ¿Ya tenés una cuenta?
+            <a class='ml-2' href='/login'>
+              Iniciar sesión
+            </a>
+          </span>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
