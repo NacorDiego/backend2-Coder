@@ -30,14 +30,20 @@
           />
         </div>
       </div>
-      <div class='row align-items-center px-3'>
-        <button class='btn btn-lg btn-primary' type='submit'>
-          Enviar
-        </button>
-        <span class='ml-auto'>
+      <button class='btn btn-lg btn-primary btn-block mb-4' type='submit'>
+        Enviar
+      </button>
+      <div class='card-footer d-flex flex-column'>
+        <span class='mb-1'>
           ¿No estás registrado?
-          <a href='/register'>
-            Registrate aquí
+          <a class='ml-2' href='/register'>
+            Registrarse
+          </a>
+        </span>
+        <span>
+          ¿Tenés cuenta de GitHub?
+          <a class='ml-2' href='/login-github'>
+            Iniciar sesión con GitHub
           </a>
         </span>
       </div>

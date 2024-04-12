@@ -5,7 +5,6 @@ import { isAuthenticated } from '@middlewares/auth.middleware';
 
 const router = Router();
 
-router.get('/logout', isAuthenticated, usersController.userLogout);
 router.post('/register', usersController.userRegister);
 router.post(
   '/login',
@@ -15,5 +14,7 @@ router.post(
     failureFlash: true, // Utilizar flash para errores
   }),
 );
+router.get('/github');
+router.get('/logout', isAuthenticated, usersController.userLogout);
 
 export default router;

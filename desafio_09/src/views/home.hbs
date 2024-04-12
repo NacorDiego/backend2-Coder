@@ -1,14 +1,26 @@
-{{!-- <div class='container-data-user'>
-  <h1>
-    {{user.name}}
-  </h1>
-  <p>
-    Tu email: {{user.email}}
-  </p>
-  <p>
-    Tu edad: {{user.age}}
-  </p>
-</div> --}}
+<div class='card p-5'>
+  {{#if user}}
+    <h1 class='h2'>
+      <i class='bi bi-person-circle mr-2'></i>
+      Datos del usuario
+    </h1>
+    <div class='d-flex flex-column mt-3'>
+      <span class='h4'>
+        {{user.first_name}} {{user.last_name}}
+      </span>
+      <span class='h5'>
+        {{user.email}}
+      </span>
+      <span class='h5'>
+        {{user.age}}
+      </span>
+    </div>
+  {{else}}
+    <h1 class='h2'>
+      No se ha encontrado el usuario
+    </h1>
+  {{/if}}
+</div>
 
 <div
   class='d-flex justify-content-between align-items-center border-bottom py-4 mb-3'

@@ -19,6 +19,7 @@ router.get(
 router.get('/chat', isAuthenticated, chatController.showChat);
 router.get('/register', viewsController.viewRegistrationForm);
 router.get('/login', viewsController.viewLoginForm);
+router.get('/login-github', viewsController.viewLoginWithGithub);
 router.get('/profile', isAuthenticated, viewsController.viewUserProfile);
 
 export default router;

@@ -1,13 +1,7 @@
 import { Request, Response } from 'express';
 import { getProducts, getProductById } from '@services/dao/db/product.service';
 
-//TODO: Desarrollar controladores
 export const renderProducts = async (req: Request, res: Response) => {
-  // if (!req.session.user)
-  //   res
-  //     .status(400)
-  //     .json({ status: 'FAILED', message: 'No se encontró una sesión válida.' });
-
   try {
     const result = await getProducts();
 
@@ -43,12 +37,16 @@ export const renderEditProductForm = async (req: Request, res: Response) => {
 
 export const renderRealTimeProducts = async (req: Request, res: Response) => {};
 
+export const viewRegistrationForm = (req: Request, res: Response) => {
+  res.render('users/register');
+};
+
 export const viewLoginForm = (req: Request, res: Response) => {
   res.render('users/login');
 };
 
-export const viewRegistrationForm = (req: Request, res: Response) => {
-  res.render('users/register');
+export const viewLoginWithGithub = (req: Request, res: Response) => {
+  res.render('users/login-github');
 };
 
 export const viewUserProfile = (req: Request, res: Response) => {

@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-center">
-  <di class='card w-50 p-5'>
+  <di class='card w-50 w-md-100 p-5'>
     <h1>
       Registrarse
     </h1>
@@ -67,14 +67,20 @@
         </div>
       </div>
 
-      <div class='row align-items-center px-3'>
-        <button class='btn btn-lg btn-primary ms-2' type='submit'>
-          Enviar
-        </button>
-        <span class='ml-auto'>
+      <button class='btn btn-lg btn-primary btn-block mb-4' type='submit'>
+        Enviar
+      </button>
+      <div class='card-footer d-flex flex-column'>
+        <span class="mb-1">
           ¿Ya tienes una cuenta?
-          <a href='/login'>
-            Ingresá aquí
+          <a class="ml-2" href='/login'>
+            Iniciar sesión
+          </a>
+        </span>
+        <span>
+          ¿Tenés cuenta de Github?
+          <a class="ml-2" href='/login-github'>
+            Iniciar sesión con Github
           </a>
         </span>
       </div>
