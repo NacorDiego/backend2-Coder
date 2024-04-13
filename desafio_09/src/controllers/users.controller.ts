@@ -43,7 +43,7 @@ export const userRegister = async (req: Request, res: Response) => {
     registerData.role = 'admin';
 
   try {
-    const result = await usersService.userRegisterService(registerData);
+    await usersService.userRegisterService(registerData);
     req.flash('success_msg', 'Usuario registrado con éxito');
     res.status(201).redirect('/login');
   } catch (error: any) {
@@ -52,6 +52,27 @@ export const userRegister = async (req: Request, res: Response) => {
 
     res.status(error?.status || 500).render('users/register', { errors });
   }
+};
+
+export const userLoginGithub = (req: Request, res: Response) => {};
+
+export const githubCallback = (req: Request, res: Response) => {
+  if (req.user) {
+    const user = req.user;
+    console.log('sesion de usuario:');
+    console.log(user);
+  } else console.log('No existe req.user');
+
+  // req.session.user = {
+  //   name: `${user.first_name} ${user.last_name}`
+  //   email: user.email,
+  //   age: user.age
+  // }
+
+  // req.session.admin= true
+
+  res.redirect('/login');
+  // res.redirect('/');
 };
 
 export const userLogout = (req: Request, res: Response) => {

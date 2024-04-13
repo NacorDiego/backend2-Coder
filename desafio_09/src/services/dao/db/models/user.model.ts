@@ -17,25 +17,40 @@ const userSchema = new Schema<UserToRegister>(
       type: String,
       trim: true,
       lowercase: true,
-      required: true,
+      required: function () {
+        return this.loggedBy !== 'GitHub';
+      },
     },
     email: {
       type: String,
       trim: true,
       lowercase: true,
-      required: true,
+      required: function () {
+        return this.loggedBy !== 'GitHub';
+      },
       unique: true,
     },
     age: {
       type: Number,
-      required: true,
       min: 18,
       max: 99,
+      required: true,
     },
     password: {
       type: String,
       trim: true,
-      required: true,
+      required: function () {
+        return this.loggedBy !== 'GitHub';
+      },
+    },
+    loggedBy: {
+      type: String,
+      enum: ['', 'GitHub'],
+      default: '',
+    },
+    githubId: {
+      type: String,
+      default: '',
     },
     role: {
       type: String,

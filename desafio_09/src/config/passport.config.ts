@@ -12,6 +12,14 @@ if (!CLIENT_ID || !CLIENT_SECRET)
     'Las variables de enterno GITHUB_CLIENT_ID y GITHUB_CLIENT_SECRET deben estar definidas.',
   );
 
+interface GithubProfile extends Profile {
+  _json: {
+    email: string;
+    name: string;
+    id: number;
+  };
+}
+
 //? Estrategia GITHUB
 passport.use(
   'github',
@@ -19,19 +27,36 @@ passport.use(
     {
       clientID: CLIENT_ID,
       clientSecret: CLIENT_SECRET,
-      callbackURL: 'http://localhost:8080/api/users/githubcallback',
+      callbackURL: 'http://localhost:8080/api/users/github/callback',
     },
     async (
       accessToken: string,
       refreshToken: string,
-      profile: Profile,
+      profile: GithubProfile,
       done: DoneCallback,
     ) => {
       console.log('Perfil obtenido del usuario en github:');
       console.log(profile);
-
       try {
+        const dbUser = await User.findOne({ githubId: profile._json.id });
+
+        if (!dbUser) {
+          let newUser = {
+            first_name: profile.username,
+            last_name: '',
+            age: 18,
+            email: profile._json?.email || '',
+            password: '',
+            loggedBy: 'GitHub',
+            githubId: profile._json.id,
+          };
+          const result = await User.create(newUser);
+          return done(null, result);
+        } else {
+          return done(null, dbUser);
+        }
       } catch (error: any) {
+        console.error('Error al autenticar al usuario con github: ', error);
         done(error);
       }
     },

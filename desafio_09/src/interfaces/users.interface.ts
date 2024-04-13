@@ -8,6 +8,8 @@ export interface UserToRegister extends Document {
   email: string;
   age: number;
   password: string;
+  loggedBy: string;
+  githubId: string;
   role: string;
   encryptPassword(password: string): Promise<string>;
   matchPassword(password: string): Promise<boolean>;

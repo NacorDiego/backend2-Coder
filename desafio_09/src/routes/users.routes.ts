@@ -18,9 +18,16 @@ router.post(
 router.get(
   '/github',
   passport.authenticate('github', { scope: ['user:email'] }),
-  (req: Request, res: Response) => {},
+  usersController.userLoginGithub,
 );
-router.get('/githubcallback');
+router.get(
+  '/github/callback',
+  passport.authenticate('github', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+  }),
+  usersController.githubCallback,
+);
 router.get('/logout', isAuthenticated, usersController.userLogout);
 
 export default router;
