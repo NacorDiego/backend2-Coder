@@ -52,6 +52,10 @@ const userSchema = new Schema<UserToRegister>(
       type: String,
       default: '',
     },
+    cart: {
+      type: Schema.Types.ObjectId,
+      reference: 'carts',
+    },
     role: {
       type: String,
       enum: ['admin', 'user'], // Definir los posibles valores de rol

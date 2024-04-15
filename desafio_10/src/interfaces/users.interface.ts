@@ -10,6 +10,7 @@ export interface UserToRegister extends Document {
   password: string;
   loggedBy: string;
   githubId: string;
+  cart: Schema.Types.ObjectId;
   role: string;
   encryptPassword(password: string): Promise<string>;
   matchPassword(password: string): Promise<boolean>;
