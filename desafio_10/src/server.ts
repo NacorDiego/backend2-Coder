@@ -7,7 +7,7 @@ import { engine } from 'express-handlebars';
 import logger from 'morgan';
 // Passport
 import passport from 'passport';
-import './config/passport.config';
+import './config/passport2.config';
 // Routes
 import cartRoutes from '@routes/carts.routes';
 import productRoutes from '@routes/products.routes';
@@ -115,7 +115,6 @@ app.use((req, res, next) => {
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
   res.locals.user = req.user ? req.user : null;
-  // res.locals.user = req.user ? (req.user as any).toObject() : null;
   next();
 });
 

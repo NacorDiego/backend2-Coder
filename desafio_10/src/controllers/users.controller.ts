@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import * as usersService from '@services/dao/db/users.service';
 import { SessionUser, NewUser } from '@interfaces/users.interface';
+import jwt from 'jsonwebtoken';
+import { configJWT } from 'src/config/config';
 
 // declare module se utilizan para poder crear sesión.
 declare module 'express-session' {
@@ -57,22 +59,9 @@ export const userRegister = async (req: Request, res: Response) => {
 export const userLoginGithub = (req: Request, res: Response) => {};
 
 export const githubCallback = (req: Request, res: Response) => {
-  if (req.user) {
-    const user = req.user;
-    console.log('sesion de usuario:');
-    console.log(user);
-  } else console.log('No existe req.user');
-
-  // req.session.user = {
-  //   name: `${user.first_name} ${user.last_name}`
-  //   email: user.email,
-  //   age: user.age
-  // }
-
-  // req.session.admin= true
-
-  res.redirect('/login');
-  // res.redirect('/');
+  const token = jwt.sign({ user: req.user }, configJWT.jwt_secret);
+  res.cookie('jwt', token);
+  res.redirect('/');
 };
 
 export const userLogout = (req: Request, res: Response) => {

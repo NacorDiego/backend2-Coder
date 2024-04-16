@@ -15,3 +15,7 @@ export const configGithub = {
   client_id: process.env.GITHUB_CLIENT_ID,
   client_secret: process.env.GITHUB_CLIENT_SECRET,
 };
+
+export const configJWT = {
+  jwt_secret: 'secret_de_jwt',
+};
