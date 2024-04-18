@@ -2,7 +2,6 @@ import { Router } from 'express';
 import * as usersController from '@controllers/users.controller';
 import passport from 'passport';
 import { isAuthenticated } from '@middlewares/auth.middleware';
-import { Request, Response } from 'express';
 
 const router = Router();
 

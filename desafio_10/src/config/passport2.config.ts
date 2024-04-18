@@ -95,7 +95,21 @@ passport.use(
       jwtFromRequest: req => req.cookies.jwt,
       secretOrKey: configJWT.jwt_secret,
     },
-    async (jwtPayload, done: any) => {},
+    async (jwtPayload, done: any) => {
+      try {
+        // Buscar al usuario en la base de datos usando el id del payload del JWT
+        const user = await User.findById(jwtPayload.id);
+
+        // Si no existe en la BD
+        if (!user) return done(null, false);
+
+        // Si existe en la BD
+        return done(null, user);
+      } catch (error) {
+        // En caso de error, continuar con el error
+        return done(error, false);
+      }
+    },
   ),
 );
 
