@@ -58,7 +58,7 @@ export const userRegister = async (req: Request, res: Response) => {
 
 export const userLoginGithub = (req: Request, res: Response) => {};
 
-export const githubCallback = (req: Request, res: Response) => {
+export const successfulLogin = (req: Request, res: Response) => {
   const token = jwt.sign({ user: req.user }, configJWT.jwt_secret);
   res.cookie('jwt', token);
   res.redirect('/');

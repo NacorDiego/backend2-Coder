@@ -7,7 +7,7 @@ import { engine } from 'express-handlebars';
 import logger from 'morgan';
 // Passport
 import passport from 'passport';
-import './config/passport2.config';
+import './config/passport.config';
 // Routes
 import cartRoutes from '@routes/carts.routes';
 import productRoutes from '@routes/products.routes';

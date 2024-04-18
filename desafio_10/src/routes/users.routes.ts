@@ -13,6 +13,7 @@ router.post(
     failureRedirect: '/login',
     failureFlash: true, // Utilizar flash para errores
   }),
+  usersController.successfulLogin,
 );
 router.get(
   '/github',
@@ -22,10 +23,9 @@ router.get(
 router.get(
   '/github/callback',
   passport.authenticate('github', {
-    // successRedirect: '/',
     failureRedirect: '/login',
   }),
-  usersController.githubCallback,
+  usersController.successfulLogin,
 );
 router.get('/logout', isAuthenticated, usersController.userLogout);
 

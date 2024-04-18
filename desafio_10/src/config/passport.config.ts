@@ -1,8 +1,11 @@
 import passport, { DoneCallback } from 'passport';
+import { Strategy as GithubStrategy } from 'passport-github2';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as GithubStrategy, Profile } from 'passport-github2';
+import { Strategy as JwtStrategy } from 'passport-jwt';
 import User from '@models/user.model';
-import { configGithub } from './config';
+import { configGithub, configJWT } from './config';
+import { UserToRegister } from '@interfaces/users.interface';
+import { GithubProfile } from '@interfaces/passport.interface';
 
 const CLIENT_ID = configGithub.client_id;
 const CLIENT_SECRET = configGithub.client_secret;
@@ -12,15 +15,7 @@ if (!CLIENT_ID || !CLIENT_SECRET)
     'Las variables de enterno GITHUB_CLIENT_ID y GITHUB_CLIENT_SECRET deben estar definidas.',
   );
 
-interface GithubProfile extends Profile {
-  _json: {
-    email: string;
-    name: string;
-    id: number;
-  };
-}
-
-//? Estrategia GITHUB
+//? Github strategy
 passport.use(
   'github',
   new GithubStrategy(
@@ -35,14 +30,12 @@ passport.use(
       profile: GithubProfile,
       done: DoneCallback,
     ) => {
-      console.log('Perfil obtenido del usuario en github:');
-      console.log(profile);
       try {
-        const dbUser = await User.findOne({ githubId: profile._json.id });
+        const userFound = await User.findOne({ githubId: profile._json.id });
 
-        if (!dbUser) {
+        if (!userFound) {
           let newUser = {
-            first_name: profile.username,
+            first_name: profile.username || '',
             last_name: '',
             age: 18,
             email: profile._json?.email || '',
@@ -50,20 +43,22 @@ passport.use(
             loggedBy: 'GitHub',
             githubId: profile._json.id,
           };
-          const result = await User.create(newUser);
-          return done(null, result);
+          const userSaved = await User.create(newUser);
+          return done(null, userSaved);
         } else {
-          return done(null, dbUser);
+          return done(null, userFound);
         }
       } catch (error: any) {
-        console.error('Error al autenticar al usuario con github: ', error);
+        console.error(
+          'Error al autenticar al usuario con github: ',
+          error?.message || error,
+        );
         done(error);
       }
     },
   ),
 );
 
-//? Estrategia LOCAL
 passport.use(
   'login',
   new LocalStrategy(
@@ -72,19 +67,48 @@ passport.use(
       passwordField: 'password',
     },
     async (email: string, password: string, done: any) => {
-      //? Confirmar si existe el correo
-      const dbUser = await User.findOne({ email });
-      if (!dbUser) {
-        return done(null, false, { message: 'Credenciales incorrectas.' });
-      }
+      try {
+        const userFound = await User.findOne({ email });
+        if (!userFound)
+          return done(null, false, { message: 'Credenciales incorrectas.' });
 
-      //? Confirmar si la contraseña es correcta
-      const match = await dbUser.matchPassword(password);
-      if (!match) {
-        return done(null, false, { message: 'Credenciales incorrectas.' });
-      }
+        const passwordsMatch = await userFound.matchPassword(password);
+        if (!passwordsMatch)
+          return done(null, false, { message: 'Credenciales incorrectas.' });
 
-      return done(null, dbUser);
+        return done(null, userFound);
+      } catch (error: any) {
+        console.error(
+          'Error al autenticar al usuario con github: ',
+          error?.message || error,
+        );
+        done(error);
+      }
+    },
+  ),
+);
+
+passport.use(
+  'jwt',
+  new JwtStrategy(
+    {
+      jwtFromRequest: req => req.cookies.jwt,
+      secretOrKey: configJWT.jwt_secret,
+    },
+    async (jwtPayload, done: any) => {
+      try {
+        // Buscar al usuario en la base de datos usando el id del payload del JWT
+        const user = await User.findById(jwtPayload.id);
+
+        // Si no existe en la BD
+        if (!user) return done(null, false);
+
+        // Si existe en la BD
+        return done(null, user);
+      } catch (error) {
+        // En caso de error, continuar con el error
+        return done(error, false);
+      }
     },
   ),
 );
@@ -93,24 +117,21 @@ passport.serializeUser((user: any, done: any) => {
   done(null, user._id);
 });
 
-passport.deserializeUser(
-  async (id: string, done: (err: any, user?: any) => void) => {
-    try {
-      const result = await User.findById(id);
-      if (result) {
-        const user = {
-          _id: result._id,
-          first_name: result.first_name,
-          last_name: result.last_name,
-          email: result.email,
-          age: result.age,
-        };
-        done(null, user);
-      } else {
-        done(new Error('User not found'));
-      }
-    } catch (err) {
-      done(err);
+passport.deserializeUser(async (id: string, done: any) => {
+  try {
+    const userFound = await User.findById(id);
+    if (userFound) {
+      const user = {
+        id: userFound._id,
+        first_name: userFound.first_name,
+        last_name: userFound.last_name,
+        email: userFound.email,
+        age: userFound.age,
+      };
+      return done(null, user);
     }
-  },
-);
+    return done(new Error('Usuario no encontrado.'));
+  } catch (error: any) {
+    done(error);
+  }
+});
