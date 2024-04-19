@@ -9,24 +9,25 @@ router.post('/register', usersController.userRegister);
 router.post(
   '/login',
   passport.authenticate('login', {
-    successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true, // Utilizar flash para errores
+    session: false,
   }),
   usersController.successfulLogin,
 );
 router.get(
   '/github',
-  passport.authenticate('github', { scope: ['user:email'] }),
+  passport.authenticate('github', { scope: ['user:email'], session: false }),
   usersController.userLoginGithub,
 );
 router.get(
   '/github/callback',
   passport.authenticate('github', {
     failureRedirect: '/login',
+    session: false,
   }),
   usersController.successfulLogin,
 );
-router.get('/logout', isAuthenticated, usersController.userLogout);
+router.get('/logout', usersController.userLogout);
 
 export default router;

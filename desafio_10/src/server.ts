@@ -18,7 +18,7 @@ import express from 'express';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 // Sessions
-import session from 'express-session';
+// import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import flash from 'connect-flash';
 // Utilities
@@ -85,35 +85,44 @@ app.use(express.urlencoded({ extended: true }));
 // Method-override
 app.use(methodOverride('_method'));
 // Sessions
-app.use(
-  session({
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-      mongoOptions: {},
-      autoRemove: 'interval', // Eliminar sesiones en intervalos de 1min
-      autoRemoveInterval: 5, // eliminar sesion en 1min
-    }),
-    secret: 'C0d3rS3cr3t', // Key de seguridad
-    resave: true, // Guardar en memoria
-    saveUninitialized: true, // Guardar apenas se crea la sesión, aunque no tenga info
-    cookie: {
-      secure: false, // Cambiar esto a true en un entorno de producción con HTTPS habilitado
-      httpOnly: true,
-      maxAge: 1000 * 60 * 5, // eliminar cookie en 5min
-    },
-  }),
-);
+// app.use(
+//   session({
+//     store: MongoStore.create({
+//       mongoUrl: process.env.MONGO_URI,
+//       mongoOptions: {},
+//       autoRemove: 'interval', // Eliminar sesiones en intervalos de 1min
+//       autoRemoveInterval: 5, // eliminar sesion en 1min
+//     }),
+//     secret: 'C0d3rS3cr3t', // Key de seguridad
+//     resave: true, // Guardar en memoria
+//     saveUninitialized: true, // Guardar apenas se crea la sesión, aunque no tenga info
+//     cookie: {
+//       secure: false, // Cambiar esto a true en un entorno de producción con HTTPS habilitado
+//       httpOnly: true,
+//       maxAge: 1000 * 60 * 5, // eliminar cookie en 5min
+//     },
+//   }),
+// );
 // Autenticación y registro con Passport
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
+// Mensajes con cookies
+app.use((req, res, next) => {
+  // Leer mensaje de la cookie
+  res.locals.success_msg = req.cookies.success_msg;
+  // Eliminar cookie
+  res.clearCookie('success_msg');
+  next();
+});
+
 // Mensajes con connect-flash
-app.use(flash());
+// app.use(flash());
 
 //? - - - = = = Global Variables = = = - - -
 app.use((req, res, next) => {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error');
+  // res.locals.success_msg = req.flash('success_msg');
+  // res.locals.error_msg = req.flash('error_msg');
+  // res.locals.error = req.flash('error');
   res.locals.user = req.user ? req.user : null;
   next();
 });

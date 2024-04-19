@@ -66,9 +66,9 @@ passport.use(
       usernameField: 'email',
       passwordField: 'password',
     },
-    async (email: string, password: string, done: any) => {
+    async (user_email: string, password: string, done: any) => {
       try {
-        const userFound = await User.findOne({ email });
+        const userFound = await User.findOne({ user_email });
         if (!userFound)
           return done(null, false, { message: 'Credenciales incorrectas.' });
 
@@ -76,7 +76,18 @@ passport.use(
         if (!passwordsMatch)
           return done(null, false, { message: 'Credenciales incorrectas.' });
 
-        return done(null, userFound);
+        const { _id, first_name, last_name, email, age, role } = userFound;
+
+        const user = {
+          _id,
+          first_name,
+          last_name,
+          email,
+          age,
+          role,
+        };
+
+        return done(null, user);
       } catch (error: any) {
         console.error(
           'Error al autenticar al usuario con github: ',
@@ -98,10 +109,21 @@ passport.use(
     async (jwtPayload, done: any) => {
       try {
         // Buscar al usuario en la base de datos usando el id del payload del JWT
-        const user = await User.findById(jwtPayload.id);
+        const userFound = await User.findById(jwtPayload.id);
 
         // Si no existe en la BD
-        if (!user) return done(null, false);
+        if (!userFound) return done(null, false);
+
+        const { _id, first_name, last_name, email, age, role } = userFound;
+
+        const user = {
+          _id,
+          first_name,
+          last_name,
+          email,
+          age,
+          role,
+        };
 
         // Si existe en la BD
         return done(null, user);
@@ -113,25 +135,25 @@ passport.use(
   ),
 );
 
-passport.serializeUser((user: any, done: any) => {
-  done(null, user._id);
-});
+// passport.serializeUser((user: any, done: any) => {
+//   done(null, user._id);
+// });
 
-passport.deserializeUser(async (id: string, done: any) => {
-  try {
-    const userFound = await User.findById(id);
-    if (userFound) {
-      const user = {
-        id: userFound._id,
-        first_name: userFound.first_name,
-        last_name: userFound.last_name,
-        email: userFound.email,
-        age: userFound.age,
-      };
-      return done(null, user);
-    }
-    return done(new Error('Usuario no encontrado.'));
-  } catch (error: any) {
-    done(error);
-  }
-});
+// passport.deserializeUser(async (id: string, done: any) => {
+//   try {
+//     const userFound = await User.findById(id);
+//     if (userFound) {
+//       const user = {
+//         id: userFound._id,
+//         first_name: userFound.first_name,
+//         last_name: userFound.last_name,
+//         email: userFound.email,
+//         age: userFound.age,
+//       };
+//       return done(null, user);
+//     }
+//     return done(new Error('Usuario no encontrado.'));
+//   } catch (error: any) {
+//     done(error);
+//   }
+// });
