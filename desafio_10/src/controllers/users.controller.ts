@@ -82,6 +82,10 @@ export const updateUserEmail = async (req: Request, res: Response) => {
     const email = req.body.email;
 
     //TODO: req.user no tiene nada. Tengo que guarda el valor de la cookie 'githubId'
+    const user = req.user as UserToRegister;
+
+    console.log('POST user:');
+    console.log(user);
 
     const updatedUser = await User.findOneAndUpdate(
       { githubId: user.githubId },
