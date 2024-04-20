@@ -6,7 +6,8 @@ export const createProduct = async (req: Request, res: Response) => {
   const dataProduct = req.body;
   try {
     const result = await productService.createProduct(dataProduct);
-    req.flash('success_msg', 'Producto agregado con éxito!');
+    // req.flash('success_msg', 'Producto agregado con éxito!');
+    res.cookie('success_msg', '¡Producto agregado con éxito!');
     res.status(result.status).json({ status: 'OK', data: result.data });
   } catch (error: any) {
     res.status(error.status).json({ status: 'FAILED', message: error.message });
@@ -89,7 +90,7 @@ export const updateProductById = async (req: Request, res: Response) => {
   const updates = req.body;
   try {
     const result = await productService.updateProductById(pId, updates);
-    req.flash('success_msg', 'Producto actualizado con éxito!');
+    res.cookie('success_msg', 'Producto actualizado con éxito!');
     return res.status(result.status).redirect('/');
   } catch (error: any) {
     res.status(error.status).json({ status: 'FAILED', message: error.message });
@@ -100,7 +101,7 @@ export const deleteProductById = async (req: Request, res: Response) => {
   const pid = req.params.pid;
   try {
     const result = await productService.deleteProductById(pid);
-    req.flash('success_msg', 'Producto eliminado con éxito!');
+    res.cookie('success_msg', 'Producto eliminado con éxito!');
     res.status(result.status).redirect('/');
   } catch (error: any) {
     res.status(error.status).json({ status: 'FAILED', message: error.message });

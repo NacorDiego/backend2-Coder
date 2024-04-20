@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import * as usersController from '@controllers/users.controller';
 import passport from 'passport';
-import { isAuthenticated } from '@middlewares/auth.middleware';
 
 const router = Router();
 
@@ -17,7 +16,11 @@ router.post(
 );
 router.get(
   '/github',
-  passport.authenticate('github', { scope: ['user:email'], session: false }),
+  passport.authenticate('github', {
+    scope: ['user:email'],
+    session: false,
+    failureFlash: false,
+  }),
   usersController.userLoginGithub,
 );
 router.get(
@@ -25,6 +28,7 @@ router.get(
   passport.authenticate('github', {
     failureRedirect: '/login',
     session: false,
+    failureFlash: false,
   }),
   usersController.successfulLogin,
 );

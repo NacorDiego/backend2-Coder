@@ -4,7 +4,6 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JwtStrategy } from 'passport-jwt';
 import User from '@models/user.model';
 import { configGithub, configJWT } from './config';
-import { UserToRegister } from '@interfaces/users.interface';
 import { GithubProfile } from '@interfaces/passport.interface';
 
 const CLIENT_ID = configGithub.client_id;
@@ -69,12 +68,10 @@ passport.use(
     async (user_email: string, password: string, done: any) => {
       try {
         const userFound = await User.findOne({ user_email });
-        if (!userFound)
-          return done(null, false, { message: 'Credenciales incorrectas.' });
+        if (!userFound) return done(null, false);
 
         const passwordsMatch = await userFound.matchPassword(password);
-        if (!passwordsMatch)
-          return done(null, false, { message: 'Credenciales incorrectas.' });
+        if (!passwordsMatch) return done(null, false);
 
         const { _id, first_name, last_name, email, age, role } = userFound;
 

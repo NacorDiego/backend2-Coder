@@ -46,7 +46,8 @@ export const userRegister = async (req: Request, res: Response) => {
 
   try {
     await usersService.userRegisterService(registerData);
-    req.flash('success_msg', 'Usuario registrado con éxito');
+    // req.flash('success_msg', 'Usuario registrado con éxito');
+    res.cookie('success_msg', 'Usuario registrado con éxito.');
     res.status(201).redirect('/login');
   } catch (error: any) {
     console.error('error: ', error.message);
@@ -59,13 +60,16 @@ export const userRegister = async (req: Request, res: Response) => {
 export const userLoginGithub = (req: Request, res: Response) => {};
 
 export const successfulLogin = (req: Request, res: Response) => {
+  // Creo token JWT y lo guardo en cookie
   const token = jwt.sign({ user: req.user }, configJWT.jwt_secret);
   res.cookie('jwt', token);
+  // Creo cookie de msg success
+  res.cookie('success_msg', 'El login fue exitoso.');
   res.redirect('/');
 };
 
 export const userLogout = (req: Request, res: Response) => {
   req.logout(() => {});
-  req.flash('success_msg', 'Sesión cerrada con éxito.');
+  res.cookie('success_msg', 'Sesión cerrada con éxito.');
   res.redirect('/login');
 };

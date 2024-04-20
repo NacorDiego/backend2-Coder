@@ -8,6 +8,6 @@ export const isAuthenticated = (
   if (req.isAuthenticated()) {
     return next();
   }
-  req.flash('error_msg', 'No estás autorizado.');
+  // req.flash('error_msg', 'No estás autorizado.');
   res.redirect('/login');
 };
