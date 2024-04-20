@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import * as usersService from '@services/dao/db/users.service';
-import { NewUser } from '@interfaces/users.interface';
+import { NewUser, UserJwt, UserToRegister } from '@interfaces/users.interface';
 import jwt from 'jsonwebtoken';
 import { configJWT } from 'src/config/config';
+import User from '@models/user.model';
 
 export const userRegister = async (req: Request, res: Response) => {
   const errors = [];
@@ -56,9 +57,69 @@ export const successfulLogin = (req: Request, res: Response) => {
   // Creo token JWT y lo guardo en cookie
   const token = jwt.sign({ user: req.user }, configJWT.jwt_secret);
   res.cookie('jwt', token);
-  // Creo cookie de msg success
-  res.cookie('success_msg', 'El login fue exitoso.');
   res.redirect('/');
+};
+
+export const successfulLoginFromGithub = (req: Request, res: Response) => {
+  const user = req.user as UserJwt;
+
+  console.log('GET user:');
+  console.log(user);
+
+  if (user && !user.email) {
+    res.cookie('githubID', user.githubId);
+    return res.render('users/enter-email');
+  }
+
+  // Creo token JWT y lo guardo en cookie
+  const token = jwt.sign({ user }, configJWT.jwt_secret);
+  res.cookie('jwt', token);
+  res.redirect('/');
+};
+
+export const updateUserEmail = async (req: Request, res: Response) => {
+  try {
+    const email = req.body.email;
+
+    //TODO: req.user no tiene nada. Tengo que guarda el valor de la cookie 'githubId'
+
+    const updatedUser = await User.findOneAndUpdate(
+      { githubId: user.githubId },
+      { email },
+      { new: true },
+    );
+
+    if (!updatedUser)
+      throw {
+        status: 404,
+        message: 'No se pudo actualizar el email del usuario.',
+      };
+
+    const { _id, first_name, last_name, age, role, githubId } = updatedUser;
+
+    const userJWT: UserJwt = {
+      id: _id,
+      first_name,
+      last_name,
+      email,
+      age,
+      role,
+      githubId: parseInt(githubId),
+    };
+
+    const token = jwt.sign({ userJWT }, configJWT.jwt_secret);
+
+    res.cookie('jwt', token);
+
+    res.redirect('/');
+  } catch (error: any) {
+    console.log(error.message || error);
+
+    res.status(error.status || 500).json({
+      status: 'FAILED',
+      message: error.message || 'Error interno del servidor',
+    });
+  }
 };
 
 export const userLogout = (req: Request, res: Response) => {

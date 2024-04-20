@@ -30,8 +30,10 @@ router.get(
     failureRedirect: '/login',
     session: false,
   }),
-  usersController.successfulLogin,
+  usersController.successfulLoginFromGithub,
 );
+
+router.post('/github/callback', usersController.updateUserEmail);
 
 router.get('/logout', usersController.userLogout);
 

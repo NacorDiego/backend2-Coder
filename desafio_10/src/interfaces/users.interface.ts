@@ -17,12 +17,13 @@ export interface UserToRegister extends Document {
 }
 
 export interface UserJwt {
-  id: Schema.Types.ObjectId;
+  id?: Schema.Types.ObjectId;
   first_name: string;
   last_name: string;
   email: string;
   age: number;
   role: string;
+  githubId: number;
 }
 
 export interface JwtPayload {
