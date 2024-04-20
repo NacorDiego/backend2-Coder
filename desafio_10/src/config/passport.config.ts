@@ -66,12 +66,19 @@ passport.use(
       passwordField: 'password',
     },
     async (user_email: string, password: string, done: any) => {
+      console.log(`Mail ingresado ${user_email}`);
       try {
-        const userFound = await User.findOne({ user_email });
-        if (!userFound) return done(null, false);
+        const userFound = await User.findOne({ email: user_email });
+        if (!userFound) {
+          console.log(`No se encontro el usuario con este mail ${user_email}`);
+          return done(null, false);
+        }
 
         const passwordsMatch = await userFound.matchPassword(password);
-        if (!passwordsMatch) return done(null, false);
+        if (!passwordsMatch) {
+          console.log('Las contraseñas no coinciden');
+          return done(null, false);
+        }
 
         const { _id, first_name, last_name, email, age, role } = userFound;
 

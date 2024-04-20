@@ -12,8 +12,9 @@ export const renderProducts = async (req: Request, res: Response) => {
       stock: product.stock,
     }));
 
+    //TODO: req.cookies.jwt tiene el token. Necesito desencriptarlo.
     res.status(result.status).render('home', { products: productsList });
-    // .render('home', { products: productsList, user: req.session.user });
+    // .render('home', { products: productsList, user: req.cookies.jwt });
   } catch (error: any) {
     res.status(error.status).json({ status: 'FAILED', message: error.message });
   }

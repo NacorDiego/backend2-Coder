@@ -5,6 +5,7 @@ import passport from 'passport';
 const router = Router();
 
 router.post('/register', usersController.userRegister);
+
 router.post(
   '/login',
   passport.authenticate('login', {
@@ -14,6 +15,7 @@ router.post(
   }),
   usersController.successfulLogin,
 );
+
 router.get(
   '/github',
   passport.authenticate('github', {
@@ -23,6 +25,7 @@ router.get(
   }),
   usersController.userLoginGithub,
 );
+
 router.get(
   '/github/callback',
   passport.authenticate('github', {
@@ -32,6 +35,7 @@ router.get(
   }),
   usersController.successfulLogin,
 );
+
 router.get('/logout', usersController.userLogout);
 
 export default router;
