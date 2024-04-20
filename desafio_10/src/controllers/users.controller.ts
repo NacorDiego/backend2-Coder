@@ -62,7 +62,7 @@ export const successfulLogin = (req: Request, res: Response) => {
 };
 
 export const userLogout = (req: Request, res: Response) => {
-  req.logout(() => {});
+  res.clearCookie('jwt');
   res.cookie('success_msg', 'Sesión cerrada con éxito.');
   res.redirect('/login');
 };

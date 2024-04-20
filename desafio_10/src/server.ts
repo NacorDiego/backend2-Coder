@@ -1,7 +1,6 @@
 // Cookies
 import cookieParser from 'cookie-parser';
 // Handlebars
-// import exphbs from 'express-handlebars';
 import { engine } from 'express-handlebars';
 // Logger
 import logger from 'morgan';
@@ -17,10 +16,6 @@ import viewsRoutes from '@routes/views.routes';
 import express from 'express';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
-// Sessions
-// import session from 'express-session';
-import MongoStore from 'connect-mongo';
-import flash from 'connect-flash';
 // Utilities
 import path from 'path';
 import dotenv from 'dotenv';
@@ -33,7 +28,6 @@ const server = createServer(app);
 const io = new Server(server, {
   connectionStateRecovery: {}, // Recupera datos  de conexión interrumpida
 });
-// const ROUTE_SRC = path.join(__dirname, 'src');
 
 // Socket.io
 io.on('connection', socket => {
@@ -69,7 +63,6 @@ app.engine(
   }),
 );
 app.set('view engine', '.hbs');
-
 app.set('views', path.join(__dirname, 'views'));
 
 // Cookies
@@ -78,35 +71,20 @@ app.use(cookieParser('C0d3rS3cr3t'));
 //? - - - = = = Middlewares = = = - - -
 // Log record
 app.use(logger('dev'));
+
 // Preparar servidor para recibir JSON
 app.use(express.json());
+
 // Permite recibir datos codificados de POST en form por url.
 app.use(express.urlencoded({ extended: true }));
+
 // Method-override
 app.use(methodOverride('_method'));
-// Sessions
-// app.use(
-//   session({
-//     store: MongoStore.create({
-//       mongoUrl: process.env.MONGO_URI,
-//       mongoOptions: {},
-//       autoRemove: 'interval', // Eliminar sesiones en intervalos de 1min
-//       autoRemoveInterval: 5, // eliminar sesion en 1min
-//     }),
-//     secret: 'C0d3rS3cr3t', // Key de seguridad
-//     resave: true, // Guardar en memoria
-//     saveUninitialized: true, // Guardar apenas se crea la sesión, aunque no tenga info
-//     cookie: {
-//       secure: false, // Cambiar esto a true en un entorno de producción con HTTPS habilitado
-//       httpOnly: true,
-//       maxAge: 1000 * 60 * 5, // eliminar cookie en 5min
-//     },
-//   }),
-// );
+
 // Autenticación y registro con Passport
 app.use(passport.initialize());
-// app.use(passport.session());
-// Mensajes con cookies
+
+// Mensajes de exito con cookies
 app.use((req, res, next) => {
   // Leer mensaje de la cookie
   res.locals.success_msg = req.cookies.success_msg;
@@ -115,17 +93,16 @@ app.use((req, res, next) => {
   next();
 });
 
-// Mensajes con connect-flash
-// app.use(flash());
-
-//? - - - = = = Global Variables = = = - - -
+// Mensajes de error con cookies
 app.use((req, res, next) => {
-  // res.locals.success_msg = req.flash('success_msg');
-  // res.locals.error_msg = req.flash('error_msg');
-  // res.locals.error = req.flash('error');
-  res.locals.user = req.user ? req.user : null;
+  // Leer mensaje de la cookie
+  res.locals.error_msg = req.cookies.error_msg;
+  // Eliminar cookie
+  res.clearCookie('error_msg');
   next();
 });
+
+//? - - - = = = Global Variables = = = - - -
 
 //? - - - = = = Routes = = = - - -
 app.use('/', viewsRoutes);
