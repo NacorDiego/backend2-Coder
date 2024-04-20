@@ -138,26 +138,3 @@ passport.use(
     },
   ),
 );
-
-// passport.serializeUser((user: any, done: any) => {
-//   done(null, user._id);
-// });
-
-// passport.deserializeUser(async (id: string, done: any) => {
-//   try {
-//     const userFound = await User.findById(id);
-//     if (userFound) {
-//       const user = {
-//         id: userFound._id,
-//         first_name: userFound.first_name,
-//         last_name: userFound.last_name,
-//         email: userFound.email,
-//         age: userFound.age,
-//       };
-//       return done(null, user);
-//     }
-//     return done(new Error('Usuario no encontrado.'));
-//   } catch (error: any) {
-//     done(error);
-//   }
-// });
