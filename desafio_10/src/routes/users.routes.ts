@@ -10,7 +10,6 @@ router.post(
   '/login',
   passport.authenticate('login', {
     failureRedirect: '/login',
-    failureFlash: true, // Utilizar flash para errores
     session: false,
   }),
   usersController.successfulLogin,
@@ -21,7 +20,6 @@ router.get(
   passport.authenticate('github', {
     scope: ['user:email'],
     session: false,
-    failureFlash: false,
   }),
   usersController.userLoginGithub,
 );
@@ -31,7 +29,6 @@ router.get(
   passport.authenticate('github', {
     failureRedirect: '/login',
     session: false,
-    failureFlash: false,
   }),
   usersController.successfulLogin,
 );
