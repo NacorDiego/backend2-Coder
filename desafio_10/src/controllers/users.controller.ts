@@ -1,15 +1,8 @@
 import { Request, Response } from 'express';
 import * as usersService from '@services/dao/db/users.service';
-import { SessionUser, NewUser } from '@interfaces/users.interface';
+import { NewUser } from '@interfaces/users.interface';
 import jwt from 'jsonwebtoken';
 import { configJWT } from 'src/config/config';
-
-// declare module se utilizan para poder crear sesión.
-declare module 'express-session' {
-  interface SessionData {
-    user: SessionUser; // Agrega tu propiedad de usuario aquí
-  }
-}
 
 export const userRegister = async (req: Request, res: Response) => {
   const errors = [];

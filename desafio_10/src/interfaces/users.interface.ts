@@ -16,11 +16,17 @@ export interface UserToRegister extends Document {
   matchPassword(password: string): Promise<boolean>;
 }
 
-export interface SessionUser {
+export interface UserJwt {
   id: Schema.Types.ObjectId;
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   age: number;
+  role: string;
+}
+
+export interface JwtPayload {
+  user: UserJwt;
 }
 
 export interface NewUser {

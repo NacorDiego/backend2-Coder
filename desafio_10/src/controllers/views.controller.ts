@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
 import { getProducts, getProductById } from '@services/dao/db/product.service';
+import jwt from 'jsonwebtoken';
+import { configJWT } from 'src/config/config';
+import { JwtPayload } from '@interfaces/users.interface';
 
 export const renderProducts = async (req: Request, res: Response) => {
   try {
@@ -12,9 +15,9 @@ export const renderProducts = async (req: Request, res: Response) => {
       stock: product.stock,
     }));
 
-    //TODO: req.cookies.jwt tiene el token. Necesito desencriptarlo.
-    res.status(result.status).render('home', { products: productsList });
-    // .render('home', { products: productsList, user: req.cookies.jwt });
+    res
+      .status(result.status)
+      .render('home', { products: productsList, user: req.user });
   } catch (error: any) {
     res.status(error.status).json({ status: 'FAILED', message: error.message });
   }
@@ -51,6 +54,5 @@ export const viewLoginWithGithub = (req: Request, res: Response) => {
 };
 
 export const viewUserProfile = (req: Request, res: Response) => {
-  res.render('users/profile');
-  // res.render('profile', { user: req.session.user });
+  res.render('users/profile', { user: req.user });
 };
