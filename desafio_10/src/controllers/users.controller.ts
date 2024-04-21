@@ -40,7 +40,6 @@ export const userRegister = async (req: Request, res: Response) => {
 
   try {
     await usersService.userRegisterService(registerData);
-    // req.flash('success_msg', 'Usuario registrado con éxito');
     res.cookie('success_msg', 'Usuario registrado con éxito.');
     res.status(201).redirect('/login');
   } catch (error: any) {
@@ -80,15 +79,10 @@ export const successfulLoginFromGithub = (req: Request, res: Response) => {
 export const updateUserEmail = async (req: Request, res: Response) => {
   try {
     const email = req.body.email;
-
-    //TODO: req.user no tiene nada. Tengo que guarda el valor de la cookie 'githubId'
-    const user = req.user as UserToRegister;
-
-    console.log('POST user:');
-    console.log(user);
+    const githubID = req.cookies.githubID;
 
     const updatedUser = await User.findOneAndUpdate(
-      { githubId: user.githubId },
+      { githubId: githubID },
       { email },
       { new: true },
     );
