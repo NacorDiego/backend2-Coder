@@ -1,4 +1,4 @@
-import { Schema, Types } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import { Document } from 'mongoose';
 
 export interface UserToRegister extends Document {
@@ -12,8 +12,11 @@ export interface UserToRegister extends Document {
   githubId: string;
   cart: Schema.Types.ObjectId;
   role: string;
+}
+
+export interface IUserModel extends Model<UserToRegister> {
   encryptPassword(password: string): Promise<string>;
-  matchPassword(password: string): Promise<boolean>;
+  matchPassword(password: string, hashedPassword: string): Promise<boolean>;
 }
 
 export interface UserJwt {

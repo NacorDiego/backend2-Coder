@@ -1,6 +1,6 @@
 import { Model, Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { UserToRegister } from '@interfaces/users.interface';
+import { UserToRegister, IUserModel } from '@interfaces/users.interface';
 
 const userCollection = 'users';
 
@@ -68,21 +68,25 @@ const userSchema = new Schema<UserToRegister>(
   },
 );
 
-// Agrego método para cifrar password
-userSchema.methods.encryptPassword = async (
+// Método estático para cifrar password
+userSchema.statics.encryptPassword = async function (
   password: string,
-): Promise<string> => {
+): Promise<string> {
   const salt = await bcrypt.genSalt(10);
   return await bcrypt.hash(password, salt);
 };
 
-// Agrego método para comprar password con la almacenada en bd
-userSchema.methods.matchPassword = async function (
+// Método estático para comparar password con la almacenada en bd
+userSchema.statics.matchPassword = async function (
   password: string,
+  hashedPassword: string,
 ): Promise<boolean> {
-  return await bcrypt.compare(password, this.password);
+  return await bcrypt.compare(password, hashedPassword);
 };
 
-const userModel: Model<UserToRegister> = model(userCollection, userSchema);
+const userModel: IUserModel = model<UserToRegister, IUserModel>(
+  userCollection,
+  userSchema,
+);
 
 export default userModel;

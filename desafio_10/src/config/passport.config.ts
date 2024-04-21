@@ -100,7 +100,11 @@ passport.use(
           return done(null, false);
         }
 
-        const passwordsMatch = await userFound.matchPassword(password);
+        const passwordsMatch = await User.matchPassword(
+          password,
+          userFound.password,
+        );
+
         if (!passwordsMatch) {
           console.log('Las contraseñas no coinciden');
           req.res.cookie('error_msg', 'Las credenciales son inválidas.');

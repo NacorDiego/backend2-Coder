@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as usersService from '@services/dao/db/users.service';
-import { NewUser, UserJwt, UserToRegister } from '@interfaces/users.interface';
+import { NewUser, UserJwt } from '@interfaces/users.interface';
 import jwt from 'jsonwebtoken';
 import { configJWT } from 'src/config/config';
 import User from '@models/user.model';
@@ -31,7 +31,7 @@ export const userRegister = async (req: Request, res: Response) => {
     last_name,
     email,
     age,
-    password,
+    password: await User.encryptPassword(password),
     role: 'user',
   };
 
@@ -76,14 +76,24 @@ export const successfulLoginFromGithub = (req: Request, res: Response) => {
   res.redirect('/');
 };
 
-export const updateUserEmail = async (req: Request, res: Response) => {
+export const updateUserEmailAndPassword = async (
+  req: Request,
+  res: Response,
+) => {
   try {
-    const email = req.body.email;
+    const { email, password, confirm_password } = req.body;
     const githubID = req.cookies.githubID;
+
+    if (password !== confirm_password) {
+      res.cookie('error_msg', 'Las contraseñas no coinciden.');
+      return res.status(404).render('users/enter-email');
+    }
+
+    const hashedPassword = await User.encryptPassword(password);
 
     const updatedUser = await User.findOneAndUpdate(
       { githubId: githubID },
-      { email },
+      { email, password: hashedPassword },
       { new: true },
     );
 

@@ -33,7 +33,7 @@ router.get(
   usersController.successfulLoginFromGithub,
 );
 
-router.post('/github/callback', usersController.updateUserEmail);
+router.post('/github/callback', usersController.updateUserEmailAndPassword);
 
 router.get('/logout', usersController.userLogout);
 
