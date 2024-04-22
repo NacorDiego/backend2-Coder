@@ -35,16 +35,15 @@ passport.use(
       try {
         const userFound = await User.findOne({ githubId: profile._json.id });
 
-        let user: UserJwt = {
-          first_name: profile.username || '',
-          last_name: '',
-          email: profile._json?.email || '',
-          age: 18,
-          role: 'user',
-          githubId: profile._json.id,
-        };
-
         if (!userFound) {
+          let user: UserJwt = {
+            first_name: profile.username || '',
+            last_name: '',
+            email: profile._json?.email || '',
+            age: 18,
+            role: 'user',
+            githubId: profile._json.id,
+          };
           let newUser = {
             first_name: profile.username || '',
             last_name: '',
@@ -66,6 +65,14 @@ passport.use(
 
           return done(null, user);
         } else {
+          let user: UserJwt = {
+            first_name: userFound.first_name || '',
+            last_name: userFound.last_name || '',
+            email: userFound.email,
+            age: 18,
+            role: userFound.role,
+            githubId: parseInt(userFound.githubId),
+          };
           user.id = userFound._id;
 
           req.res.cookie('success_msg', '¡Has iniciado sesión desde GitHub!');
