@@ -147,14 +147,18 @@ passport.use(
     {
       jwtFromRequest: req => req.cookies.jwt,
       secretOrKey: configJWT.jwt_secret,
+      passReqToCallback: true,
     },
-    async (jwtPayload, done: any) => {
+    async (req, jwtPayload, done: any) => {
       try {
         // Buscar al usuario en la base de datos usando el id del payload del JWT
         const userFound = await User.findById(jwtPayload.id);
 
         // Si no existe en la BD
-        if (!userFound) return done(null, false);
+        if (!userFound) {
+          req.res.cookie('error_msg', '¡Ocurrió un error inesperado!');
+          return done(null, false);
+        }
 
         const { _id, first_name, last_name, email, age, role } = userFound;
 
