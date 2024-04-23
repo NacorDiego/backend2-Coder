@@ -151,8 +151,13 @@ passport.use(
     },
     async (req, jwtPayload, done: any) => {
       try {
+        console.log(jwtPayload);
+
         // Buscar al usuario en la base de datos usando el id del payload del JWT
-        const userFound = await User.findById(jwtPayload.id);
+        const userFound = await User.findOne({ email: jwtPayload.user.email });
+
+        console.log('user:');
+        console.log(userFound);
 
         // Si no existe en la BD
         if (!userFound) {
