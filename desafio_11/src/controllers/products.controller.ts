@@ -6,7 +6,6 @@ export const createProduct = async (req: Request, res: Response) => {
   const dataProduct = req.body;
   try {
     const result = await productService.createProduct(dataProduct);
-    // req.flash('success_msg', 'Producto agregado con éxito!');
     res.cookie('success_msg', '¡Producto agregado con éxito!');
     res.status(result.status).json({ status: 'OK', data: result.data });
   } catch (error: any) {
