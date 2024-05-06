@@ -9,7 +9,7 @@ export interface UserToRegister extends Document {
   age: number;
   password: string;
   loggedBy: string;
-  githubId: string;
+  githubId: number;
   cart: Schema.Types.ObjectId;
   role: string;
 }
@@ -20,9 +20,8 @@ export interface IUserModel extends Model<UserToRegister> {
 }
 
 export interface UserJwt {
-  id?: Schema.Types.ObjectId;
-  first_name: string;
-  last_name: string;
+  id: Schema.Types.ObjectId;
+  name: string;
   email: string;
   age: number;
   role: string;
@@ -30,7 +29,7 @@ export interface UserJwt {
 }
 
 export interface JwtPayload {
-  user: UserJwt;
+  userJWT: UserJwt;
 }
 
 export interface NewUser {
@@ -40,4 +39,10 @@ export interface NewUser {
   age: number;
   password: string;
   role: string;
+}
+
+export interface IUserGithub {
+  username: string;
+  email: string;
+  githubId: number;
 }

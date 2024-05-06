@@ -1,4 +1,4 @@
-import { Model, Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserToRegister, IUserModel } from '@interfaces/users.interface';
 
@@ -49,8 +49,8 @@ const userSchema = new Schema<UserToRegister>(
       default: '',
     },
     githubId: {
-      type: String,
-      default: '',
+      type: Number,
+      default: 0,
     },
     cart: {
       type: Schema.Types.ObjectId,

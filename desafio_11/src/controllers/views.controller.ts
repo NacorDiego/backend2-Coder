@@ -1,8 +1,5 @@
 import { Request, Response } from 'express';
 import { getProducts, getProductById } from '@services/dao/db/product.service';
-import jwt from 'jsonwebtoken';
-import { configJWT } from 'src/config/config';
-import { JwtPayload } from '@interfaces/users.interface';
 
 export const renderProducts = async (req: Request, res: Response) => {
   try {
@@ -33,8 +30,6 @@ export const renderEditProductForm = async (req: Request, res: Response) => {
     price: data.price,
     stock: data.stock,
   };
-
-  console.log(product);
 
   res.render('products/edit-product', { product });
 };

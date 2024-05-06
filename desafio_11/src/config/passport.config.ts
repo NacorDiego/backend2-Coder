@@ -5,10 +5,12 @@ import { Strategy as JwtStrategy } from 'passport-jwt';
 import User from '@models/user.model';
 import { configGithub, configJWT } from './config';
 import { GithubProfile } from '@interfaces/passport.interface';
-import { UserJwt } from '@interfaces/users.interface';
+import { IUserGithub } from '@interfaces/users.interface';
+import UsersDto from '@services/DTO/users.dto';
 
 const CLIENT_ID = configGithub.client_id;
 const CLIENT_SECRET = configGithub.client_secret;
+const userDto = new UsersDto();
 
 if (!CLIENT_ID || !CLIENT_SECRET)
   throw new Error(
@@ -34,51 +36,28 @@ passport.use(
     ) => {
       try {
         const userFound = await User.findOne({ githubId: profile._json.id });
+        let user;
 
         if (!userFound) {
-          let user: UserJwt = {
-            first_name: profile.username || '',
-            last_name: '',
+          let newUser: IUserGithub = {
+            username: profile.username || '',
             email: profile._json?.email || '',
-            age: 18,
-            role: 'user',
             githubId: profile._json.id,
           };
-          let newUser = {
-            first_name: profile.username || '',
-            last_name: '',
-            age: 18,
-            email: profile._json?.email || '',
-            password: '',
-            loggedBy: 'GitHub',
-            githubId: profile._json.id,
-          };
-
-          const createdUser = await User.create(newUser);
-
-          user.id = createdUser._id;
-
+          const createdUser = await User.create(
+            userDto.fromGithubToDatabase(newUser),
+          );
+          user = userDto.fromDatabaseToJwt(createdUser);
           req.res.cookie(
             'success_msg',
             '¡Te has registrado con tu cuenta de GitHub!',
           );
-
-          return done(null, user);
         } else {
-          let user: UserJwt = {
-            first_name: userFound.first_name || '',
-            last_name: userFound.last_name || '',
-            email: userFound.email,
-            age: 18,
-            role: userFound.role,
-            githubId: parseInt(userFound.githubId),
-          };
-          user.id = userFound._id;
-
+          user = userDto.fromDatabaseToJwt(userFound);
           req.res.cookie('success_msg', '¡Has iniciado sesión desde GitHub!');
-
-          return done(null, user);
         }
+
+        return done(null, user);
       } catch (error: any) {
         console.error(
           'Error al autenticar al usuario con github: ',
@@ -118,16 +97,7 @@ passport.use(
           return done(null, false);
         }
 
-        const { _id, first_name, last_name, email, age, role } = userFound;
-
-        const user = {
-          _id,
-          first_name,
-          last_name,
-          email,
-          age,
-          role,
-        };
+        const user = userDto.fromDatabaseToJwt(userFound);
 
         return done(null, user);
       } catch (error: any) {
@@ -147,25 +117,22 @@ passport.use(
     {
       jwtFromRequest: req => req.cookies.jwt,
       secretOrKey: configJWT.jwt_secret,
+      passReqToCallback: true,
     },
-    async (jwtPayload, done: any) => {
+    async (req, jwtPayload, done: any) => {
       try {
         // Buscar al usuario en la base de datos usando el id del payload del JWT
-        const userFound = await User.findById(jwtPayload.id);
+        const userFound = await User.findOne({
+          email: jwtPayload.userJWT.email,
+        });
 
         // Si no existe en la BD
-        if (!userFound) return done(null, false);
+        if (!userFound) {
+          req.res.cookie('error_msg', '¡Ocurrió un error inesperado!');
+          return done(null, false);
+        }
 
-        const { _id, first_name, last_name, email, age, role } = userFound;
-
-        const user = {
-          _id,
-          first_name,
-          last_name,
-          email,
-          age,
-          role,
-        };
+        const user = userDto.fromDatabaseToJwt(userFound);
 
         // Si existe en la BD
         return done(null, user);

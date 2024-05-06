@@ -24,7 +24,6 @@ export const createProduct = async (dataProduct: any) => {
   });
   try {
     const productSave = await newProduct.save();
-
     return { status: 201, data: productSave };
   } catch (error: any) {
     throw {

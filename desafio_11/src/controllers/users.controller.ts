@@ -4,6 +4,7 @@ import { NewUser, UserJwt } from '@interfaces/users.interface';
 import User from '@models/user.model';
 import jwt from 'jsonwebtoken';
 import { configJWT } from 'src/config/config';
+import UsersDto from '@services/DTO/users.dto';
 
 export const userRegister = async (req: Request, res: Response) => {
   const errors = [];
@@ -60,6 +61,8 @@ export const successfulLogin = (req: Request, res: Response) => {
 };
 
 export const successfulLoginFromGithub = (req: Request, res: Response) => {
+  console.log('GITHUB/CALLBACK');
+
   const user = req.user as UserJwt;
 
   console.log('GET user:');
@@ -73,7 +76,7 @@ export const successfulLoginFromGithub = (req: Request, res: Response) => {
   // Creo token JWT y lo guardo en cookie
   const token = jwt.sign({ user }, configJWT.jwt_secret);
   res.cookie('jwt', token);
-  res.redirect('/');
+  res.redirect('/login');
 };
 
 export const updateUserEmailAndPassword = async (
@@ -100,17 +103,8 @@ export const updateUserEmailAndPassword = async (
         message: 'No se pudo actualizar el email del usuario.',
       };
 
-    const { _id, first_name, last_name, age, role, githubId } = updatedUser;
-
-    const userJWT: UserJwt = {
-      id: _id,
-      first_name,
-      last_name,
-      email,
-      age,
-      role,
-      githubId: parseInt(githubId),
-    };
+    const userDto = new UsersDto();
+    const userJWT = userDto.fromDatabaseToJwt(updatedUser);
 
     const token = jwt.sign({ userJWT }, configJWT.jwt_secret);
 
