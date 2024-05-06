@@ -13,5 +13,6 @@ router.get('/register', viewsController.viewRegistrationForm);
 router.get('/login', viewsController.viewLoginForm);
 router.get('/login-github', viewsController.viewLoginWithGithub);
 router.get('/profile', decodeJWT, viewsController.viewUserProfile);
+router.get('/recover-password', viewsController.viewsRecoverPassword);
 
 export default router;

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import * as usersService from '@services/dao/db/users.service';
 import { NewUser, UserJwt } from '@interfaces/users.interface';
+import User from '@models/user.model';
 import jwt from 'jsonwebtoken';
 import { configJWT } from 'src/config/config';
-import User from '@models/user.model';
 
 export const userRegister = async (req: Request, res: Response) => {
   const errors = [];
@@ -67,7 +67,7 @@ export const successfulLoginFromGithub = (req: Request, res: Response) => {
 
   if (user && !user.email) {
     res.cookie('githubID', user.githubId);
-    return res.render('users/enter-email');
+    return res.render('users/update-data', { pathEndpoint: 'github/callback' });
   }
 
   // Creo token JWT y lo guardo en cookie
@@ -84,10 +84,7 @@ export const updateUserEmailAndPassword = async (
     const { email, password, confirm_password } = req.body;
     const githubID = req.cookies.githubID;
 
-    if (password !== confirm_password) {
-      res.cookie('error_msg', 'Las contraseñas no coinciden.');
-      return res.status(404).render('users/enter-email');
-    }
+    matchPasswords(res, password, confirm_password, 'enter-email');
 
     const hashedPassword = await User.encryptPassword(password);
 
@@ -130,8 +127,50 @@ export const updateUserEmailAndPassword = async (
   }
 };
 
+export const updateUserPassword = async (req: Request, res: Response) => {
+  const { email, password, confirm_password } = req.body;
+
+  matchPasswords(res, password, confirm_password, 'enter-passwords');
+
+  try {
+    const hashedPassword = await User.encryptPassword(password);
+
+    const updatedUser = await User.findOneAndUpdate(
+      { email },
+      { password: hashedPassword },
+      { new: true },
+    );
+
+    if (!updatedUser)
+      throw {
+        status: 500,
+        message: 'No se pudo actualizar la contraseña del usuario.',
+      };
+
+    res.redirect('/login');
+  } catch (error: any) {
+    console.log(error.message || error);
+    res.status(error.status || 500).json({
+      status: 'FAILED',
+      message: error.message || 'Error interno del servidor.',
+    });
+  }
+};
+
 export const userLogout = (req: Request, res: Response) => {
   res.clearCookie('jwt');
   res.cookie('success_msg', 'Sesión cerrada con éxito.');
   res.redirect('/login');
+};
+
+const matchPasswords = (
+  res: Response,
+  password: string,
+  confirm_password: string,
+  view: string,
+) => {
+  if (password !== confirm_password) {
+    res.cookie('error_msg', 'Las contraseñas no coinciden.');
+    return res.status(404).render(`users/${view}`);
+  }
 };

@@ -56,3 +56,9 @@ export const viewLoginWithGithub = (req: Request, res: Response) => {
 export const viewUserProfile = (req: Request, res: Response) => {
   res.render('users/profile', { user: req.user });
 };
+
+export const viewsRecoverPassword = (req: Request, res: Response) => {
+  res
+    .status(200)
+    .render('users/update-data', { pathEndpoint: 'recover-password' });
+};

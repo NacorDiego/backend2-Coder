@@ -35,6 +35,8 @@ router.get(
 
 router.post('/github/callback', usersController.updateUserEmailAndPassword);
 
+router.post('/recover-password', usersController.updateUserPassword);
+
 router.get('/logout', usersController.userLogout);
 
 export default router;
