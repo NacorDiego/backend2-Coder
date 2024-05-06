@@ -61,12 +61,7 @@ export const successfulLogin = (req: Request, res: Response) => {
 };
 
 export const successfulLoginFromGithub = (req: Request, res: Response) => {
-  console.log('GITHUB/CALLBACK');
-
   const user = req.user as UserJwt;
-
-  console.log('GET user:');
-  console.log(user);
 
   if (user && !user.email) {
     res.cookie('githubID', user.githubId);
