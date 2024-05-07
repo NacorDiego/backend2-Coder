@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import * as productService from '@services/dao/db/product.service';
-// import * as productService from '../services/dao/filesystem/product.service';
+
+import * as productService from '@services/product.service';
 
 export const createProduct = async (req: Request, res: Response) => {
   const dataProduct = req.body;

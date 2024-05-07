@@ -1,6 +1,8 @@
-import { Router } from 'express';
-import * as usersController from '@controllers/users.controller';
 import passport from 'passport';
+import { Router } from 'express';
+
+// Controllers
+import * as usersController from '@controllers/users.controller';
 
 const router = Router();
 

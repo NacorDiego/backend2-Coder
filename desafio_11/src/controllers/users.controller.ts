@@ -1,10 +1,20 @@
 import { Request, Response } from 'express';
-import * as usersService from '@services/dao/db/users.service';
-import { NewUser, UserJwt } from '@interfaces/users.interface';
-import User from '@models/user.model';
 import jwt from 'jsonwebtoken';
-import { configJWT } from 'src/config/config';
-import UsersDto from '@services/DTO/users.dto';
+
+// Services
+import * as usersService from '@services/users.service';
+
+// Interfaces
+import { NewUser, UserJwt } from '@interfaces/users.interface';
+
+// Models
+import User from '@models/user.model';
+
+// Configs
+import { configJWT } from 'src/configs/config';
+
+// Dtos
+import UsersDto from '@dtos/users.dto';
 
 export const userRegister = async (req: Request, res: Response) => {
   const errors = [];

@@ -1,5 +1,7 @@
-import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
+import { Schema, model } from 'mongoose';
+
+// Interfaces
 import { UserToRegister, IUserModel } from '@interfaces/users.interface';
 
 const userCollection = 'users';

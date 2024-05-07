@@ -1,6 +1,11 @@
-import Cart from './models/cart.model';
-import { getProductById } from './product.service';
+// Interfaces
 import { Product } from '@interfaces/products.interface';
+
+// Models
+import Cart from '@models/cart.model';
+
+// Services
+import { getProductById } from './product.service';
 
 export const createCart = async () => {
   const newCart = new Cart({

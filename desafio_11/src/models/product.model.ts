@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
+
+// Interfaces
 import { Product } from '@interfaces/products.interface';
 
 const productCollection = 'products';

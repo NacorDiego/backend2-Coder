@@ -1,8 +1,12 @@
+import passport from 'passport';
 import { Router } from 'express';
+
+// Controllers
 import * as viewsController from '@controllers/views.controller';
 import * as chatController from '@controllers/chats.controller';
+
+// Middlewares
 import { decodeJWT } from '@middlewares/decodeJWT.middleware';
-import passport from 'passport';
 
 const router = Router();
 

@@ -9,12 +9,16 @@
     //Rutas absolutas
     "baseUrl": ".",
     "paths": {
+      "@configs/*": ["./src/configs/*"],
       "@controllers/*": ["./src/controllers/*"],
+      "@daos/*": ["./src/daos/*"],
+      "@dtos/*": ["./src/dtos/*"],
       "@interfaces/*": ["./src/interfaces/*"],
       "@middlewares/*": ["./src/middlewares/*"],
-      "@models/*": ["./src/services/dao/db/models/*"],
+      "@models/*": ["./src/models/*"],
       "@routes/*": ["./src/routes/*"],
-      "@services/*": ["./src/services/*"]
+      "@services/*": ["./src/services/*"],
+      "@utils/*": ["./src/utils/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/@types"],
     "esModuleInterop": true,

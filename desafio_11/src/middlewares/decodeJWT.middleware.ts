@@ -1,7 +1,11 @@
-import { JwtPayload } from '@interfaces/users.interface';
-import { NextFunction, Request, Response } from 'express';
-import { configJWT } from 'src/config/config';
 import jwt from 'jsonwebtoken';
+import { NextFunction, Request, Response } from 'express';
+
+// Interfaces
+import { JwtPayload } from '@interfaces/users.interface';
+
+// Configs
+import { configJWT } from 'src/configs/config';
 
 // Decodificar el JWT con la info del user y guardarla en req.user
 export const decodeJWT = (req: Request, res: Response, next: NextFunction) => {

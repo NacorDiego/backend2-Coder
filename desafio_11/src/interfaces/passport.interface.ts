@@ -1,4 +1,3 @@
-import { DoneCallback } from 'passport';
 import { Profile } from 'passport-github2';
 
 export interface GithubProfile extends Profile {

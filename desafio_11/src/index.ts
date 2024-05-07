@@ -1,9 +1,9 @@
 // Server
 import server from './server';
 // Database
-import './config/database';
+import './configs/database';
 // Utilities
-import { configServer } from './config/config';
+import { configServer } from './configs/config';
 //? Filesystem
 // import path from 'path';
 // import { createDirectory, createFile } from './services/fileSystem.services';

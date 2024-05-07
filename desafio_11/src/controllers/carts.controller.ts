@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import * as cartService from '../services/dao/db/cart.service';
+
+import * as cartService from '@services/cart.service';
 
 // Crea un nuevo carrito vacío
 export const createCart = async (req: Request, res: Response) => {

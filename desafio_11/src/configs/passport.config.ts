@@ -1,12 +1,22 @@
 import passport, { DoneCallback } from 'passport';
+
+// Strategies
 import { Strategy as GithubStrategy } from 'passport-github2';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JwtStrategy } from 'passport-jwt';
+
+// Models
 import User from '@models/user.model';
+
+// Configs
 import { configGithub, configJWT } from './config';
+
+// Interfaces
 import { GithubProfile } from '@interfaces/passport.interface';
 import { IUserGithub } from '@interfaces/users.interface';
-import UsersDto from '@services/DTO/users.dto';
+
+// Dtos
+import UsersDto from '@dtos/users.dto';
 
 const CLIENT_ID = configGithub.client_id;
 const CLIENT_SECRET = configGithub.client_secret;

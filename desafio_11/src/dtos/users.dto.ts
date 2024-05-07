@@ -1,5 +1,7 @@
-import { IUserGithub, UserToRegister } from '@interfaces/users.interface';
 import { Schema } from 'mongoose';
+
+// Interfaces
+import { IUserGithub, UserToRegister } from '@interfaces/users.interface';
 
 export default class UsersDto {
   id!: Schema.Types.ObjectId;

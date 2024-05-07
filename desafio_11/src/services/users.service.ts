@@ -1,5 +1,8 @@
-import User from '@models/user.model';
+// Interfaces
 import { LoginData, RegisterData } from '@interfaces/sessions.interface';
+
+// Models
+import User from '@models/user.model';
 
 export const userRegisterService = async (registerData: RegisterData) => {
   try {

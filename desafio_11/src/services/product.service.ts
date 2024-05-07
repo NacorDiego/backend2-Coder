@@ -1,3 +1,4 @@
+// Models
 import Product from '@models/product.model';
 
 export const createProduct = async (dataProduct: any) => {

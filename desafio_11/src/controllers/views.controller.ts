@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
-import { getProducts, getProductById } from '@services/dao/db/product.service';
+
+// Services
+import { getProducts, getProductById } from '@services/product.service';
 
 export const renderProducts = async (req: Request, res: Response) => {
   try {
