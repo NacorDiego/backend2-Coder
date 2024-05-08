@@ -4,6 +4,9 @@ import { Product } from '@interfaces/products.interface';
 // Models
 import Cart from '@models/cart.model';
 
+// Repositories
+import * as CartRepository from '@repositories/cart.repository';
+
 // Services
 import { getProductById } from './product.service';
 
@@ -13,7 +16,7 @@ export const createCart = async () => {
   });
 
   try {
-    const cartSave = await newCart.save();
+    const cartSave = await CartRepository.saveCart(newCart);
     return { status: 201, data: cartSave };
   } catch (error: any) {
     throw {
@@ -24,14 +27,8 @@ export const createCart = async () => {
 };
 
 export const getCarts = async (limit: number | undefined) => {
-  let carts;
-
   try {
-    if (limit !== undefined && limit >= 0) {
-      carts = await Cart.find().limit(limit);
-    } else {
-      carts = await Cart.find();
-    }
+    const carts = await CartRepository.findCarts(limit);
 
     if (!carts)
       throw {

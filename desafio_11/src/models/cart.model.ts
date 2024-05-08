@@ -33,6 +33,6 @@ cartSchema.pre('find', function () {
   this.populate('products.item');
 });
 
-const cartModel = model(cartCollection, cartSchema);
+const CartModel = model(cartCollection, cartSchema);
 
-export default cartModel;
+export default CartModel;

@@ -1,9 +1,11 @@
-export interface Cart {
-  id?: string;
+import { Document, Schema } from 'mongoose';
+
+export interface ICart extends Document {
+  id_?: Schema.Types.ObjectId;
   products: ProductInTheCart[];
 }
 
 export interface ProductInTheCart {
-  id: string;
+  item: string;
   quantity: number;
 }
