@@ -49,7 +49,7 @@ export const getCartById = async (id: string) => {
   const cartId = id;
 
   try {
-    const cart = await Cart.findById(cartId).populate('products.item');
+    const cart = await CartRepository.findCartById(cartId);
 
     if (!cart)
       throw {
@@ -76,24 +76,8 @@ export const addProductToCart = async (cid: string, pid: string) => {
         message: 'No existe el producto.',
       };
 
-    // Obtener el carrito
-    const cart = await Cart.findById(cid);
-    if (!cart)
-      throw {
-        status: 404,
-        message: 'No existe el carrito.',
-      };
-
-    // Buscar producto en el carrito
-    const productIndex = cart.products?.findIndex(
-      product => product.item.toString() === pid,
-    );
-
-    productIndex !== -1
-      ? cart.products[productIndex].quantity++
-      : cart.products.push({ item: pid, quantity: 1 });
-
-    const updatedCart = await cart.save();
+    // Agregar el producto al carrito
+    const updatedCart = await CartRepository.addProductToCart(cid, pid);
 
     return { status: 200, data: updatedCart };
   } catch (error: any) {

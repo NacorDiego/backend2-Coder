@@ -27,3 +27,24 @@ export const findCartAndSave = async (
 ): Promise<InstanceType<typeof CartModel> | null> => {
   return await CartDao.findCartAndSave(cart);
 };
+
+export const addProductToCart = async (
+  cid: string,
+  pid: string,
+): Promise<InstanceType<typeof CartModel> | null> => {
+  // Obtener el carrito
+  const cart = await CartDao.findCartById(cid);
+  if (!cart) throw { status: 404, message: 'No existe el producto.' };
+
+  // Buscar producto en el carrito
+  const productIndex = CartDao.findProductInCart(cart, pid);
+
+  productIndex !== -1
+    ? cart.products[productIndex].quantity++
+    : cart.products.push({ item: pid, quantity: 1 });
+
+  // Guardar el carrito
+  const updatedCart = await CartDao.saveCart(cart);
+
+  return updatedCart;
+};
