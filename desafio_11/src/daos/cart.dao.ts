@@ -23,12 +23,6 @@ export const findCartById = async (
   return await CartModel.findById(id).populate('products.item');
 };
 
-export const findCartAndSave = async (
-  cart: InstanceType<typeof CartModel>,
-): Promise<InstanceType<typeof CartModel> | null> => {
-  return await CartModel.findById(cart._id).populate('products.item');
-};
-
 export const findProductInCart = (
   cart: InstanceType<typeof CartModel>,
   pid: string,
