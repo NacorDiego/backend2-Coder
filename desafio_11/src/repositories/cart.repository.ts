@@ -25,7 +25,7 @@ export const findCartById = async (
 export const findCartAndSave = async (
   cart: InstanceType<typeof CartModel>,
 ): Promise<InstanceType<typeof CartModel> | null> => {
-  return await CartDao.findCartAndSave(cart);
+  return await CartDao.saveCart(cart);
 };
 
 export const addProductToCart = async (
