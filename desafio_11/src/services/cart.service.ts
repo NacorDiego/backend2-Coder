@@ -90,25 +90,9 @@ export const addProductToCart = async (cid: string, pid: string) => {
 
 export const removeProductFromCart = async (cid: string, pid: string) => {
   try {
-    // Obtener carrito
-    const cart = await Cart.findById(cid);
-    if (!cart)
-      throw {
-        status: 404,
-        message: 'No existe el carrito.',
-      };
-    // Buscar producto en el carrito
-    const productIndex = cart.products?.findIndex(
-      product => product.item.toString() === pid,
-    );
-    if (productIndex === -1)
-      throw {
-        status: 404,
-        message: 'El producto no está en el carrito.',
-      };
     // Eliminar el producto del carrito
-    cart.products.splice(productIndex, 1);
-    const updatedCart = await cart.save();
+    const updatedCart = await CartRepository.removeProductFromCart(cid, pid);
+
     return { status: 200, data: updatedCart };
   } catch (error: any) {
     throw {
@@ -120,31 +104,34 @@ export const removeProductFromCart = async (cid: string, pid: string) => {
 
 export const updateCart = async (cid: string, newProducts: any) => {
   try {
-    // Verificar si el carrito existe
-    const cart = await Cart.findById(cid);
-    if (!cart)
-      throw {
-        status: 404,
-        message: 'No existe el carrito.',
-      };
     // Verificar si los productos existen en la BD
     for (let product of newProducts.payload) {
       const pid = product._id;
 
       const dbProduct = await getProductById(pid);
-      if (!dbProduct)
-        throw {
-          status: 404,
-          message: 'No existe el producto.',
-        };
+      if (!dbProduct) throw { status: 404, message: 'No existe el producto.' };
     }
-    // Actualizar los productos del carrito
-    cart.products = newProducts.payload.map((product: Product) => ({
-      item: product.id,
-      quantity: 1,
-    }));
 
-    const updatedCart = await cart.save();
+    // Actualizar el carrito
+    const updatedCart = await CartRepository.updateCart(cid, newProducts);
+
+    return { status: 200, data: updatedCart };
+  } catch (error: any) {}
+};
+
+export const updateProductQuantity = async (
+  cid: string,
+  pid: string,
+  quantity: number,
+) => {
+  try {
+    // Actualizar la cantidad del producto en el carrito
+    const updatedCart = await CartRepository.updateProductQuantity(
+      cid,
+      pid,
+      quantity,
+    );
+
     return { status: 200, data: updatedCart };
   } catch (error: any) {
     throw {
@@ -154,64 +141,12 @@ export const updateCart = async (cid: string, newProducts: any) => {
   }
 };
 
-export const updateProductQuantity = async (
-  cid: string,
-  pid: string,
-  quantity: number,
-) => {
+export const removeAllProductsFromCart = async (cid: string) => {
   try {
-    // Buscar el carrito por ID
-    const cart = await Cart.findById(cid);
-    if (!cart)
-      throw {
-        status: 404,
-        message: 'No existe el carrito.',
-      };
+    // Eliminar todos los productos del carrito
+    const updatedCart = await CartRepository.removeAllProductsFromCart(cid);
 
-    // Buscar el producto en el carrito
-    const productIndex = cart.products.findIndex(
-      product => product.item.toString() === pid,
-    );
-    if (productIndex === -1)
-      throw {
-        status: 404,
-        message: 'Producto no encontrado en el carrito.',
-      };
-    // Actualizar la cantidad del producto
-    cart.products[productIndex].quantity = quantity;
-    // Guardar el carrito actualizado
-    const updatedCart = await cart.save();
-    return {
-      status: 200,
-      data: updatedCart,
-    };
-  } catch (error: any) {
-    throw {
-      status: error?.status || 500,
-      message: error?.message || error,
-    };
-  }
-};
-
-export const removeAllProductsFromCart = async (cartid: string) => {
-  try {
-    // Buscar el carrito por ID
-    const cart = await Cart.findById(cartid);
-    if (!cart)
-      throw {
-        status: 404,
-        message: 'No existe el carrito.',
-      };
-
-    // Vaciar lista de productos del carrito
-    cart.products = [] as any;
-
-    // Guardar el carrito actualizado
-    const updatedCart = await cart.save();
-    return {
-      status: 200,
-      data: updatedCart,
-    };
+    return { status: 200, data: updatedCart };
   } catch (error: any) {
     throw {
       status: error?.status || 500,

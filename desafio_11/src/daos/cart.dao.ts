@@ -35,3 +35,24 @@ export const findProductInCart = (
 ): number => {
   return cart.products?.findIndex(product => product.item.toString() === pid);
 };
+
+export const removeProductFromCart = (
+  cart: InstanceType<typeof CartModel>,
+  productIndex: number,
+): void => {
+  cart.products.slice(productIndex, 1);
+};
+
+export const updateProductQuantityInCart = (
+  cart: InstanceType<typeof CartModel>,
+  productIndex: number,
+  quantity: number,
+): void => {
+  cart.products[productIndex].quantity = quantity;
+};
+
+export const removeAllProductsFromCart = (
+  cart: InstanceType<typeof CartModel>,
+): void => {
+  cart.products = [] as any;
+};
