@@ -9,3 +9,4 @@ const createErrorFactory = function (name: string) {
 
 export const ConnectionError = createErrorFactory('ConnectionError');
 export const ValidationError = createErrorFactory('ValidationError');
+export const NotFoundError = createErrorFactory('NotFoundError');

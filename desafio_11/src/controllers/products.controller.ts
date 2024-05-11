@@ -1,41 +1,43 @@
 import { Request, Response } from 'express';
 
-import * as productService from '@services/product.service';
+// Errors
+import {
+  ConnectionError,
+  NotFoundError,
+  ValidationError,
+} from '@utils/errors.util';
+
+// Services
+import * as ProductService from '@services/product.service';
+import productModel from '@models/product.model';
 
 export const createProduct = async (req: Request, res: Response) => {
-  const dataProduct = req.body;
   try {
-    const result = await productService.createProduct(dataProduct);
-    res.cookie('success_msg', '¡Producto agregado con éxito!');
-    res.status(result.status).json({ status: 'OK', data: result.data });
+    const product = await ProductService.createProduct(req.body);
+    res.status(201).json({ status: 'OK', data: product });
   } catch (error: any) {
-    res.status(error.status).json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
 };
 
 export const getProducts = async (req: Request, res: Response) => {
-  // limit
-  const limit =
-    typeof req.query.limit === 'string' ? parseInt(req.query.limit) : 10;
-  // page
-  const page =
-    typeof req.query.page === 'string' ? parseInt(req.query.page) : 1;
-  // category
-  const category =
-    typeof req.query.category === 'string' ? req.query.category : undefined;
-  // sort
-  const sort = typeof req.query.sort === 'string' ? req.query.sort : undefined;
-  // status
-  let queryStatus = req.query.status;
-  let status: boolean | undefined;
-  if (queryStatus !== undefined) {
-    status = req.query.status === 'true';
-  } else {
-    status = undefined;
-  }
-
   try {
-    const result = await productService.getProducts(
+    const limit =
+      typeof req.query.limit === 'string'
+        ? parseInt(req.query.limit)
+        : undefined;
+    const page =
+      typeof req.query.page === 'string' ? parseInt(req.query.page) : undefined;
+    const status =
+      typeof req.query.status === 'string'
+        ? req.query.status === 'true'
+        : undefined;
+    const category =
+      typeof req.query.category === 'string' ? req.query.category : undefined;
+    const sort =
+      typeof req.query.sort === 'string' ? req.query.sort : undefined;
+
+    const products = await ProductService.getProducts(
       limit,
       page,
       status,
@@ -43,66 +45,58 @@ export const getProducts = async (req: Request, res: Response) => {
       sort,
     );
 
-    return res.status(result.status).json({
-      status: 'OK',
-      payload: result.data.docs,
-      totalPages: result.data.totalPages,
-      prevPage: result.data.prevPage,
-      nextPage: result.data.nextPage,
-      page: result.data.page,
-      hasPrevPage: result.data.hasPrevPage,
-      hasNextPage: result.data.hasNextPage,
-      prevLink:
-        result.data.hasPrevPage && result.data.page
-          ? `${req.protocol}://${req.get('host')}${
-              req.originalUrl.split('?')[0]
-            }?page=${result.data.page - 1}`
-          : null,
-      nextLink:
-        result.data.hasNextPage && result.data.page
-          ? `${req.protocol}://${req.get('host')}${
-              req.originalUrl.split('?')[0]
-            }?page=${result.data.page + 1}`
-          : null,
-    });
+    res.status(200).json({ status: 'OK', data: products });
   } catch (error: any) {
-    res.status(error.status).json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
 };
 
 export const getProductById = async (req: Request, res: Response) => {
-  const pId = req.params.pid;
   try {
-    const product = await productService.getProductById(pId);
-    return res
-      .status(product.status)
-      .json({ status: 'OK', data: product.data });
+    const { id } = req.params;
+
+    const product = await ProductService.getProductById(id);
+
+    res.status(200).json({ status: 'OK', data: product });
   } catch (error: any) {
-    return res
-      .status(error.status)
-      .json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
 };
 
 export const updateProductById = async (req: Request, res: Response) => {
-  const pId = req.params.pid;
-  const updates = req.body;
   try {
-    const result = await productService.updateProductById(pId, updates);
-    res.cookie('success_msg', 'Producto actualizado con éxito!');
-    return res.status(result.status).redirect('/');
+    const { id } = req.params;
+    const updates: Partial<InstanceType<typeof productModel>> = req.body;
+
+    const updatedProduct = await ProductService.updateProductById(id, updates);
+
+    res.status(200).json({ status: 'OK', data: updatedProduct });
   } catch (error: any) {
-    res.status(error.status).json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
 };
 
 export const deleteProductById = async (req: Request, res: Response) => {
-  const pid = req.params.pid;
   try {
-    const result = await productService.deleteProductById(pid);
-    res.cookie('success_msg', 'Producto eliminado con éxito!');
-    res.status(result.status).redirect('/');
+    const { id } = req.params;
+
+    await ProductService.deleteProductById(id);
+
+    res.status(200).json({ message: 'Producto eliminado con éxito.' });
   } catch (error: any) {
-    res.status(error.status).json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
+};
+
+const errorHandler = (error: any, res: Response) => {
+  if (error instanceof NotFoundError)
+    res.status(404).json({ status: 'FAILED', message: error.message });
+  else if (error instanceof ValidationError)
+    res.status(400).json({ status: 'FAILED', message: error.message });
+  else if (error instanceof ConnectionError)
+    res.status(500).json({ status: 'FAILED', message: error.message });
+  else
+    res
+      .status(500)
+      .json({ status: 'FAILED', message: 'Error interno del servidor.' });
 };
