@@ -130,33 +130,18 @@ export const updateUserEmailAndPassword = async (
   }
 };
 
+//TODO: Dividir con service, repo y dao.
 export const updateUserPassword = async (req: Request, res: Response) => {
-  const { email, password, confirm_password } = req.body;
-
-  matchPasswords(res, password, confirm_password, 'enter-passwords');
-
   try {
-    const hashedPassword = await User.encryptPassword(password);
+    const { email, password, confirm_password } = req.body;
 
-    const updatedUser = await User.findOneAndUpdate(
-      { email },
-      { password: hashedPassword },
-      { new: true },
-    );
-
-    if (!updatedUser)
-      throw {
-        status: 500,
-        message: 'No se pudo actualizar la contraseña del usuario.',
-      };
+    await UserService.updateUserPassword(email, password, confirm_password);
 
     res.redirect('/login');
   } catch (error: any) {
     console.log(error.message || error);
-    res.status(error.status || 500).json({
-      status: 'FAILED',
-      message: error.message || 'Error interno del servidor.',
-    });
+
+    errorHandler(error, res);
   }
 };
 
@@ -164,16 +149,4 @@ export const userLogout = (req: Request, res: Response) => {
   res.clearCookie('jwt');
   res.cookie('success_msg', 'Sesión cerrada con éxito.');
   res.redirect('/login');
-};
-
-const matchPasswords = (
-  res: Response,
-  password: string,
-  confirm_password: string,
-  view: string,
-) => {
-  if (password !== confirm_password) {
-    res.cookie('error_msg', 'Las contraseñas no coinciden.');
-    return res.status(404).render(`users/${view}`);
-  }
 };

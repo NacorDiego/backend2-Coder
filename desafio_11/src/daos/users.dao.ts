@@ -12,6 +12,17 @@ export const findUserByGithubId = async (
   return await UserModel.findOne({ githubId });
 };
 
+export const updateUserPassword = async (
+  email: string,
+  hashedPassword: string,
+): Promise<InstanceType<typeof UserModel> | null> => {
+  return await UserModel.findOneAndUpdate(
+    { email },
+    { password: hashedPassword },
+    { new: true },
+  );
+};
+
 export const updateUserByEmailAndPassword = async (
   githubId: string,
   email: string,

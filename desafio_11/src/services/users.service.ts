@@ -10,6 +10,18 @@ export const userRegisterService = async (
   return await UserRepository.registerUser(registerData);
 };
 
+export const updateUserPassword = async (
+  email: string,
+  password: string,
+  confirm_password: string,
+): Promise<InstanceType<typeof UserModel> | null> => {
+  return await UserRepository.updateUserPassword(
+    email,
+    password,
+    confirm_password,
+  );
+};
+
 export const updateUserEmailAndPassword = async (
   githubId: string,
   email: string,
