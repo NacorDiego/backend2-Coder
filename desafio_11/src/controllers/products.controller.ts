@@ -1,11 +1,7 @@
 import { Request, Response } from 'express';
 
 // Errors
-import {
-  ConnectionError,
-  NotFoundError,
-  ValidationError,
-} from '@utils/errors.util';
+import { errorHandler } from '@utils/errors.util';
 
 // Services
 import * as ProductService from '@services/product.service';
@@ -86,17 +82,4 @@ export const deleteProductById = async (req: Request, res: Response) => {
   } catch (error: any) {
     errorHandler(error, res);
   }
-};
-
-const errorHandler = (error: any, res: Response) => {
-  if (error instanceof NotFoundError)
-    res.status(404).json({ status: 'FAILED', message: error.message });
-  else if (error instanceof ValidationError)
-    res.status(400).json({ status: 'FAILED', message: error.message });
-  else if (error instanceof ConnectionError)
-    res.status(500).json({ status: 'FAILED', message: error.message });
-  else
-    res
-      .status(500)
-      .json({ status: 'FAILED', message: 'Error interno del servidor.' });
 };

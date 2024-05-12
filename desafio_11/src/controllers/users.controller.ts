@@ -2,10 +2,10 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 // Services
-import * as usersService from '@services/users.service';
+import * as UserService from '@services/users.service';
 
 // Interfaces
-import { NewUser, UserJwt } from '@interfaces/users.interface';
+import { UserJwt } from '@interfaces/users.interface';
 
 // Models
 import User from '@models/user.model';
@@ -15,6 +15,13 @@ import { configJWT } from 'src/configs/config';
 
 // Dtos
 import UsersDto from '@dtos/users.dto';
+import {
+  ConflictError,
+  ConnectionError,
+  NotFoundError,
+  ValidationError,
+  errorHandler,
+} from '@utils/errors.util';
 
 export const userRegister = async (req: Request, res: Response) => {
   const errors = [];
@@ -37,7 +44,7 @@ export const userRegister = async (req: Request, res: Response) => {
     return res.render('users/register', { errors, dataUser });
   }
 
-  const registerData: NewUser = {
+  const registerData: Partial<InstanceType<typeof User>> = {
     first_name,
     last_name,
     email,
@@ -50,14 +57,22 @@ export const userRegister = async (req: Request, res: Response) => {
     registerData.role = 'admin';
 
   try {
-    await usersService.userRegisterService(registerData);
+    await UserService.userRegisterService(registerData);
     res.cookie('success_msg', 'Usuario registrado con éxito.');
     res.status(201).redirect('/login');
   } catch (error: any) {
     console.error('error: ', error.message);
-    const errors = [{ text: error?.message || 'Error interno del servidor' }];
+    const errors = [{ text: error.message || 'Error interno del servidor' }];
 
-    res.status(error?.status || 500).render('users/register', { errors });
+    if (error instanceof ConflictError) {
+      res.status(409).render('users/register', { errors });
+    } else if (error instanceof ValidationError) {
+      res.status(400).render('users/register', { errors });
+    } else if (error instanceof ConnectionError) {
+      res.status(500).render('users/register', { errors });
+    } else {
+      res.status(500).render('users/register', { errors });
+    }
   }
 };
 
@@ -92,21 +107,15 @@ export const updateUserEmailAndPassword = async (
     const { email, password, confirm_password } = req.body;
     const githubID = req.cookies.githubID;
 
-    matchPasswords(res, password, confirm_password, 'enter-email');
-
-    const hashedPassword = await User.encryptPassword(password);
-
-    const updatedUser = await User.findOneAndUpdate(
-      { githubId: githubID },
-      { email, password: hashedPassword },
-      { new: true },
+    const updatedUser = await UserService.updateUserEmailAndPassword(
+      githubID,
+      email,
+      password,
+      confirm_password,
     );
 
     if (!updatedUser)
-      throw {
-        status: 404,
-        message: 'No se pudo actualizar el email del usuario.',
-      };
+      throw new NotFoundError('No se pudo actualizar el email del usuario.');
 
     const userDto = new UsersDto();
     const userJWT = userDto.fromDatabaseToJwt(updatedUser);
@@ -117,12 +126,7 @@ export const updateUserEmailAndPassword = async (
 
     res.redirect('/');
   } catch (error: any) {
-    console.log(error.message || error);
-
-    res.status(error.status || 500).json({
-      status: 'FAILED',
-      message: error.message || 'Error interno del servidor',
-    });
+    errorHandler(error, res);
   }
 };
 

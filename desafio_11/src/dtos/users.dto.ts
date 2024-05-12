@@ -2,13 +2,14 @@ import { Schema } from 'mongoose';
 
 // Interfaces
 import { IUserGithub, UserToRegister } from '@interfaces/users.interface';
+import UserModel from '@models/user.model';
 
 export default class UsersDto {
-  id!: Schema.Types.ObjectId;
+  id?: Schema.Types.ObjectId;
   first_name?: string;
   last_name?: string;
   name?: string;
-  email: string;
+  email?: string;
   age: number;
   role: string;
   password?: string;
@@ -22,7 +23,9 @@ export default class UsersDto {
     this.githubId = 0;
   }
 
-  public fromDatabaseToJwt(user: UserToRegister): UsersDto {
+  public fromDatabaseToJwt(
+    user: Partial<InstanceType<typeof UserModel>>,
+  ): UsersDto {
     this.id = user._id;
     this.name = `${user.first_name} ${user.last_name}`;
     this.email = user.email;

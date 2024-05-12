@@ -1,24 +1,25 @@
-// Interfaces
-import { LoginData, RegisterData } from '@interfaces/sessions.interface';
-
 // Models
-import User from '@models/user.model';
+import UserModel from '@models/user.model';
 
-export const userRegisterService = async (registerData: RegisterData) => {
-  try {
-    const userExists = await User.findOne({ email: registerData.email });
-    if (userExists)
-      throw { status: 409, message: 'El usuario ya se encuentra registrado.' };
+// Repositories
+import * as UserRepository from '@repositories/users.repository';
 
-    const newUser = new User(registerData);
-    // newUser.password = await User.encryptPassword(registerData.password);
+export const userRegisterService = async (
+  registerData: Partial<InstanceType<typeof UserModel>>,
+) => {
+  return await UserRepository.registerUser(registerData);
+};
 
-    const result = await newUser.save();
-    return result;
-  } catch (error: any) {
-    throw {
-      status: error?.status || 500,
-      message: error?.message || error,
-    };
-  }
+export const updateUserEmailAndPassword = async (
+  githubId: string,
+  email: string,
+  password: string,
+  confirm_password: string,
+): Promise<InstanceType<typeof UserModel> | null> => {
+  return await UserRepository.updateUserEmailAndPassword(
+    githubId,
+    email,
+    password,
+    confirm_password,
+  );
 };
