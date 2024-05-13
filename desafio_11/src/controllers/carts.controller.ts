@@ -1,17 +1,15 @@
 import { Request, Response } from 'express';
 
 import * as cartService from '@services/cart.service';
+import { errorHandler } from '@utils/errors.util';
 
 // Crea un nuevo carrito vacío
 export const createCart = async (req: Request, res: Response) => {
   try {
     const result = await cartService.createCart();
-    res.status(result.status).json({ status: 'OK', data: result.data });
+    res.status(201).json({ status: 'OK', data: result });
   } catch (error: any) {
-    res.status(error.status).json({
-      status: 'FAILED',
-      message: error.message,
-    });
+    errorHandler(error, res);
   }
 };
 
@@ -24,9 +22,9 @@ export const getCarts = async (req: Request, res: Response) => {
   try {
     const carts = await cartService.getCarts(limit);
 
-    res.status(carts.status).json({ status: 'OK', data: carts.data });
+    res.status(200).json({ status: 'OK', data: carts });
   } catch (error: any) {
-    res.status(error.status).json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
 };
 
@@ -37,9 +35,9 @@ export const getCartById = async (req: Request, res: Response) => {
   try {
     const result = await cartService.getCartById(cid);
 
-    res.status(result.status).json({ status: 'OK', data: result.data });
+    res.status(200).json({ status: 'OK', data: result });
   } catch (error: any) {
-    res.status(error.status).json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
 };
 
@@ -51,9 +49,9 @@ export const addProductToCart = async (req: Request, res: Response) => {
   try {
     const result = await cartService.addProductToCart(cid, pid);
 
-    res.status(result.status).json({ status: 'OK', data: result.data });
+    res.status(200).json({ status: 'OK', data: result });
   } catch (error: any) {
-    res.status(error.status).json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
 };
 
@@ -62,9 +60,9 @@ export const removeProductFromCart = async (req: Request, res: Response) => {
   try {
     const result = await cartService.removeProductFromCart(cid, pid);
 
-    res.status(result.status).json({ status: 'OK', data: result.data });
+    res.status(200).json({ status: 'OK', data: result });
   } catch (error: any) {
-    res.status(error.status).json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
 };
 
@@ -74,9 +72,9 @@ export const updateCart = async (req: Request, res: Response) => {
   try {
     const result = await cartService.updateCart(cid, newProducts);
 
-    res.status(result.status).json({ status: 'OK', data: result.data });
+    res.status(200).json({ status: 'OK', data: result });
   } catch (error: any) {
-    res.status(error.status).json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
 };
 
@@ -86,9 +84,9 @@ export const updateProductQuantity = async (req: Request, res: Response) => {
   try {
     const result = await cartService.updateProductQuantity(cid, pid, quantity);
 
-    res.status(result.status).json({ status: 'OK', data: result.data });
+    res.status(200).json({ status: 'OK', data: result });
   } catch (error: any) {
-    res.status(error.status).json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
 };
 
@@ -100,8 +98,8 @@ export const removeAllProductsFromCart = async (
   try {
     const result = await cartService.removeAllProductsFromCart(cid);
 
-    res.status(result.status).json({ status: 'OK', data: result.data });
+    res.status(200).json({ status: 'OK', data: result });
   } catch (error: any) {
-    res.status(error.status).json({ status: 'FAILED', message: error.message });
+    errorHandler(error, res);
   }
 };

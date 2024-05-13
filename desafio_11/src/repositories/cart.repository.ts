@@ -3,6 +3,7 @@ import * as CartDao from '@daos/cart.dao';
 
 // Models
 import CartModel from '@models/cart.model';
+import { NotFoundError } from '@utils/errors.util';
 
 export const saveCart = async (
   cart: InstanceType<typeof CartModel>,
@@ -34,7 +35,7 @@ export const addProductToCart = async (
 ): Promise<InstanceType<typeof CartModel> | null> => {
   // Obtener el carrito
   const cart = await CartDao.findCartById(cid);
-  if (!cart) throw { status: 404, message: 'No existe el producto.' };
+  if (!cart) throw new NotFoundError('No existe el producto.');
 
   // Buscar producto en el carrito
   const productIndex = CartDao.findProductInCart(cart, pid);
@@ -55,12 +56,12 @@ export const removeProductFromCart = async (
 ): Promise<InstanceType<typeof CartModel> | null> => {
   // Obtener el carrito
   const cart = await CartDao.findCartById(cid);
-  if (!cart) throw { status: 404, message: 'No existe el carrito.' };
+  if (!cart) throw new NotFoundError('No existe el carrito.');
 
   // Buscar producto en el carrito
   const productIndex = CartDao.findProductInCart(cart, pid);
   if (productIndex === -1)
-    throw { status: 404, message: 'El producto no está en el carrito' };
+    throw new NotFoundError('El producto no está en el carrito');
 
   // Eliminar el producto del carrito
   CartDao.removeProductFromCart(cart, productIndex);
@@ -77,7 +78,7 @@ export const updateCart = async (
 ): Promise<InstanceType<typeof CartModel> | null> => {
   // Obtener el carrito
   const cart = await CartDao.findCartById(cid);
-  if (!cart) throw { status: 404, message: 'No existe el carrito.' };
+  if (!cart) throw new NotFoundError('No existe el carrito.');
 
   // Actualizar los productos del carrito
   cart.products = newProducts.payload.map((product: any) => ({
@@ -97,12 +98,12 @@ export const updateProductQuantity = async (
   quantity: number,
 ): Promise<InstanceType<typeof CartModel> | null> => {
   const cart = await CartDao.findCartById(cid);
-  if (!cart) throw { status: 404, message: 'No existe el carrito.' };
+  if (!cart) throw new NotFoundError('No existe el carrito.');
 
   // Buscar producto en el carrito
   const productIndex = CartDao.findProductInCart(cart, pid);
   if (productIndex === -1)
-    throw { status: 404, message: 'Producto no encontrado en el carrito.' };
+    throw new NotFoundError('Producto no encontrado en el carrito.');
 
   // Actualizar la cantidad del producto
   CartDao.updateProductQuantityInCart(cart, productIndex, quantity);
@@ -118,7 +119,7 @@ export const removeAllProductsFromCart = async (
 ): Promise<InstanceType<typeof CartModel> | null> => {
   // Obtener el carrito
   const cart = await CartDao.findCartById(cid);
-  if (!cart) throw { status: 404, message: 'No existe el carrito.' };
+  if (!cart) throw new NotFoundError('No existe el carrito.');
 
   // Vaciar el carrito
   CartDao.removeAllProductsFromCart(cart);
