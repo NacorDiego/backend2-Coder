@@ -29,7 +29,7 @@ export interface UserJwt {
 }
 
 export interface JwtPayload {
-  userJWT: UserJwt;
+  user: UserJwt;
 }
 
 export interface NewUser {

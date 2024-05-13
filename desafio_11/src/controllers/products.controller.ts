@@ -33,6 +33,12 @@ export const getProducts = async (req: Request, res: Response) => {
     const sort =
       typeof req.query.sort === 'string' ? req.query.sort : undefined;
 
+    console.log('limit: ', limit);
+    console.log('page: ', page);
+    console.log('status: ', status);
+    console.log('category: ', category);
+    console.log('sort: ', sort);
+
     const products = await ProductService.getProducts(
       limit,
       page,

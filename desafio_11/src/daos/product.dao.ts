@@ -17,6 +17,8 @@ export const getProductsWithPagination = async (
   options: PaginateOptions,
 ): Promise<PaginateResult<InstanceType<typeof ProductModel> | null>> => {
   const products = await ProductModel.paginate(query, options);
+  console.log('Products en product.dao:');
+  console.log(products);
   if (!products) {
     throw new NotFoundError('No se encontraron productos.');
   }

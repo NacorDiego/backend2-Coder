@@ -47,7 +47,10 @@ export const getProducts = async (
   if (limit < 0 || page < 0)
     throw new ValidationError('Limit y page deben ser números positivos.');
 
-  return await ProductDao.getProductsWithPagination(query, options);
+  const products = await ProductDao.getProductsWithPagination(query, options);
+  console.log('Products en product.respository:');
+  console.log(products);
+  return products;
 };
 
 export const getProductById = async (

@@ -128,7 +128,7 @@ export const jwtStrategy = new JwtStrategy(
     try {
       // Buscar al usuario en la base de datos usando el id del payload del JWT
       const userFound = await UserService.findUserByEmail(
-        jwtPayload.userJWT.email,
+        jwtPayload.user.email,
       );
 
       // Si no existe en la BD

@@ -19,13 +19,16 @@ export const getProducts = async (
   category: string | undefined = undefined,
   sort: string | undefined = undefined,
 ): Promise<PaginateResult<InstanceType<typeof ProductModel> | null>> => {
-  return await ProductRepository.getProducts(
+  const products = await ProductRepository.getProducts(
     limit,
     page,
     status,
     category,
     sort,
   );
+  console.log('Products en product.service:');
+  console.log(products);
+  return products;
 };
 
 export const getProductById = async (

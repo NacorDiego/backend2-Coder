@@ -20,9 +20,9 @@ export const decodeJWT = (req: Request, res: Response, next: NextFunction) => {
       configJWT.jwt_secret,
     ) as JwtPayload;
 
-    req.user = decodedToken.userJWT;
-    console.log('req.user:');
-    console.log(req.user);
+    req.user = decodedToken.user;
+    // console.log('req.user:');
+    // console.log(req.user);
   }
 
   next();
