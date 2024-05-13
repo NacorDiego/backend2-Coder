@@ -10,6 +10,32 @@ import {
 
 // Models
 import UserModel from '@models/user.model';
+import { IUserGithub } from '@interfaces/users.interface';
+
+export const checkPassword = async (
+  password: string,
+  userPassword: string,
+): Promise<boolean> => {
+  return await UserDao.checkPassword(password, userPassword);
+};
+
+export const createUserFromGithub = async (
+  newUser: IUserGithub,
+): Promise<InstanceType<typeof UserModel> | null> => {
+  return await UserDao.createUserFromGithub(newUser);
+};
+
+export const findUserByEmail = async (
+  email: string,
+): Promise<InstanceType<typeof UserModel> | null> => {
+  return await UserDao.findUserByEmail(email);
+};
+
+export const findUserByGithubId = async (
+  githubId: string,
+): Promise<InstanceType<typeof UserModel> | null> => {
+  return await UserDao.findUserByGithubId(githubId);
+};
 
 export const registerUser = async (
   registerData: Partial<InstanceType<typeof UserModel>>,

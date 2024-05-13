@@ -16,7 +16,10 @@ export const errorHandler = (error: any, res: Response) => {
     res.status(404).json({ status: 'FAILED', message: error.message });
   else if (error instanceof ConflictError)
     res.status(409).json({ status: 'FAILED', message: error.message });
-  else if (error instanceof ConnectionError)
+  else if (
+    error instanceof ConnectionError ||
+    error instanceof ConfigurationError
+  )
     res.status(500).json({ status: 'FAILED', message: error.message });
   else
     res
@@ -28,3 +31,4 @@ export const ConnectionError = createErrorFactory('ConnectionError');
 export const ValidationError = createErrorFactory('ValidationError');
 export const NotFoundError = createErrorFactory('NotFoundError');
 export const ConflictError = createErrorFactory('ConflictError');
+export const ConfigurationError = createErrorFactory('ConfigurationError');
