@@ -9,3 +9,8 @@ export interface Product {
   thumbnail?: string;
   id?: string;
 }
+
+export interface IQuery {
+  status?: boolean;
+  category?: string;
+}

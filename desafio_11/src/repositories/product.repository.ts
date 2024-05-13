@@ -6,13 +6,11 @@ import * as ProductDao from '@daos/product.dao';
 // Errors
 import { ValidationError } from '@utils/errors.util';
 
+// Interfaces
+import { IQuery } from '@interfaces/products.interface';
+
 // Models
 import ProductModel from '@models/product.model';
-
-interface IQuery {
-  status?: boolean;
-  category?: string;
-}
 
 export const createProduct = async (
   dataProduct: any,
@@ -26,18 +24,16 @@ export const getProducts = async (
   page: number,
   status: boolean | undefined,
   category: string | undefined,
-  sort: string | undefined,
+  sort: string,
 ): Promise<PaginateResult<InstanceType<typeof ProductModel> | null>> => {
   // Query
-  let query: IQuery = {
-    status: undefined,
-    category: undefined,
-  };
+  let query: IQuery = {};
+
   if (status !== undefined) query.status = status;
   if (category !== undefined) query.category = category;
 
   // Options
-  const options: PaginateOptions = {
+  const options = {
     limit,
     page,
     sort: sort ? { price: sort === 'asc' ? 1 : -1 } : undefined,
@@ -48,8 +44,6 @@ export const getProducts = async (
     throw new ValidationError('Limit y page deben ser números positivos.');
 
   const products = await ProductDao.getProductsWithPagination(query, options);
-  console.log('Products en product.respository:');
-  console.log(products);
   return products;
 };
 

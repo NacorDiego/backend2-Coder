@@ -1,8 +1,5 @@
 import { Request, Response } from 'express';
 
-// Controllers
-import * as ProductController from '@controllers/products.controller';
-
 // Services
 import * as ProductService from '@services/product.service';
 import { NotFoundError, errorHandler } from '@utils/errors.util';
@@ -10,9 +7,6 @@ import { NotFoundError, errorHandler } from '@utils/errors.util';
 export const renderProducts = async (req: Request, res: Response) => {
   try {
     const result = await ProductService.getProducts();
-
-    console.log('Products en renderProducts:');
-    console.log(result);
 
     // Filtrar "product" que no sean null y luego mapear
     const productsList = result.docs

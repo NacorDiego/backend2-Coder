@@ -17,7 +17,7 @@ export const getProducts = async (
   page: number = 1,
   status: boolean | undefined = undefined,
   category: string | undefined = undefined,
-  sort: string | undefined = undefined,
+  sort: string | undefined = 'asc',
 ): Promise<PaginateResult<InstanceType<typeof ProductModel> | null>> => {
   const products = await ProductRepository.getProducts(
     limit,
